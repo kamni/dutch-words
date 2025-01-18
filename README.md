@@ -1,6 +1,8 @@
-# Dutch Word Frequencies
+# Dutch Words
 
-This provides a list of top Dutch words for the purposes of personal study.
+This provides a list of top 10,000 Dutch words for the purposes of personal study,
+based on word frequencies from the *Projekt Deutscher Wortschatz* from the
+Universität Leipzig.
 
 ## Data License
 

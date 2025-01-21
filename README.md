@@ -29,3 +29,11 @@ All corpora provided for download are licensed under
 larger data sets, please contact [us](mailto:wort@informatik.uni-leipzig.de).
 
 © 2025 Universität Leipzig / Sächsische Akademie der Wissenschaften / InfAI.
+
+## Development
+
+Install python requirements:
+
+```sh
+pip install -r requirements.txt
+```

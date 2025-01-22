@@ -1,2 +1,4 @@
 audio/*
+config.ini
+data/database.json
 /node_modules/*

@@ -1,6 +1,8 @@
 """
 Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
+
+Interface for retrieving words from storage.
 """
 
 from abc import ABC, abstractmethod
@@ -15,7 +17,7 @@ class WordPort(ABC):
     """
 
     @abstractmethod
-    def create_word(self, word: Word) -> Word:
+    def create(self, word: Word) -> Word:
         """
         Create a new word in the database.
 
@@ -29,7 +31,7 @@ class WordPort(ABC):
         pass
 
     @abstractmethod
-    def create_words(self, words: List[Word]) -> List[Word]:
+    def create_in_batch(self, words: List[Word]) -> List[Word]:
         """
         Batch create multiple words.
         Ignores words that already exist.
@@ -38,14 +40,12 @@ class WordPort(ABC):
             Word is counted as a duplicate when it has the same
             languageCode and baseWord.
 
-        :return: List of created words.
-            Returns None for any words that were not created,
-            so the lists can be compared, if needed.
+        :return: List of words that were created.
         """
         pass
 
     @abstractmethod
-    def create_or_update_word(self, word: Word) -> Word:
+    def create_or_update(self, word: Word) -> Word:
         """
         Create a new word, or update an existing word in the database.
 
@@ -58,7 +58,7 @@ class WordPort(ABC):
         pass
 
     @abstractmethod
-    def read_word(self, language_code: str, base_word: str) -> Word:
+    def read(self, language_code: str, base_word: str) -> Word:
         """
         Retrieve a word from the database.
 
@@ -71,7 +71,7 @@ class WordPort(ABC):
         pass
 
     @abstractmethod
-    def read_words(self, number: int=100, offset: int=0) -> List[Word]:
+    def read_multiple(self, number: int=100, offset: int=0) -> List[Word]:
         """
         Retrieve multiple words from the database.
 
@@ -83,7 +83,7 @@ class WordPort(ABC):
         pass
 
     @abstractmethod
-    def update_word(self, word: Word) -> Word:
+    def update(self, word: Word) -> Word:
         """
         Update an existing word in the database.
 
@@ -98,7 +98,7 @@ class WordPort(ABC):
         pass
 
     @abstractmethod
-    def delete_word(self, word: Word) -> bool:
+    def delete(self, word: Word) -> bool:
         """
         Remove an existing word in the database.
 
@@ -112,7 +112,7 @@ class WordPort(ABC):
         pass
 
     @abstractmethod
-    def merge_word(self, word: Word) -> Word:
+    def merge_existing(self, word: Word) -> Word:
         """
         Search the database for baseWords matching the text in WordData.
         Merge those Words into the current Word and remove old words.

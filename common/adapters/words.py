@@ -1,29 +1,34 @@
 """
 Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
+
+Implementations of WordPort for retrieving words from storage.
 """
 
 import json
+import os
 import pathlib
 from enum import Enum
 from typing import Dict, List, Optional
 
-from common.models.database import Database
 from common.models.words import Word
 from common.ports.words import WordPort
+from common.utils.file import DatabaseFileMixin, JSONFileMixin
 
 
-class WordJSONFileAdapter(WordPort):
+class WordJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, WordPort):
     """
-    Writes the Word objects as JSON to a file.
+    Handler for JSON file database.
 
-    WARNING: This is not thread safe and should only be used for development.
+    WARNING: This is only intended for local development.
+    Do not use in production environments.
     """
 
-    def __init__(self, input_file: str, output_file: Optional[str]=None):
-        self.input_file = input_file
-        # The same file can be read and written back to
-        self.output_file = output_file or input_file
+    def __init__(self, **kwargs):
+        self.database = self._get_db_filename(
+            kwargs['databasefile'],
+            'json',
+        )
 
     def _is_duplicate(
         self,
@@ -32,25 +37,7 @@ class WordJSONFileAdapter(WordPort):
     ) -> bool:
         return new_word in existing_words
 
-    def _read_json(self) -> Database:
-        # Safety precaution: make sure file exists
-        pathlib.Path(self.input_file).touch()
-
-        data = {'words': []}
-        try:
-            with open(self.input_file, 'r') as input_file:
-                data = json.load(input_file) or data
-        except json.JSONDecodeError:
-            # File is empty; ignore
-            pass
-
-        return Database.model_validate(data)
-
-    def _write_json(self, data: Database):
-        with open(self.output_file, 'w') as output_file:
-            json.dump(data.model_dump(), output_file, indent=2)
-
-    def create_word(self, word: Word) -> Word:
+    def create(self, word: Word) -> Word:
         """
         Create a new word in the database.
 
@@ -73,7 +60,7 @@ class WordJSONFileAdapter(WordPort):
         self._write_json(database)
         return word
 
-    def create_words(self, words: List[Word]) -> List[Word]:
+    def create_in_batch(self, words: List[Word]) -> List[Word]:
         """
         Batch create multiple words.
         Ignores words that already exist.
@@ -93,7 +80,7 @@ class WordJSONFileAdapter(WordPort):
             self._write_json(database)
         return non_duplicates
 
-    def create_or_update_word(self, word: Word) -> Word:
+    def create_or_update(self, word: Word) -> Word:
         """
         Create a new word, or update an existing word in the database.
 
@@ -105,7 +92,7 @@ class WordJSONFileAdapter(WordPort):
         """
         raise NotImplementedError()
 
-    def read_word(self, language_code: str, base_word: str) -> Word:
+    def read(self, language_code: str, base_word: str) -> Word:
         """
         Retrieve a word from the database.
 
@@ -117,7 +104,7 @@ class WordJSONFileAdapter(WordPort):
         """
         raise NotImplementedError()
 
-    def read_words(self, number: int=100, offset: int=0) -> List[Word]:
+    def read_multiple(self, number: int=100, offset: int=0) -> List[Word]:
         """
         Retrieve multiple words from the database.
 
@@ -128,7 +115,7 @@ class WordJSONFileAdapter(WordPort):
         """
         raise NotImplementedError()
 
-    def update_word(self, word: Word) -> Word:
+    def update(self, word: Word) -> Word:
         """
         Update an existing word in the database.
 
@@ -142,7 +129,7 @@ class WordJSONFileAdapter(WordPort):
         """
         raise NotImplementedError()
 
-    def delete_word(self, word: Word) -> bool:
+    def delete(self, word: Word) -> bool:
         """
         Remove an existing word in the database.
 
@@ -155,7 +142,7 @@ class WordJSONFileAdapter(WordPort):
         """
         raise NotImplementedError()
 
-    def merge_word(self, word: Word) -> Word:
+    def merge_existing(self, word: Word) -> Word:
         """
         Search the database for baseWords matching the text in WordData.
         Merge those Words into the current Word and remove old words.

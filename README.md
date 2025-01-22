@@ -37,3 +37,15 @@ Install python requirements:
 ```sh
 pip install -r requirements.txt
 ```
+
+Copy the configuration:
+
+```sh
+cp config.ini.example config.ini
+```
+
+Generate the database (say 'yes' to the prompt):
+
+```sh
+. ./scripts/initialize_database.py -d
+```

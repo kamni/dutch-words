@@ -16,98 +16,6 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, create_model
 
-# We use camelCase in the config
-# so that we can easily export to javascript in the frontend
-DEFAULT_CONFIG = {
-    'UnknownData': {
-        'id': (Optional[str], None),
-        'text': (str, ...),
-    },
-    'Unknown': {
-        'id': (Optional[str], None),
-        'type': ('DefaultGrammarType', 'unknown'),
-        'data': (list, ...)  # UnknownData; pydantic complains if we type the list
-    },
-    'NounData': {
-        'id': (Optional[str], None),
-        'case': ('DefaultCase', ...),
-        'plurality': ('DefaultPlurality', ...),
-        'gender': ('DefaultGender', ...),
-        'article': (str, ...),
-        'text': (str, ...),
-    },
-    'Noun': {
-        'id': (Optional[str], None),
-        'type': ('DefaultGrammarType', 'noun'),
-        'data': (list, ...),  # NounData; pydantic complains...
-    },
-    'PronounData': {
-        'id': (Optional[str], None),
-        'case': ('DefaultCase', ...),
-        'gender': ('DefaultGender', ...),
-        'politeness': ('DefaultPoliteness', ...),
-        'text': (str, ...),
-    },
-    'Pronoun': {
-        'id': (Optional[str], None),
-        'type': ('DefaultGrammarType', 'pronoun'),
-        'data': (list, ...),  # PronounData; pydantic complains...
-    },
-    'AdjectiveData': {
-        'id': (Optional[str], None),
-        'case': ('DefaultCase', ...),
-        'gender': ('DefaultGender', ...),
-        'text': (str, ...),
-    },
-    'Adjective': {
-        'id': (Optional[str], None),
-        'type': ('DefaultGrammarType', 'adjective'),
-        'data': (list, ...),  # AdjectiveData; pydantic complains...
-    },
-    'AdverbData': {
-        'id': (Optional[str], None),
-        'text': (str, ...),
-    },
-    'Adverb': {
-        'id': (Optional[str], None),
-        'type': ('DefaultGrammarType', 'adverb'),
-        'data': (list, ...),  # AdverbData; pydantic complains...
-    },
-    'VerbData': {
-        'id': (Optional[str], None),
-        'tense': (str, ...),
-        'person': ('DefaultPerson', ...),
-        'gender': ('DefaultGender', ...),
-        'politeness': ('DefaultPoliteness', ...),
-        'text': (str, ...),
-    },
-    'Verb': {
-        'id': (Optional[str], None),
-        'type': ('DefaultGrammarType', 'verb'),
-        'data': (list, ...),  # VerbData; pydantic complains...
-    },
-    'ParticipleData': {
-        'id': (Optional[str], None),
-        'relatedVerb': (str, ...),
-        'text': (str, ...),
-    },
-    'Participle': {
-        'id': (Optional[str], None),
-        'type': ('DefaultGrammarType', 'participle'),
-        'data': (list, ...),  # ParticipleData; pydantic complains...
-    },
-    'ConjunctionData': {
-        'id': (Optional[str], None),
-        'text': (str, ...),
-    },
-    'Conjunction': {
-        'id': (Optional[str], None),
-        'type': ('DefaultGrammarType', 'conjunction'),
-        'data': (list, ...),  # ConjunctionData; pydantic complains...
-    },
-}
-
-
 class DefaultGrammarType(str, Enum):
     # Prepositions are not included here,
     # because prepositions are difficult to learn
@@ -122,6 +30,98 @@ class DefaultGrammarType(str, Enum):
     verb = 'verb'
     participle = 'participle'
     conjunction = 'conjunction'
+
+
+# We use camelCase in the config
+# so that we can easily export to javascript in the frontend
+DEFAULT_CONFIG = {
+    'UnknownData': {
+        'id': (Optional[str], None),
+        'text': (str, ...),
+    },
+    'Unknown': {
+        'id': (Optional[str], None),
+        'type': ('DefaultGrammarType', DefaultGrammarType.unknown),
+        'data': (list, ...)  # UnknownData; pydantic complains if we type the list
+    },
+    'NounData': {
+        'id': (Optional[str], None),
+        'case': ('DefaultCase', ...),
+        'plurality': ('DefaultPlurality', ...),
+        'gender': ('DefaultGender', ...),
+        'article': (str, ...),
+        'text': (str, ...),
+    },
+    'Noun': {
+        'id': (Optional[str], None),
+        'type': ('DefaultGrammarType', DefaultGrammarType.unknown),
+        'data': (list, ...),  # NounData; pydantic complains...
+    },
+    'PronounData': {
+        'id': (Optional[str], None),
+        'case': ('DefaultCase', ...),
+        'gender': ('DefaultGender', ...),
+        'politeness': ('DefaultPoliteness', ...),
+        'text': (str, ...),
+    },
+    'Pronoun': {
+        'id': (Optional[str], None),
+        'type': ('DefaultGrammarType', DefaultGrammarType.unknown),
+        'data': (list, ...),  # PronounData; pydantic complains...
+    },
+    'AdjectiveData': {
+        'id': (Optional[str], None),
+        'case': ('DefaultCase', ...),
+        'gender': ('DefaultGender', ...),
+        'text': (str, ...),
+    },
+    'Adjective': {
+        'id': (Optional[str], None),
+        'type': ('DefaultGrammarType', DefaultGrammarType.unknown),
+        'data': (list, ...),  # AdjectiveData; pydantic complains...
+    },
+    'AdverbData': {
+        'id': (Optional[str], None),
+        'text': (str, ...),
+    },
+    'Adverb': {
+        'id': (Optional[str], None),
+        'type': ('DefaultGrammarType', DefaultGrammarType.unknown),
+        'data': (list, ...),  # AdverbData; pydantic complains...
+    },
+    'VerbData': {
+        'id': (Optional[str], None),
+        'tense': (str, ...),
+        'person': ('DefaultPerson', ...),
+        'gender': ('DefaultGender', ...),
+        'politeness': ('DefaultPoliteness', ...),
+        'text': (str, ...),
+    },
+    'Verb': {
+        'id': (Optional[str], None),
+        'type': ('DefaultGrammarType', DefaultGrammarType.unknown),
+        'data': (list, ...),  # VerbData; pydantic complains...
+    },
+    'ParticipleData': {
+        'id': (Optional[str], None),
+        'relatedVerb': (str, ...),
+        'text': (str, ...),
+    },
+    'Participle': {
+        'id': (Optional[str], None),
+        'type': ('DefaultGrammarType', DefaultGrammarType.unknown),
+        'data': (list, ...),  # ParticipleData; pydantic complains...
+    },
+    'ConjunctionData': {
+        'id': (Optional[str], None),
+        'text': (str, ...),
+    },
+    'Conjunction': {
+        'id': (Optional[str], None),
+        'type': ('DefaultGrammarType', DefaultGrammarType.unknown),
+        'data': (list, ...),  # ConjunctionData; pydantic complains...
+    },
+}
 
 
 class DefaultCase(str, Enum):

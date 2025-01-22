@@ -9,6 +9,7 @@ class ObjectExistsError(Exception):
     """
     pass
 
+
 class ObjectNotFoundError(Exception):
     """
     Thrown when trying to retrieve an object that doesn't exist.

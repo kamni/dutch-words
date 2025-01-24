@@ -7,19 +7,14 @@ import configparser
 import importlib
 import os
 import sys
-from typing import Any
+from typing import Any, Optional
 
+from common.stores.settings import SettingsStore
 from common.utils.singleton import Singleton
 
 
-TOP_LEVEL_FOLDER = os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__),
-        '..',
-        '..',
-    ),
-)
-DEFAULT_CONFIG = 'config.ini'
+class AdapterInitializationError(Exception):
+    pass
 
 
 class AdapterNotFoundError(Exception):
@@ -31,17 +26,22 @@ class AdapterStore(metaclass=Singleton):
     Singleton that instantiates all adapters using the specified config
     """
 
-    _adapters = {}
+    def __init__(self, settings_store: Optional[SettingsStore]=None):
+        self._adapters = {}
+        self._settings = settings_store or SettingsStore()
 
-    def __init__(self, config: str=DEFAULT_CONFIG):
-        self.config_file = os.path.join(TOP_LEVEL_FOLDER, config)
-        self.config = configparser.ConfigParser()
-        self.config.read(self.config_file)
+    def _get_adapter_cls(self, port_name: str):
+        module_name, cls_name = self._settings.get('ports', port_name).rsplit('.', 1)
+        module = importlib.import_module(module_name)
+        AdapterCls = getattr(module, cls_name)
+        return AdapterCls
 
     def initialize(self, force_rebuild: bool=False):
         """
         Initialize adapters for use in the app.
-        The method
+
+        This is done as a separate step from __init__
+        so we can troubleshoot individual adapter initializations.
 
         :force_rebuild: Re-import the adapters.
             If false, ignores build if adapters already exist.
@@ -50,27 +50,34 @@ class AdapterStore(metaclass=Singleton):
         if force_rebuild:
             self._adapters = {}
 
-        ports = self.config['ports']
+        ports = self._settings.get('ports')
+        exceptions = {}
         for port in ports:
             # Don't override existing adapters
             if port in self._adapters:
                 continue
 
-            module_name, cls_name = self.config['ports'][port].rsplit('.', 1)
-            module = importlib.import_module(module_name)
-            AdapterCls = getattr(module, cls_name)
-
-            adapter_options = {
-                key: value
-                for (key, value) in self.config['adapters.common'].items()
-            }
-            custom_options_section = f'adapters.{port}'
-            if custom_options_section in self.config.sections():
-                for (key, value) in self.config[f'adapters.{port}']:
+            try:
+                AdapterCls = self._get_adapter_cls(port)
+                adapter_options = {}
+                for key in self._settings.get('adapters.common'):
+                    value = self._settings.get('adapters.common', key)
                     adapter_options[key] = value
 
-            adapter = AdapterCls(**adapter_options)
-            self._adapters[port] = adapter
+                custom_options_section = f'adapters.{port}'
+                section = self._settings.get(custom_options_section)
+                if section:
+                    for key in section:
+                        value = self._settings.get(section, key)
+                        adapter_options[key] = value
+
+                adapter = AdapterCls(**adapter_options)
+                self._adapters[port] = adapter
+            except Exception as exc:
+                exceptions[port] = exc
+
+        if exceptions:
+            raise AdapterInitializationError(str(exceptions))
 
     def get(self, port_name: str) -> Any:
         """

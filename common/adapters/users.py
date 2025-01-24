@@ -5,9 +5,12 @@ Affero GPL v3
 Implementations of UserPort
 """
 
+import hashlib
+import time
+import uuid
 from typing import List
 
-from common.models.errors import ObjectExistsError
+from common.models.errors import ObjectExistsError, ObjectNotFoundError
 from common.models.database import Database
 from common.models.users import User
 from common.ports.users import UserPort
@@ -35,12 +38,20 @@ class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
     ) -> bool:
         return new_user in existing_users
 
+    def _set_id(self, user: User):
+        if not user.id:
+            user.id = str(uuid.uuid4())
+
+    def _set_password(self, user: User, password: str):
+        # REMINDER: don't use this in production
+        salt = str(time.monotonic())
+        pswd_str = f'{salt}{password}'.encode('utf-8')
+        phash = hashlib.sha256(pswd_str).hexdigest()
+        user.password = f'{salt}${phash}'
+
     def create(self, user: User) -> User:
         """
         Create a new user in the database.
-
-        WARNING: Please create a User object with `make_user`
-        to set the password and id.
 
         :user: New User object to add to the database.
             User is counted as a duplicate when it has the same
@@ -55,6 +66,9 @@ class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
             raise ObjectExistsError(
                 f'User with {user.username} already exists')
 
+        self._set_id(user)
+        self._set_password(user, user.password or '')
+
         database.users.append(user)
         self._write_json(database)
         return user
@@ -64,9 +78,6 @@ class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
         Batch create multiple users.
         Ignores users that already exist.
 
-        WARNING: Please create a User object with `make_user`
-        to set the password and id.
-
         :user: New User object to add to the database.
             User is counted as a duplicate when it has the same username.
 
@@ -75,6 +86,32 @@ class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
         database = self._read_json()
         non_duplicates = list(set(users).difference(set(database.users)))
         if non_duplicates:
-            database.users.extend(non_duplicates)
+            for user in non_duplicates:
+                self._set_id(user)
+                self._set_password(user, user.password or '')
+                database.users.append(user)
             self._write_json(database)
         return non_duplicates
+
+    def read(self, username: str) -> User:
+        """
+        Read a single User from the database.
+
+        :username: The username to search for.
+            Username is expected to be unique.
+
+        :return: The user that was found.
+        :raises: ObjectNotFoundError if user doesn't exist
+        """
+
+        database = self._read_json()
+        user_match = list(
+            filter(
+                lambda x: x.username == username,
+                database.users,
+            )
+        )
+        if not user_match:
+            raise ObjectNotFoundError(f'No user with {username} found.')
+
+        return user_match[0]

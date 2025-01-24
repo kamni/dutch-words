@@ -36,6 +36,7 @@ Install python requirements:
 
 ```sh
 pip install -r requirements.txt
+pip install -r requirements_dev.txt
 ```
 
 Copy the configuration:
@@ -48,4 +49,16 @@ Generate the database (say 'yes' to the prompt):
 
 ```sh
 . ./scripts/initialize_database.py -d
+```
+
+Connect to the textual terminal for debugging:
+
+```sh
+textual console
+```
+
+Then run the app in a separate terminal with:
+
+```sh
+textual run --dev cli/__main__.py
 ```

@@ -39,36 +39,6 @@ class User(BaseModel):
             )
         return False
 
-    @classmethod
-    def make_user(self, username: str, password: str, display_name: Optional[str] = None):
-        """
-        Preferred method of creating a User from inputted data.
-        Sets the id and password.
-
-        :username: User's username in the system. Should be unique.
-        :password: Plaintext password. Will be salted and hashed before
-            storing to the database.
-        :display_name: Optional display name for the User.
-            Does not have to be unique.
-        """
-
-        user = User(username=username, display_name=display_name)
-        user.set_id()
-        user.set_password(password)
-        return user
-
-    def set_id(self):
-        """
-        Set the id for the Word and all ids for the type.
-        """
-        if not self.id:
-            self.id = str(uuid.uuid4())
-
-    def set_password(self, password: str):
-        salt = time.monotonic()
-        phash = hash(f'{salt}{password}')
-        self.password = f'{salt}${phash}'
-
 
 class UserDisplay(BaseModel):
     """
@@ -76,11 +46,12 @@ class UserDisplay(BaseModel):
     NOTE: use camel-cased attributes for easier handling with javascript
     """
 
-    user_id: Optional[str]
+    user_id: Optional[str] = None
     username: str
     displayName: Optional[str] = None
 
-    def from_user(self, user: User) -> 'UserDisplay':
+    @classmethod
+    def from_user(cls, user: User) -> 'UserDisplay':
         """
         Convert a database user into a UI-friendly user object.
 
@@ -89,6 +60,7 @@ class UserDisplay(BaseModel):
         """
 
         user_display = UserDisplay(
+            user_id=user.id,
             username=user.username,
             displayName=user.display_name or user.username,
         )

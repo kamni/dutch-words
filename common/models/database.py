@@ -19,6 +19,5 @@ class Database(BaseModel):
     DO NOT USE IN PRODUCTION.
     """
 
-#    sessions: Optional[List[UserSession]] = []
     users: Optional[List[User]] = []
     words: Optional[List[Word]] = []

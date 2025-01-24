@@ -85,7 +85,7 @@ class DatabaseCreator:
             user_data = [row for row in csv.reader(input_file, delimiter=',')][1:]
 
         users = [
-            User.make_user(
+            User(
                 username=user[0],
                 display_name=user[1],
                 password=user[2],

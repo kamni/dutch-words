@@ -17,3 +17,13 @@ class Singleton(type):
         if cls not in cls._instances:
             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
+
+    @classmethod
+    def destroy(metacls, cls):
+        """
+        Destroy an instance of a singleton class so it can be reinitialized
+
+        Usage: Singleton.destroy(SomeClass)
+        """
+        if cls in metacls._instances:
+            del metacls._instances[cls]

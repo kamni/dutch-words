@@ -45,3 +45,16 @@ class UserPort(ABC):
             so the lists can be compared, if needed.
         """
         pass
+
+    @abstractmethod
+    def read(self, username: str) -> User:
+        """
+        Read a single User from the database.
+
+        :username: The username to search for.
+            Username is expected to be unique.
+
+        :return: The user that was found.
+        :raises: ObjectNotFoundError if user doesn't exist
+        """
+        pass

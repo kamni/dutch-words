@@ -1,9 +1,8 @@
 # Configurations for the project
 
 [ports]
-#AuthnPort = common.adapters.auth.AuthnJSONFileAdapter
+AuthnPort = common.adapters.auth.AuthnJSONFileAdapter
 DatabasePort = common.adapters.database.DatabaseJSONFileAdapter
-#SessionPort = common.adapters.dev.session.SessionJSONFileAdapter
 UserPort = common.adapters.users.UserJSONFileAdapter
 WordPort = common.adapters.words.WordJSONFileAdapter
 

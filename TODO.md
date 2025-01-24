@@ -74,6 +74,7 @@ Learning mode:
    3. Hear foreign text, type what you heard.
    4. Option to turn off seeing text in #1 and #2
 
+Score for number of words you've learned
 
 ## Database Models
 

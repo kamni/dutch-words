@@ -15,7 +15,7 @@ def document_directory_path(instance: models.Model, filename:str):
     See https://docs.djangoproject.com/en/5.1/ref/models/fields/#filefield
     """
 
-    return f'documents/{instance.user.id}/{instance.language}/{filename}'
+    return f'uploads/{instance.user.id}/{instance.language}/docs/{filename}'
 
 
 class Document(models.Model):
@@ -51,6 +51,9 @@ class Document(models.Model):
         unique=True,
     )
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
 
 class SentenceOrder(models.Model):
     """
@@ -58,8 +61,9 @@ class SentenceOrder(models.Model):
     """
 
     class Meta:
-        ordering = ['order']
+        ordering = ['document', 'sentence', 'order']
         unique_together = [['sentence', 'document', 'order']]
+        verbose_name_plural = 'Sentence order'
 
     sentence = models.ForeignKey(
         Sentence,

@@ -1,4 +1,5 @@
 audio/*
+backend/uploads/*
 config.ini
 data/database.json
 /node_modules/*

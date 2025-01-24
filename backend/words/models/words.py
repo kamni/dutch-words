@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from ..utils.audio import get_audio_upload_path
 from ..utils.languages import language_choices
 
 
@@ -14,7 +15,12 @@ def word_directory_path(instance: models.Model, filename:str):
     See https://docs.djangoproject.com/en/5.1/ref/models/fields/#filefield
     """
 
-    return f'audio/{instance.user.id}/{instance.language}/{filename}'
+    filename = get_audio_upload_path(
+        instance.user.id,
+        uuid.uuid4(),
+        instance.language,
+    )
+    return filename
 
 
 class Word(models.Model):
@@ -54,7 +60,8 @@ class Word(models.Model):
         expression = 'expression'
 
     class Meta:
-        unique_together=[('user', 'language', 'root_word')]
+        ordering = ['user']
+        unique_together = [('user', 'language', 'root_word')]
 
     id = models.UUIDField(
         primary_key=True,
@@ -195,11 +202,6 @@ class Conjugation(models.Model):
     )
     tense = models.CharField(
         max_length=40,
-        blank=True,
-        null=True,
-    )
-    audio_file = models.FileField(
-        upload_to=word_directory_path,
         blank=True,
         null=True,
     )

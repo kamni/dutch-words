@@ -2,10 +2,16 @@
 
 ## Django Experiment
 
-* [ ] Create base models
-* [ ] Meta: define uniqueness on each of the classes
+* [x] Create base models
+* [x] Meta: define uniqueness on each of the classes
+* [x] Upload a document and have it make everything
+* [x] Download audio files for sentences
+* [ ] Write a custom delete method for Document so it deletes everything
+      (except words that are associated with other sentences)
+* [ ] Get audio files downloading to a media folder that gets served
 * [ ] Create user tracking (learned, learning, to learn, unknown)
-* [ ] Get to the point where I can upload a document from the django admin
+* [ ] Users should only be able to see their own items
+* [ ] Remove database from version control
 
 
 ## Initialize Database

@@ -5,17 +5,23 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .words import Word
+from ..utils.audio import get_audio_upload_path
 from ..utils.languages import language_choices
 
 
 def sentence_directory_path(instance: models.Model, filename:str):
     """
-    Where to upload audio files for whole sentences
+    Where to upload audio files for sentences
 
     See https://docs.djangoproject.com/en/5.1/ref/models/fields/#filefield
     """
 
-    return f'audio/{instance.user.id}/{instance.language}/{filename}'
+    filename = get_audio_upload_path(
+        instance.user.id,
+        uuid.uuid4(),
+        instance.language,
+    )
+    return filename
 
 
 class Sentence(models.Model):
@@ -61,8 +67,9 @@ class WordOrder(models.Model):
     """
 
     class Meta:
-        ordering = ['order']
+        ordering = ['sentence', 'word', 'order']
         unique_together = [['word', 'sentence', 'order']]
+        verbose_name_plural = 'Word order'
 
     word = models.ForeignKey(
         Word,

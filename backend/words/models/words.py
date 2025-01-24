@@ -1,10 +1,10 @@
 import uuid
 
 from django.contrib.auth.models import User
-from django.db import Q, models
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .language_codes import language_choices
+from ..utils.languages import language_choices
 
 
 def word_directory_path(instance: models.Model, filename:str):
@@ -68,7 +68,7 @@ class Word(models.Model):
         help_text=_('User who uploaded this word'),
     )
     language = models.CharField(
-        max_length=3,
+        max_length=8,
         choices=language_choices(),
         help_text=_('Language that the word belongs to'),
     )
@@ -91,7 +91,7 @@ class Word(models.Model):
         blank=True,
         null=True,
     )
-    translations = models.ManyToMany(
+    translations = models.ManyToManyField(
         'self',
         symmetrical=True,
         help_text=_('Words in other language that mean the same or similar'),
@@ -150,6 +150,11 @@ class Conjugation(models.Model):
     word = models.ForeignKey(
         Word,
         on_delete=models.CASCADE,
+    )
+    language = models.CharField(
+        max_length=8,
+        choices=language_choices(),
+        help_text=_('Language that the word belongs to'),
     )
     text = models.CharField(
         max_length=255,

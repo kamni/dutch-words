@@ -1,10 +1,11 @@
 import uuid
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .language_codes import language_choices
 from .words import Word
+from ..utils.languages import language_choices
 
 
 def sentence_directory_path(instance: models.Model, filename:str):
@@ -37,7 +38,7 @@ class Sentence(models.Model):
         help_text=_('User who uploaded this sentence'),
     )
     language = models.CharField(
-        max_length=3,
+        max_length=8,
         choices=language_choices(),
         help_text=_('Language that the sentence belongs to'),
     )
@@ -47,7 +48,7 @@ class Sentence(models.Model):
         blank=True,
         null=True,
     )
-    translations = models.ManyToMany(
+    translations = models.ManyToManyField(
         'self',
         symmetrical=True,
         help_text=_('Sentences in other language that mean the same or similar'),

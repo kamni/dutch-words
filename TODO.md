@@ -1,5 +1,13 @@
 # TODOS
 
+## Django Experiment
+
+* [ ] Create base models
+* [ ] Meta: define uniqueness on each of the classes
+* [ ] Create user tracking (learned, learning, to learn, unknown)
+* [ ] Get to the point where I can upload a document from the django admin
+
+
 ## Initialize Database
 
 * [ ] Remove corpora collection and parsed words -- they're not interesting
@@ -75,6 +83,10 @@ Learning mode:
    4. Option to turn off seeing text in #1 and #2
 
 Score for number of words you've learned
+
+Store word -- are all of them user-related? No uneditable words?
+Selected translations?
+You are responsible for your own copyright
 
 ## Database Models
 

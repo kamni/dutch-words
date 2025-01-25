@@ -12,7 +12,7 @@
 * [ ] Create user tracking (learned, learning, to learn, unknown)
 * [ ] Users should only be able to see their own items
 * [ ] Remove database from version control
-
+* [ ] Tests
 
 ## Initialize Database
 
@@ -20,20 +20,6 @@
 * [ ] Remove corpora info in README
 * [ ] Initialize database only creates a new database
 * [ ] Tests for initialize database -- if Django, would be command
-
-## Sqlite, Sqlalchemy, and South
-
-Or Django with Vue frontend, postgres database?
-
-* [ ] Re-convert the models, and from_ORM to pydantic
-* [ ] Initialize database should work with sql config
-
-## Upload Script
-
-* [ ] Handle 'txt' with a txt port/adapter
-* [ ] Upload the script, creating Unknowns for each word, unless it already
-      exists, then just add the sentence (provided the sentence isn't already
-      there).
 
 ## Cleanup
 

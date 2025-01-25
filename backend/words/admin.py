@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import (
     Conjugation,
     Document,
+    LearningTracker,
     Sentence,
     SentenceOrder,
     Word,
@@ -49,3 +50,8 @@ class SentenceOrderAdmin(admin.ModelAdmin):
 @admin.register(Conjugation)
 class ConjugationAdmin(admin.ModelAdmin):
     list_display = ['text', 'word', 'language', 'user']
+
+
+@admin.register(LearningTracker)
+class LearningTrackerAdmin(admin.ModelAdmin):
+    list_display = ['conjugation', 'language', 'status', 'user']

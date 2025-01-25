@@ -17,10 +17,33 @@ class LearningTracker(models.Model):
     """
 
     class Status(models.TextChoices):
+        """
+        Status explanations:
+
+        * learned: The user is comfortable with this word
+          and doesn't wish to train on it.
+
+        * currently_learning: The user is currently learning this word.
+
+        * waiting_to_learn: The user has not yet added this word to the
+          learning rotation.
+
+        * unknown: The user has not yet created a conjugation for this word.
+
+        * hidden: The user wishes to hide this word from the learning process.
+          This is most useful for articles and prepositions,
+          because they are hard to learn separately from context.
+        """
+
         learned = _('learned')
         currently_learning = _('currently learning')
         waiting_to_learn = _('waiting to learn')
         unknown = _('not conjugated')
+        hidden = _('hidden')
+
+    class Meta:
+        ordering = ['user', 'language', 'status']
+        unique_together = [['user', 'conjugation']]
 
     id = models.UUIDField(
         primary_key=True,
@@ -46,7 +69,7 @@ class LearningTracker(models.Model):
         help_text=_('Word conjugation to learn'),
     )
     status = models.CharField(
-        min_length=20,
+        max_length=20,
         choices=Status,
         blank=True,
         default=Status.unknown,

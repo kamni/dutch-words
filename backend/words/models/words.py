@@ -50,15 +50,15 @@ class Word(models.Model):
           until the user sets the type.
         """
 
-        unknown = 'unknown'
+        unknown = _('unknown')
         noun = 'noun'
-        pronoun = 'pronoun'
-        adjective = 'adjective'
-        adverb = 'adverb'
-        verb = 'verb'
-        participle = 'participle'
-        conjunction = 'conjunction'
-        expression = 'expression'
+        pronoun = _('pronoun')
+        adjective = _('adjective')
+        adverb = _('adverb')
+        verb = _('verb')
+        participle = _('participle')
+        conjunction = _('conjunction')
+        expression = _('expression')
 
     class Meta:
         ordering = ['user']
@@ -128,28 +128,28 @@ class Conjugation(models.Model):
     """
 
     class Case(models.TextChoices):
-        nominative = 'nominative'
-        accusative = 'accusative'
-        dative = 'dative'
-        genitive = 'genitive'
+        nominative = _('nominative')
+        accusative = _('accusative')
+        dative = _('dative')
+        genitive = _('genitive')
 
     class Person(models.TextChoices):
-        first = 'first'
-        second = 'second'
-        third = 'third'
+        first = _('first')
+        second = _('second')
+        third = _('third')
 
     class Plurality(models.TextChoices):
-        single = 'single'
-        plural = 'plural'
+        single = _('single')
+        plural = _('plural')
 
     class Gender(models.TextChoices):
-        neutral = 'neutral'
-        feminine = 'feminine'
-        masculine = 'masculine'
+        neutral = _('neutral')
+        feminine = _('feminine')
+        masculine = _('masculine')
 
     class Politeness(models.TextChoices):
-        casual = 'casual'
-        formal = 'formal'
+        casual = _('casual')
+        formal = _('formal')
 
     class Meta:
         unique_together = [['user', 'language', 'text']]

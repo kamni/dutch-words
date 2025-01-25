@@ -11,6 +11,7 @@
       (except words that are associated with other sentences)
 * [x] Better display string for models
 * [ ] Create user tracking (learned, learning, to learn, unknown)
+* [ ] Populate tracking when sentence is translated
 * [ ] Users should only be able to see their own items
 * [ ] Remove database from version control
 * [ ] Tests

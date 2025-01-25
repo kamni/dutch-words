@@ -61,6 +61,9 @@ class Sentence(models.Model):
         help_text=_('Sentences in other language that mean the same or similar'),
     )
 
+    def __str__(self):
+        return self.text
+
     def delete(self):
         if self.audio_file.name:
             audio_file = pathlib.Path(self.audio_file.name)
@@ -75,7 +78,7 @@ class WordOrder(models.Model):
     """
 
     class Meta:
-        ordering = ['sentence', 'word', 'order']
+        ordering = ['sentence', 'order']
         unique_together = [['word', 'sentence', 'order']]
         verbose_name_plural = 'Word order'
 

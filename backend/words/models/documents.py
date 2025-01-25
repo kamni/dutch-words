@@ -53,6 +53,9 @@ class Document(models.Model):
         unique=True,
     )
 
+    def __str__(self):
+        return self.display_name
+
     def delete(self):
         sentence_order = SentenceOrder.objects.filter(document=self)
         sentence_ids = [obj.sentence.id for obj in sentence_order]
@@ -110,7 +113,7 @@ class SentenceOrder(models.Model):
     """
 
     class Meta:
-        ordering = ['document', 'sentence', 'order']
+        ordering = ['document', 'order']
         unique_together = [['sentence', 'document', 'order']]
         verbose_name_plural = 'Sentence order'
 

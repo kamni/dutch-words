@@ -105,6 +105,9 @@ class Word(models.Model):
         help_text=_('Words in other language that mean the same or similar'),
     )
 
+    def __str__(self):
+        return self.root_word
+
     def delete(self):
         if self.audio_file.name:
             audio_file = pathlib.Path(self.audio_file.name)

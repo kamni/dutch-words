@@ -42,11 +42,13 @@ class Sentence(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        editable=False,
         help_text=_('User who uploaded this sentence'),
     )
     language = models.CharField(
         max_length=8,
         choices=language_choices(),
+        editable=False,
         help_text=_('Language that the sentence belongs to'),
     )
     text = models.TextField()

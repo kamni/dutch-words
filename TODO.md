@@ -10,11 +10,19 @@
 * [x] Write a custom delete method for Document so it deletes everything
       (except words that are associated with other sentences)
 * [x] Better display string for models
-* [ ] Create user tracking (learned, learning, to learn, unknown)
-* [ ] Populate tracking when sentence is translated
+* [x] Create user tracking (learned, learning, to learn, unknown)
+* [x] Remove database from version control
+* [ ] Populate tracking when conjugation is created
 * [ ] Users should only be able to see their own items
-* [ ] Remove database from version control
 * [ ] Tests
+
+## Editing UI
+
+* [ ] Django or js framework? Or both
+* [ ] Display untranslated sentences
+* [ ] Create words when sentence is translated (if they don't already exist)
+* [ ] Create user tracking when a conjugation is added
+* [ ] Set status from the UI on conjugation
 
 ## Initialize Database
 

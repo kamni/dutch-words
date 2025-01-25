@@ -38,7 +38,6 @@ class LearningTracker(models.Model):
         learned = _('learned')
         currently_learning = _('currently learning')
         waiting_to_learn = _('waiting to learn')
-        unknown = _('not conjugated')
         hidden = _('hidden')
 
     class Meta:
@@ -72,6 +71,6 @@ class LearningTracker(models.Model):
         max_length=20,
         choices=Status,
         blank=True,
-        default=Status.unknown,
+        default=Status.waiting_to_learn,
         help_text=_('Current status of user progress'),
     )

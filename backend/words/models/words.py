@@ -73,11 +73,13 @@ class Word(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        editable=False,
         help_text=_('User who uploaded this word'),
     )
     language = models.CharField(
         max_length=8,
         choices=language_choices(),
+        editable=False,
         help_text=_('Language that the word belongs to'),
     )
     type = models.CharField(
@@ -163,6 +165,7 @@ class Conjugation(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        editable=False,
         help_text=_('User who uploaded this conjugation'),
     )
     word = models.ForeignKey(
@@ -172,6 +175,7 @@ class Conjugation(models.Model):
     language = models.CharField(
         max_length=8,
         choices=language_choices(),
+        editable=False,
         help_text=_('Language that the word belongs to'),
     )
     text = models.CharField(

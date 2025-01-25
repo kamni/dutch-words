@@ -30,3 +30,12 @@ cd backend
 python manage.py migrate
 python manage.py runserver
 ```
+
+Create an admin user:
+
+```sh
+python manage.py createsuperuser
+```
+
+You can visit the admin interface at
+[localhost:8000/admin](http://localhost:8000/admin)

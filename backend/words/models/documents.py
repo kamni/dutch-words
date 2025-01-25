@@ -31,13 +31,12 @@ class Document(models.Model):
     id = models.UUIDField(
         primary_key=True,
         blank=True,
-        default=uuid.uuid4,
         editable=False,
+        default=uuid.uuid4,
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        editable=False,
         help_text=_('User who uploaded this document'),
     )
     display_name = models.CharField(
@@ -47,12 +46,10 @@ class Document(models.Model):
     language = models.CharField(
         max_length=8,
         choices=language_choices(),
-        editable=False,
         help_text=_('Language that the sentence belongs to'),
     )
     doc_file = models.FileField(
         upload_to=document_directory_path,
-        editable=False,
         unique=True,
     )
 

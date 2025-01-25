@@ -3,7 +3,8 @@ import string
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import Conjugation, Document
+from .models import Conjugation, Document, LearningTracker
+from .utils.audio import download_audio
 from .utils.documents import create_sentences_and_words
 
 
@@ -20,7 +21,7 @@ def process_document(sender, **kwargs):
 
 
 @receiver(post_save, sender=Conjugation)
-def create_tracker(sender, **kwargs):
+def create_audio_file_and_tracker(sender, **kwargs):
     """
     After a Conjugation is created, create a new LearningTracker
     """
@@ -28,8 +29,17 @@ def create_tracker(sender, **kwargs):
     instance = kwargs.get('instance')
     created = kwargs.get('created')
     if instance and created:
-        Conjugation.objects.create(
+        LearningTracker.objects.create(
             user=instance.user,
             language=instance.language,
             conjugation=instance,
         )
+
+        audio_file = download_audio(
+            user_id=insstance.user.id,
+            text_id=instance.id,
+            text=instance.text,
+            language_code=instance.language,
+        )
+        instance.audio_file.name = audio_file
+        instance.save()

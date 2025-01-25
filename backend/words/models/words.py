@@ -73,13 +73,11 @@ class Word(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        editable=False,
         help_text=_('User who uploaded this word'),
     )
     language = models.CharField(
         max_length=8,
         choices=language_choices(),
-        editable=False,
         help_text=_('Language that the word belongs to'),
     )
     type = models.CharField(
@@ -180,11 +178,6 @@ class Conjugation(models.Model):
     )
     text = models.CharField(
         max_length=255,
-    )
-    audio_file = models.FileField(
-        upload_to=word_directory_path,
-        blank=True,
-        null=True,
     )
     article = models.CharField(
         max_length=40,

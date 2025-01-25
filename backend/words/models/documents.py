@@ -1,10 +1,12 @@
+import pathlib
 import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .sentences import Sentence
+from .sentences import Sentence, WordOrder
+from .words import Conjugation, Word
 from ..utils.languages import language_choices
 
 
@@ -51,8 +53,55 @@ class Document(models.Model):
         unique=True,
     )
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    def delete(self):
+        sentence_order = SentenceOrder.objects.filter(document=self)
+        sentence_ids = [obj.sentence.id for obj in sentence_order]
+        sentence_ids_to_ignore = [
+            obj.sentence.id for obj in SentenceOrder.objects.filter(
+                sentence__id__in=sentence_ids,
+            ).exclude(document=self)
+        ]
+        sentence_ids_to_delete = list(
+            set(sentence_ids).difference(set(sentence_ids_to_ignore)),
+        )
+        sentences_to_delete = Sentence.objects.filter(
+            id__in=sentence_ids_to_delete,
+        )
+
+        all_words_to_delete = []
+        for sentence in sentences_to_delete:
+            word_order = WordOrder.objects.filter(sentence=sentence)
+            word_ids = [obj.word.id for obj in word_order]
+            word_ids_to_ignore = [
+                obj.word.id for obj in WordOrder.objects.filter(
+                    word__id__in=word_ids,
+                ).exclude(
+                    sentence__id__in=sentences_to_delete,
+                )
+            ]
+            word_ids_to_delete = list(
+                set(word_ids).difference(set(word_ids_to_ignore)),
+            )
+            words_to_delete = Word.objects.filter(
+                id__in=word_ids_to_delete,
+            )
+            all_words_to_delete.extend(words_to_delete)
+
+        # Remove duplicates
+        all_words_to_delete = list(set(all_words_to_delete))
+
+        # We're not calling a query batch delete,
+        # because we need to delete the uploaded files
+        # (as handled by word.delete and sentence.delete)
+        for word in all_words_to_delete:
+            word.delete()
+        for sentence in sentences_to_delete:
+            sentence.delete()
+
+        doc_file = pathlib.Path(self.doc_file.name)
+        if doc_file.exists():
+            doc_file.unlink()
+        super().delete()
 
 
 class SentenceOrder(models.Model):

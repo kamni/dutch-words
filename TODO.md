@@ -6,9 +6,10 @@
 * [x] Meta: define uniqueness on each of the classes
 * [x] Upload a document and have it make everything
 * [x] Download audio files for sentences
+* [x] Get audio files downloading to a media folder that gets served
 * [ ] Write a custom delete method for Document so it deletes everything
       (except words that are associated with other sentences)
-* [ ] Get audio files downloading to a media folder that gets served
+* [ ] Better display string for models
 * [ ] Create user tracking (learned, learning, to learn, unknown)
 * [ ] Users should only be able to see their own items
 * [ ] Remove database from version control

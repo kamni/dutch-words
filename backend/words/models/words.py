@@ -1,3 +1,4 @@
+import pathlib
 import uuid
 
 from django.contrib.auth.models import User
@@ -103,6 +104,13 @@ class Word(models.Model):
         symmetrical=True,
         help_text=_('Words in other language that mean the same or similar'),
     )
+
+    def delete(self):
+        if self.audio_file.name:
+            audio_file = pathlib.Path(self.audio_file.name)
+            if audio_file.exists():
+                audio_file.unlink()
+        super().delete()
 
 
 class Conjugation(models.Model):

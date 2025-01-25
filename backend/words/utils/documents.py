@@ -40,7 +40,7 @@ def create_sentences_and_words(instance: Document):
             audio_file = download_audio(
                 user_id=instance.user.id,
                 text_id=sentence.id,
-                text=sentence.text,
+                text=sentence.text.translate(punctuation_remover),
                 language_code=sentence.language,
             )
             sentence.audio_file.name = audio_file

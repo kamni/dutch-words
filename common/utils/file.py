@@ -4,49 +4,15 @@ Affero GPL v3
 """
 
 import json
-import os
-import pathlib
-import uuid
+from pathlib import Path
+from typing import Optional
 
 from pydantic import BaseModel
 
-
-def get_top_level_directory() -> str:
-    """
-    Gets the top-most level folder of the project.
-
-    :return: absolute path to the project directory.
-    """
-    project_path = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            '..',
-        ),
-    )
-    return project_path
+from ..models.database import Database
 
 
-class DatabaseFileMixin:
-    """
-    Utility functions for file-based databases
-    Used with adapter classes
-    """
-
-    def _get_db_filename(self, base: str, extension: str):
-        """
-        Return the absolute path to the database file.
-        Assumes file is located in the 'data' directory.
-
-        :base: base file name (e.g., my_database)
-        :extension: file extension (e.g., json or sqlite)
-        """
-
-        filename = ".".join([
-            os.path.join(get_top_level_directory(), 'data', base),
-            extension,
-        ])
-        return filename
+DATA_DIR = Path(__file__).resolve().parent.parent.parent / 'data'
 
 
 class JSONFileMixin:
@@ -54,29 +20,73 @@ class JSONFileMixin:
     Methods for reading and writing to a JSON database file
     Used with adapter classes.
 
-    Must define `self.database`, 
-    which is a string for the filename to be read from/written to.
+    Call `self.initialize_db` in the init.
     """
 
-    def _read_json(self) -> 'Database':
-        # Import here to avoid recursive import
-        from common.models.database import Database
+    _database = None
 
-        # Safety precaution: make sure file exists
-        pathlib.Path(self.database).touch()
+    def initialize_db(
+        self,
+        data_dir: Optional[str]=None,
+        base_database_name: Optional[str]=None,
+    ):
+        """
+        Set up the JSON database for the class.
+        Database as a Database object can be accessed through self._database
 
+        :data_dir: Location of the directory where the database will be saved.
+            Default is '/data' relative to the project folder.
+        :base_database_name: What the file should be called.
+            Example: 'database' will create a file called 'database.json'.
+            Default is 'database'.
+        """
+
+        data_dir = data_dir or DATA_DIR
+        base_database_name = base_database_name or 'database'
+        self._database_file = data_dir / f'{base_database_name}.json'
+        self.read_db()
+
+    @property
+    def database_file(self):
+        return self._database_file
+
+    def read_db(self, force_reread=False) -> Database:
+        """
+        Get the Database representation of the json database file.
+        To save on file reads, returns data from self._database
+        if it already exists.
+
+        :force_reread: Don't return existing data from self._database;
+            instead, re-initialize self._database.
+        """
+
+        if self._database and not force_reread:
+            return self._database
+
+        # Ensure the file exists
+        Path(self.database_file).touch()
+
+        database = Database()
         try:
             with open(self.database, 'r') as input_file:
                 data = json.load(input_file) or data
+
+            database = Database.model_validate(data)
         except json.JSONDecodeError:
             # File is empty; ignore
-            return Database()
+            pass
 
-        return Database.model_validate(data)
+        return database
 
-    def _write_json(self, data: 'Database'):
-        # Import here to avoid recursive import
-        from common.models.database import Database
+    def write_db(self, database: Optional[Database]=None):
+        """
+        Write self._database to the json file.
 
-        with open(self.database, 'w') as output_file:
-            json.dump(data.model_dump(), output_file, indent=2)
+        :database: If supplied, overwrites the existing self._database
+            before writing to file
+        """
+        if database:
+            self._database = database
+
+        with open(self._database_file, 'w') as output_file:
+            json.dump(self._database.model_dump(), output_file, indent=2)

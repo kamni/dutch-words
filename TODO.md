@@ -2,22 +2,19 @@
 
 ## Show document list
 
-* [ ] User tracking
+* [ ] Add document_port
+  * [ ] DocumentJSONAdapter
+  * [ ] DocumentDjangoORMAdapter
+  * [ ] DocumentAPIAdapter
+* [ ] Tests for adapters
+* [ ] Import document for testing
+* [ ] Django API
 
-* [ ] Create Conjugation model
-  * [ ] order -- relative to the sentence
-  * [ ] A conjugation has a One-to-Many relationship with a word.
-  * [ ] Conjugations are unique per word, not language/user/text, because
-        sometimes conjugations are the same for different root words
-  * [ ] include translations? or only on the word?
-  * [ ] include user tracking
+## Tests
 
-* [ ] Create WordDB model
-  * [ ] Words should have an ordering, relative to the sentence
-  * [ ] Add user tracking to conjugationdb, conjugationui
-* [ ] Create WordUI model
+* [ ] utils.file
 
-* [ ] Create DocumentUIFull model
+## Misc
 
 * [ ] Conjugations are tied to the sentences, not the words
 * [ ] When importing 'words' into the database, make them a conjugation.
@@ -31,10 +28,10 @@
 * [ ] convert backend.words.models.words to use PartOfSpeechType from common
 * [ ] convert all the conjugation enums into choices for conjugations
 
-* [ ] Add document_port
-  * [ ] DocumentJSONAdapter
-  * [ ] DocumentAPIAdapter
-  * [ ] DocumentDjangoAdapter
+* [ ] Conjugation (Django)
+  * [ ] A conjugation has a One-to-Many relationship with a word.
+  * [ ] Conjugations are unique per word, not language/user/text, because
+        sometimes conjugations are the same for different root words
 
 ## Misc
 

@@ -10,7 +10,7 @@ from typing import Any, Optional
 from pydantic import BaseModel
 
 
-class User(BaseModel):
+class UserDB(BaseModel):
     """
     Representation of a user in the database.
     """

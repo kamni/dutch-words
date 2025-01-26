@@ -14,6 +14,7 @@
 
 * [ ] Create WordDB model
   * [ ] Words should have an ordering, relative to the sentence
+  * [ ] Add user tracking to conjugationdb, conjugationui
 * [ ] Create WordUI model
 
 * [ ] Create DocumentUIFull model

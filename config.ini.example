@@ -25,7 +25,7 @@ DatabasePort = common.adapters.database.DatabaseJSONFileAdapter
 UserPort = common.adapters.users.UserJSONFileAdapter
 WordPort = common.adapters.words.WordJSONFileAdapter
 
-[def.json.adapters.common]
+[dev.json.adapters.common]
 DatabaseFile = database
 
 [dev.json.setup]

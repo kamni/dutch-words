@@ -10,7 +10,8 @@ from common.stores.settings import SettingsStore
 from common.utils.singleton import Singleton
 
 
-TEST_CONFIG = Path(__file__).resolve().parent.parent.parent / 'config.ini'
+BASE_DIR = Path(__file__).resolve().parent.parent.parent 
+TEST_CONFIG = BASE_DIR / 'config.ini'
 
 
 class TestSettingsStore(TestCase):
@@ -65,6 +66,38 @@ class TestSettingsStore(TestCase):
         self.assertEqual(
             expected_subsection,
             settings_store._subsection,
+        )
+
+    def test_name(self):
+        settings_store = SettingsStore()
+        expected_name = 'default'
+        self.assertEqual(
+            expected_name,
+            settings_store.name,
+        )
+
+        Singleton.destroy(SettingsStore)
+
+        settings_store = SettingsStore(TEST_CONFIG)
+        expected_name = 'testDefault'
+        self.assertEqual(
+            expected_name,
+            settings_store.name,
+        )
+
+    def test_subsection(self):
+        settings_store = SettingsStore()
+        expected_config_file = 'dev.json'
+        self.assertEqual(
+            expected_config_file,
+            settings_store.subsection
+        )
+
+        settings_store._subsection = 'dev.django'
+        expected_config_file = 'dev.json'
+        self.assertEqual(
+            expected_config_file,
+            settings_store.subsection
         )
 
     def test_get_section_only(self):

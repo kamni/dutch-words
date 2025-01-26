@@ -3,8 +3,8 @@
 ## Show document list
 
 * [x] Update config.ini so it can hold multiple sections
-  * [ ] Fix tests
-  * [ ] New test: config from string, config
+  * [x] Fix tests
+  * [x] New test: config from string, config
 
 * [ ] Update AdapterStore so it can take a key, not a file
   * [ ] Fix tests

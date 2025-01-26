@@ -39,6 +39,14 @@ class SettingsStore(metaclass=Singleton):
             subsection or self._config['config.meta']['defaultconfig']
         )
 
+    @property
+    def name(self):
+        return self._config['config.meta']['name']
+
+    @property
+    def subsection(self):
+        return self._config['config.meta']['defaultconfig']
+
     def _convert_to_type(self, value: str, value_type: type):
         if value_type == bool:
             value = value.lower()

@@ -8,7 +8,7 @@ from .words import Conjugation
 from ..utils.languages import language_choices
 
 
-class LearningTracker(models.Model):
+class ProgressTracker(models.Model):
     """
     Tracks user progress with conjugations.
 

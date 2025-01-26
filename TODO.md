@@ -2,6 +2,8 @@
 
 ## Show document list
 
+* [ ] User tracking
+
 * [ ] Create Conjugation model
   * [ ] order -- relative to the sentence
   * [ ] A conjugation has a One-to-Many relationship with a word.
@@ -9,8 +11,6 @@
         sometimes conjugations are the same for different root words
   * [ ] include translations? or only on the word?
   * [ ] include user tracking
-
-* [ ] User tracking
 
 * [ ] Create WordDB model
   * [ ] Words should have an ordering, relative to the sentence

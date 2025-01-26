@@ -12,7 +12,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from .tracking import ProgressTrackingUI
+from .tracking import ProgressTrackerUI
 from .words import WordDBMinimal, WordUI
 from .users import UserUI
 from ..utils.languages import LanguageCode
@@ -101,7 +101,7 @@ class ConjugationUI(BaseModel):
     id: Optional[str] = None  # UUID. Set by the database.
     user: UserUI
     order: int  # Relative to SentenceUI
-    tracking: Optional[ProgressTrackingUI]
+    tracking: Optional[ProgressTrackerUI]
     word: WordUI
     language_code: LanguageCode
     text: str

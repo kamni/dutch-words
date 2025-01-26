@@ -2,12 +2,33 @@
 
 ## Show document list
 
-* [x] Update config.ini so it can hold multiple sections
-  * [x] Fix tests
-  * [x] New test: config from string, config
+* [ ] Create Conjugation model
+  * [ ] order -- relative to the sentence
+  * [ ] A conjugation has a One-to-Many relationship with a word.
+  * [ ] Conjugations are unique per word, not language/user/text, because
+        sometimes conjugations are the same for different root words
+  * [ ] include translations? or only on the word?
+  * [ ] include user tracking
 
-* [ ] Update AdapterStore so it can take a key, not a file
-  * [ ] Fix tests
+* [ ] User tracking
+
+* [ ] Create WordDB model
+  * [ ] Words should have an ordering, relative to the sentence
+* [ ] Create WordUI model
+
+* [ ] Create DocumentUIFull model
+
+* [ ] Conjugations are tied to the sentences, not the words
+* [ ] When importing 'words' into the database, make them a conjugation.
+      We'll add a word later.
+* [ ] move conjugations into their own file (fix init.py)
+* [ ] change Word.root_word to Word.text
+* [ ] remove common.models.config
+* [ ] remove common.models.dev
+* [ ] rename `language` field on Document to `language_code`
+* [ ] mv `utils/languages.py` to `common`
+* [ ] convert backend.words.models.words to use PartOfSpeechType from common
+* [ ] convert all the conjugation enums into choices for conjugations
 
 * [ ] Add document_port
   * [ ] DocumentJSONAdapter

@@ -18,6 +18,7 @@ class User(BaseModel):
     id: Optional[str] = None
     username: str
     password: Optional[str] = None
+    email: Optional[str] = None
     display_name: str
 
     def __hash__(self):
@@ -40,7 +41,7 @@ class User(BaseModel):
         return False
 
 
-class UserDisplay(BaseModel):
+class UserUI(BaseModel):
     """
     Representation of a logged-in user in the UI.
     NOTE: use camel-cased attributes for easier handling with javascript

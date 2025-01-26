@@ -67,46 +67,45 @@ class TestSettingsStore(TestCase):
             settings_store._subsection,
         )
 
-    '''
     def test_get_section_only(self):
-        settings_store = SettingsStore(config=TEST_CONFIG)
+        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
         expected_section = ['foo', 'baz', 'buz']
 
         self.assertEqual(
             expected_section,
-            settings_store.get('test.data'),
+            settings_store.get('data'),
         )
 
     def test_get_invalid_section(self):
-        settings_store = SettingsStore(config=TEST_CONFIG)
+        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
         self.assertIsNone(settings_store.get('foo'))
 
     def test_get_section_and_key(self):
-        settings_store = SettingsStore(config=TEST_CONFIG)
+        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
         expected_value = 'bar'
 
         self.assertEqual(
             expected_value,
-            settings_store.get('test.data', 'foo'),
+            settings_store.get('data', 'foo'),
         )
 
     def test_get_invalid_key(self):
-        settings_store = SettingsStore(config=TEST_CONFIG)
+        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
         self.assertIsNone(
-            settings_store.get('test.data', 'boz'),
+            settings_store.get('data', 'boz'),
         )
 
     def test_get_typed_key_int(self):
-        settings_store = SettingsStore(config=TEST_CONFIG)
+        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
         expected_value = 1
 
         self.assertEqual(
             expected_value,
-            settings_store.get('test.data', 'baz', int),
+            settings_store.get('data', 'baz', int),
         )
 
     def test_get_typed_key_bool(self):
-        settings_store = SettingsStore(config=TEST_CONFIG)
+        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
         expected_value = True
 
         for value in ['yes', 'Yes', 'y', 'Y', '1', 'true', 'True']:
@@ -128,8 +127,7 @@ class TestSettingsStore(TestCase):
             )
 
     def test_get_invalidly_typed_key(self):
-        settings_store = SettingsStore(config=TEST_CONFIG)
+        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
         self.assertIsNone(
-            settings_store.get('test.data', 'foo', int),
+            settings_store.get('data', 'foo', int),
         )
-    '''

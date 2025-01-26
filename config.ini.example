@@ -1,23 +1,67 @@
-# Configurations for the project
+###############################################################################
+#                                                                             #
+# Copyright (C) J Leadbetter <j@jleadbetter.com>                              #
+# Affero GPL V3                                                               #
+#                                                                             #
+# Configuration for all modules of the project                                #
+#                                                                             #
+###############################################################################
 
-[ports]
+[config.meta]
+Name = default
+DefaultConfig = dev.json
+
+###############################################################################
+#                                                                             #
+# Configuration for JSON backend                                              #
+#                                                                             #
+###############################################################################
+
+[dev.json]
+
+[dev.json.ports]
 AuthnPort = common.adapters.auth.AuthnJSONFileAdapter
 DatabasePort = common.adapters.database.DatabaseJSONFileAdapter
 UserPort = common.adapters.users.UserJSONFileAdapter
 WordPort = common.adapters.words.WordJSONFileAdapter
 
-[adapters.common]
-databaseFile = database
+[def.json.adapters.common]
+DatabaseFile = database
 
-[setup]
+[dev.json.setup]
+CreateDefaultWords = yes
 CreateDefaultUsers = yes
 
 ###############################################################################
+#                                                                             #
 # Adapter-specific settings go here.                                          #
 #                                                                             #
 # Example config:                                                             #
 #                                                                             #
-#     [adapters.AuthnPort]                                                    #
+#     [def.json.adapters.AuthnPort]                                           #
 #     KeycloakUrl = https://example.com/keycloak                              #
 #                                                                             #
 ###############################################################################
+
+[dev.json.adapters.AuthnPort]
+PasswordlessLogin = yes
+
+###############################################################################
+#                                                                             #
+# Configuration for Django ORM backend                                        #
+#                                                                             #
+###############################################################################
+
+[dev.django]
+
+[dev.django.ports]
+
+###############################################################################
+#                                                                             #
+# Configuration for API backend                                               #
+#                                                                             #
+###############################################################################
+
+[dev.api]
+
+[dev.api.ports]

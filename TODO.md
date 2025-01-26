@@ -1,24 +1,44 @@
 # TODOS
 
+## Show document list
+
+* [x] Update config.ini so it can hold multiple sections
+  * [ ] Fix tests
+  * [ ] New test: config from string, config
+
+* [ ] Update AdapterStore so it can take a key, not a file
+  * [ ] Fix tests
+
+* [ ] Add document_port
+  * [ ] DocumentJSONAdapter
+  * [ ] DocumentAPIAdapter
+  * [ ] DocumentDjangoAdapter
+
+## Misc
+
+* [ ] fix audio upload url
+* [ ] replace instances of os.path with pathlib.Path
+
 ## Django Experiment
 
-* [x] Create base models
-* [x] Meta: define uniqueness on each of the classes
-* [x] Upload a document and have it make everything
-* [x] Download audio files for sentences
-* [x] Get audio files downloading to a media folder that gets served
-* [x] Write a custom delete method for Document so it deletes everything
-      (except words that are associated with other sentences)
-* [x] Better display string for models
-* [x] Create user tracking (learned, learning, to learn, unknown)
-* [x] Remove database from version control
-* [ ] Populate tracking when conjugation is created
-* [ ] Users should only be able to see their own items
+* [ ] Don't fetch audio until first time viewing word?
+* [ ] Fix common models
+* [ ] Audio adapter
+* [ ] Tests for audio adapter
+
+
+* [x] Stressed or unstressed conjugation (think Dutch pronouns)
+* [x] Add examples per conjugation, not per word
+* [ ] Adapter for audio
 * [ ] Tests
+* [ ] Adapters for working with Django ORM
+* [ ] Ability to upload translation files -- linked to other document
 
 ## Editing UI
 
-* [ ] Django or js framework? Or both
+* [ ] UserSettings
+* [ ] Users should only be able to see their own items
+* [ ] Django or js framework? Or textual? or?
 * [ ] Display untranslated sentences
 * [ ] Create words when sentence is translated (if they don't already exist)
 * [ ] Create user tracking when a conjugation is added

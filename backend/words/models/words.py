@@ -151,6 +151,10 @@ class Conjugation(models.Model):
         casual = _('casual')
         formal = _('formal')
 
+    class Emphasis(models.TextChoices):
+        stressed = _('stressed')
+        unstressed = _('unstressed')
+
     class Meta:
         unique_together = [['user', 'language', 'text']]
 
@@ -178,6 +182,12 @@ class Conjugation(models.Model):
     )
     text = models.CharField(
         max_length=255,
+        help_text=_('Text of the conjugated word'),
+    )
+    examples = models.ManyToManyField(
+        'Sentence',
+        symmetrical=True,
+        help_text=_('Sentence examples for this word'),
     )
     article = models.CharField(
         max_length=40,
@@ -212,6 +222,12 @@ class Conjugation(models.Model):
         max_length=40,
         blank=True,
         null=True,
+    )
+    emphasis = models.CharField(
+        max_length=40,
+        blank=True,
+        null=True,
+        choices=Emphasis,
     )
 
     def __str__(self):

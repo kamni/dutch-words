@@ -2,11 +2,13 @@
 
 ## Show document list
 
+* [ ] Implement HashableMixin
 * [ ] Add document_port
   * [ ] DocumentJSONAdapter
   * [ ] DocumentDjangoORMAdapter
   * [ ] DocumentAPIAdapter
 * [ ] Tests for adapters
+* [ ] Tests for database adapter
 * [ ] Import document for testing
 * [ ] Django API
 

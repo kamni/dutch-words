@@ -14,6 +14,11 @@ interested in studying other languages to fork this and improve on the word
 models.
 
 
+## Requirements
+
+* Python >= 3.12
+
+
 ## Development
 
 Install python requirements:

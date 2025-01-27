@@ -8,7 +8,6 @@ Implementations of WordPort for retrieving words from storage.
 import json
 import os
 import pathlib
-from enum import Enum
 from typing import Dict, List, Optional
 
 from common.models.words import Word

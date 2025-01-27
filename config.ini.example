@@ -22,11 +22,13 @@ DefaultConfig = dev.json
 [dev.json.ports]
 AuthnPort = common.adapters.auth.AuthnJSONFileAdapter
 DatabasePort = common.adapters.database.DatabaseJSONFileAdapter
+DocumentPort = common.adapters.documents.DocumentJSONFileAdapter
 UserPort = common.adapters.users.UserJSONFileAdapter
 WordPort = common.adapters.words.WordJSONFileAdapter
 
 [dev.json.adapters.common]
 DatabaseFile = database
+DataDir = data
 
 [dev.json.setup]
 CreateDefaultWords = yes

@@ -10,7 +10,7 @@ import os
 
 from common.models.database import Database
 from common.ports.database import DatabaseError, DatabasePort
-from common.utils.file import DatabaseFileMixin
+from common.utils.file import JSONFileMixin
 
 
 class DatabaseJSONFileAdapter(DatabaseFileMixin, DatabasePort):
@@ -19,13 +19,13 @@ class DatabaseJSONFileAdapter(DatabaseFileMixin, DatabasePort):
     """
 
     def __init__(self, **kwargs):
-        self.database = self._get_db_filename(
-            kwargs['databasefile'],
-            'json',
+        self.initialize_database(
+            data_dir=kwargs.get('datadir'),
+            base_database_name=kwargs.get('databasefile'),
         )
 
     def _write(self, database: Database):
-        with open(self.database, 'w') as output_file:
+        with open(self.database_file, 'w') as output_file:
             json.dump(database.model_dump(), output_file, indent=2)
 
     def initialize_database(self):
@@ -50,7 +50,7 @@ class DatabaseJSONFileAdapter(DatabaseFileMixin, DatabasePort):
         :raises: DatabaseError if something goes wrong.
         """
         try:
-            if os.path.exists(self.database):
-                os.remove(self.database)
+            Path(self.database_file).unlink()
+            self._database = {}
         except Exception as ex:
             raise DatabaseError(str(ex))

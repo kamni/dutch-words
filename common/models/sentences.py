@@ -7,12 +7,13 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
+from .base import HashableDBMixin
 from .conjugations import ConjugationDB, ConjugationDBMinimal, ConjugationUI
 from .users import UserUI
 from ..utils.language import LanguageCode
 
 
-class SentenceDBMinimal(BaseModel):
+class SentenceDBMinimal(HashableDBMixin, BaseModel):
     """
     Minimal representation of a sentence stored in the database
     """
@@ -21,8 +22,12 @@ class SentenceDBMinimal(BaseModel):
     document_id: str  # UUID
     order: int  # Relative to the DocumentDB
 
+    @property
+    def unique_together(self):
+        return ['id', 'document_id', 'order']
 
-class SentenceDB(BaseModel):
+
+class SentenceDB(HashableDBMixin, BaseModel):
     """
     Representation of a sentence to be stored in the database
     """
@@ -35,6 +40,10 @@ class SentenceDB(BaseModel):
     translations: Optional[List[SentenceDBMinimal]] = None
     order: int  # Relative to the DocumentDB
     conjugations: List[ConjugationDBMinimal]
+
+    @property
+    def unique_together(self):
+        return ['user_id', 'language_code', 'text']
 
 
 class SentenceUIMinimal(BaseModel):

@@ -35,6 +35,16 @@ class DocumentJSONFileAdapter(JSONFileMixin, DocumentPort):
         """
 
         database = self.read_json()
+        try:
+            user = list(filter(
+                lambda x: x.id == user_id,
+                database.users,
+            ))[0]
+        except IndexError:
+            # If user isn't found, return an empty list.
+            # We don't want to inform hackers that a user doesn't exist.
+            return []
+
         documents = filter(
             lambda x: x.user_id == user_id,
             database.documents,
@@ -44,8 +54,21 @@ class DocumentJSONFileAdapter(JSONFileMixin, DocumentPort):
                 lambda x: x.language_code == language_code,
                 documents,
             )
-        return list(documents)
 
+        documents_ui = [
+            {
+                id: document.id,
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    displayName: user.display_name,
+                },
+                displayName: document.display_name,
+                languageCode: document.language_code,
+            }
+            for document in documents
+        ]
+        return documents_ui
 
 
 class DocumentAPIAdapter(DocumentPort):

@@ -7,52 +7,53 @@ For example, the English verb 'to go' has multiple conjugations.
 such as 'went', 'goes', 'will have gone'.
 """
 
-from enum import Enum
+from enum import StrEnum
 from typing import Optional
 
 from pydantic import BaseModel
 
+from .base import HashableDBMixin
 from .tracking import ProgressTrackerUI
 from .words import WordDBMinimal, WordUI
 from .users import UserUI
 from ..utils.languages import LanguageCode
 
 
-class Case(str, Enum):
+class Case(StrEnum):
     nominative = 'nominative'
     accusative = 'accusative'
     dative = 'dative'
     genitive = 'genitive'
 
 
-class Person(str, Enum):
+class Person(StrEnum):
     first = 'first'
     second = 'second'
     third = 'third'
 
 
-class Plurality(str, Enum):
+class Plurality(StrEnum):
     single = 'single'
     plural = 'plural'
 
 
-class Gender(str, Enum):
+class Gender(StrEnum):
     neutral = 'neutral'
     feminine = 'feminine'
     masculine = 'masculine'
 
 
-class Politeness(str, Enum):
+class Politeness(StrEnum):
     casual = 'casual'
     formal = 'formal'
 
 
-class Emphasis(str, Enum):
+class Emphasis(StrEnum):
     stressed = 'stressed'
     unstressed = 'unstressed'
 
 
-class ConjugationDBMinimal(BaseModel):
+class ConjugationDBMinimal(HashableDBMixin, BaseModel):
     """
     Minimal representation of a conjugation stored in the database
     """
@@ -62,8 +63,12 @@ class ConjugationDBMinimal(BaseModel):
     tracking_id: str  # UUID
     order: int  # Relative to the SentenceDB
 
+    @property
+    def unique_together(self):
+        return ['id', 'sentence_id', 'order']
 
-class ConjugationDB(BaseModel):
+
+class ConjugationDB(HashableDBMixin, BaseModel):
     """
     Representation of a conjugation in the Database.
     """
@@ -76,7 +81,7 @@ class ConjugationDB(BaseModel):
     language_code: LanguageCode
     text: str
     translations: Optional[List[ConjugationDBMinimal]] = None
-    examples: Optional[List['SentenceDBMinimal']] = None
+    sentences: Optional[List['SentenceDBMinimal']] = None
     article: Optional[str] = None
     case: Optional[Case] = None
     gender: Optional[Gender] = None
@@ -84,6 +89,10 @@ class ConjugationDB(BaseModel):
     politeness: Optional[Politeness] = None
     emphasis: Optional[Emphasis] = None
     tense: Optional[str] = None
+
+    @property
+    def unique_together(self):
+        return ['user_id', 'language_code', 'text']
 
 
 class ConjugationUIMinimal(BaseModel):

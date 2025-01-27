@@ -10,16 +10,17 @@ Variations of 'to go' -- like 'went' or 'goes' are stored as Conjugations.
 import importlib
 import sys
 import uuid
-from enum import Enum
+from enum import StrEnum
 from functools import partial
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
+from .base import HashableDBMixin
 from ..utils.languages import LanguageCode
 
 
-class PartOfSpeechType(str, Enum):
+class PartOfSpeechType(StrEnum):
     """
     Grammatical part of speech.
 
@@ -50,16 +51,20 @@ class PartOfSpeechType(str, Enum):
     expression = 'expression'
 
 
-class WordDBMinimal(BaseModel):
+class WordDBMinimal(HashableDBMixin, BaseModel):
     """
     Minimal representation of a word in the database
     """
 
     id: str  # UUID
-    conjugation_id:  # UUID
+    conjugation_id: str  # UUID
+
+    @property
+    def unique_together(self):
+        return ['id', 'conjugation_id']
 
 
-class WordDB(BaseModel):
+class WordDB(HashableDBMixin, BaseModel):
     """
     Database representation of a word
     """
@@ -72,6 +77,10 @@ class WordDB(BaseModel):
     audio_file: Optional[str] = None  # Relative path in the file system
     translations: Optional[List[WordDBMinimal]] = None
     conjugations: List['ConjugationDBMinimal']
+
+    @property
+    def unique_together(self):
+        return ['user_id', 'language_code', 'type', 'text']
 
 
 class WordUIMinimal(BaseModel):

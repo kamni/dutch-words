@@ -1,7 +1,8 @@
 audio/*
+backend/db.sqlite3
 backend/uploads/*
 config.ini
 data/database.json
-backend/db.sqlite3
+test/data/database.json
 /node_modules/*
 */__pycache__/*

@@ -3,16 +3,17 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
-from enum import Enum
+from enum import StrEnum
 from typing import Optional
 
 from pydantic import BaseModel
 
-from .models.users import UserUI
+from .base import HashableDBMixin:
+from .users import UserUI
 from ..utils.languages import LanguageCode
 
 
-class TrackerStatus(str, Enum):
+class TrackerStatus(StrEnum):
     """
     Status explanations:
 
@@ -37,7 +38,7 @@ class TrackerStatus(str, Enum):
     hidden = 'hidden'
 
 
-class ProgressTrackerDB(BaseModel):
+class ProgressTrackerDB(HashableDBMixin, BaseModel):
     """
     Tracks user progress with conjugations.
     """
@@ -47,6 +48,10 @@ class ProgressTrackerDB(BaseModel):
     conjugation_id: str  # UUID
     language_code: LanguageCode
     status: Optional[TrackerStatus] = TrackerStatus.waiting_to_learn
+
+    @property
+    def unique_together(self):
+        return ['user_id', 'conjugation_id']
 
 
 class ProgressTrackerUI(BaseModel):

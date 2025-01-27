@@ -7,12 +7,13 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
+from .base import HashableDBMixin
 from .sentences import SentenceDB, SentenceUI
 from .users import UserUI
 from ..utils.languages import LanguageCode
 
 
-class DocumentDBMinimal(BaseModel):
+class DocumentDBMinimal(HashableDBMixin, BaseModel):
     """
     Minimal representation of a document in the database
     """
@@ -22,8 +23,12 @@ class DocumentDBMinimal(BaseModel):
     display_name: str
     language_code: LanguageCode
 
+    @property
+    def unique_together(self):
+        return ['user_id', 'display_name', 'language_code']
 
-class DocumentDB(BaseModel):
+
+class DocumentDB(HashableDBMixin, BaseModel):
     """
     Representation of a document to be stored in the database
     """
@@ -35,6 +40,10 @@ class DocumentDB(BaseModel):
     doc_file: str  # Relative path in file system
     sentences: List[SentenceDBMinimal]
     translations: Optional[List[DocumentDBMinimal]] = None
+
+    @property
+    def unique_together(self):
+        return ['user_id', 'display_name', 'language_code']
 
 
 class DocumentUIMinimal(BaseModel):

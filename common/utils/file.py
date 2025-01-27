@@ -12,7 +12,8 @@ from pydantic import BaseModel
 from ..models.database import Database
 
 
-DATA_DIR = Path(__file__).resolve().parent.parent.parent / 'data'
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+DATA_DIR = 'data'
 
 
 class JSONFileMixin:
@@ -41,9 +42,9 @@ class JSONFileMixin:
             Default is 'database'.
         """
 
-        data_dir = data_dir or DATA_DIR
         base_database_name = base_database_name or 'database'
-        self._database_file = data_dir / f'{base_database_name}.json'
+        data_dir = data_dir or DATA_DIR
+        self._database_file = BASE_DIR / data_dir / f'{base_database_name}.json'
         self.read_db()
 
     @property

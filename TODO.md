@@ -2,7 +2,6 @@
 
 ## Show document list
 
-* [ ] Get other tests working
 * [ ] Tests for UserUI.from_db
 * [ ] Tests for DocumentUIMinimal.from_db
 

@@ -5,13 +5,11 @@ Affero GPL v3
 
 import random
 import string
-import uuid
 
 from common.models.sentences import SentenceDBMinimal
 from common.utils.languages import LanguageCode
 
-from common.models.documents import SentenceDBMinimal
-
+from .random_data import random_uuid
 
 def create_sentence_db_minimal(**kwargs):
     """
@@ -22,11 +20,11 @@ def create_sentence_db_minimal(**kwargs):
     """
 
     random_data = {
-        id: uuid.uuid4(),
-        document_id: uuid.uuid4(),
-        order: random.randrange(0, 20),
+        'id': random_uuid(),
+        'document_id': random_uuid(),
+        'order': random.randrange(0, 20),
     }
     random_data.update(kwargs)
 
-    sentence = SentenceDBMinimal(**kwargs)
+    sentence = SentenceDBMinimal(**random_data)
     return sentence

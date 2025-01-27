@@ -20,5 +20,5 @@ class AudioFileUI(BaseModel):
     file_path: str
 
     @property
-    def unique_together(self):
+    def unique_fields(self):
         return ['file_path']

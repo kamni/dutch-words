@@ -24,7 +24,7 @@ class DocumentDBMinimal(HashableDBMixin, BaseModel):
     language_code: LanguageCode
 
     @property
-    def unique_together(self):
+    def unique_fields(self):
         return ['user_id', 'display_name', 'language_code']
 
 
@@ -42,7 +42,7 @@ class DocumentDB(HashableDBMixin, BaseModel):
     translations: Optional[List[DocumentDBMinimal]] = None
 
     @property
-    def unique_together(self):
+    def unique_fields(self):
         return ['user_id', 'display_name', 'language_code']
 
 
@@ -56,6 +56,24 @@ class DocumentUIMinimal(BaseModel):
     user: UserUI
     displayName: str
     languageCode: LanguageCode
+
+    @classmethod
+    def from_document_db(
+        cls,
+        document: DocumentDB,
+        user: UserUI,
+    ) -> 'DocumentUIMinimal':
+        """
+        Convert a DocumentDB into a DocumentUIMinimal
+        """
+
+        document_ui = cls(
+            id=document.id,
+            user=user,
+            displayName=document.display_name,
+            languageCode=document.language_code,
+        )
+        return document_ui
 
 
 class DocumentUI(BaseModel):

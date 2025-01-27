@@ -6,6 +6,7 @@ Affero GPL v3
 from typing import List, Optional
 
 from ..models.documents import DocumentDB, DocumentUIMinimal
+from ..models.users import UserUI
 from ..ports.documents import DocumentPort
 from ..utils.file import JSONFileMixin
 from ..utils.languages import LanguageCode
@@ -37,7 +38,7 @@ class DocumentJSONFileAdapter(JSONFileMixin, DocumentPort):
         :return: List of documents
         """
 
-        database = self.read_json()
+        database = self.read_db()
         try:
             user = list(filter(
                 lambda x: x.id == user_id,
@@ -59,16 +60,10 @@ class DocumentJSONFileAdapter(JSONFileMixin, DocumentPort):
             )
 
         documents_ui = [
-            {
-                id: document.id,
-                user: {
-                    id: user.id,
-                    username: user.username,
-                    displayName: user.display_name,
-                },
-                displayName: document.display_name,
-                languageCode: document.language_code,
-            }
+            DocumentUIMinimal.from_document_db(
+                document,
+                UserUI.from_user_db(user),
+            )
             for document in documents
         ]
         return documents_ui

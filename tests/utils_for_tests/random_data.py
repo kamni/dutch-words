@@ -6,6 +6,7 @@ Affero GPL v3
 import os
 import random
 import string
+import uuid
 from typing import Optional
 
 from common.utils.languages import LanguageCode
@@ -27,7 +28,7 @@ def random_file_path(
 ) -> str:
     if not base_path:
         num_parts = random.randrange(3, 5)
-        base_path = os.path.join([
+        base_path = os.path.join(*[
             random_string() for i in range(num_parts)
         ])
     if not extension:
@@ -57,3 +58,7 @@ def random_string(min_size: int=8, max_size: int=12) -> str:
         for i in range(random.randrange(min_size, max_size))
     ])
     return data_str
+
+
+def random_uuid():
+    return str(uuid.uuid4())

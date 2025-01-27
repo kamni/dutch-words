@@ -22,18 +22,21 @@ class TestDocumentJSONFileAdapter(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.document_adapter = DocumentJSONFileAdapter(
-            datadir='test/data',
+            datadir='tests/data',
             databasefile='database',
         )
 
     def setUp(self):
-        self.document_adapter.initialize_database(force_reread=True)
+        self.document_adapter.read_db(force_reread=True)
+        self.document_adapter._database.users = [
+            create_user_db() for i in range(2)
+        ]
 
     def tearDown(self):
-        self.document_adapter.initialize_database(force_reread=True)
+        self.document_adapter.read_db(force_reread=True)
 
     def test_read_all_for_user(self):
-        user1 = self.document_adapter._database['users'][0]
+        user1 = self.document_adapter._database.users[0]
         expected_documents = [
             create_document_db(
                 user_id=user1.id,
@@ -48,10 +51,10 @@ class TestDocumentJSONFileAdapter(TestCase):
             )
             for i in range(3)
         ])
-        self.document_adapter._database['documents'].extend(expected_documents)
+        self.document_adapter._database.documents.extend(expected_documents)
 
-        user2 = self.document_adapter._database['users'][1]
-        self.document_adapter._database['documents'].extend([
+        user2 = self.document_adapter._database.users[1]
+        self.document_adapter._database.documents.extend([
             create_document_db(
                 user_id=user2.id,
             )

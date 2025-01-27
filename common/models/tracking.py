@@ -50,7 +50,7 @@ class ProgressTrackerDB(HashableDBMixin, BaseModel):
     status: Optional[TrackerStatus] = TrackerStatus.waiting_to_learn
 
     @property
-    def unique_together(self):
+    def unique_fields(self):
         return ['user_id', 'conjugation_id']
 
 

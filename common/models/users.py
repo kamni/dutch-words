@@ -9,10 +9,10 @@ from typing import Any, Optional
 
 from pydantic import BaseModel
 
-from .base import HashableDBMixin
+from .base import HashableMixin
 
 
-class UserDB(HashableDBMixin, BaseModel):
+class UserDB(HashableMixin, BaseModel):
     """
     Representation of a user in the database.
     """
@@ -24,11 +24,11 @@ class UserDB(HashableDBMixin, BaseModel):
     display_name: str
 
     @property
-    def unique_together(self):
+    def unique_fields(self):
         return ['username']
 
 
-class UserUI(BaseModel):
+class UserUI(HashableMixin, BaseModel):
     """
     Representation of a logged-in user in the UI.
     NOTE: use camel-cased attributes for easier handling with javascript
@@ -48,7 +48,7 @@ class UserUI(BaseModel):
         """
 
         user_ui = cls(
-            user_id=user.id,
+            id=user.id,
             username=user.username,
             displayName=user.display_name or user.username,
         )

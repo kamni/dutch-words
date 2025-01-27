@@ -14,10 +14,10 @@ from common.models.errors import ObjectExistsError, ObjectNotFoundError
 from common.models.database import Database
 from common.models.users import User
 from common.ports.users import UserPort
-from common.utils.file import DatabaseFileMixin, JSONFileMixin
+from common.utils.file import JSONFileMixin
 
 
-class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
+class UserJSONFileAdapter(JSONFileMixin, UserPort):
     """
     Handler for JSON file database for Users.
 
@@ -26,9 +26,9 @@ class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
     """
 
     def __init__(self, **kwargs):
-        self.database = self._get_db_filename(
-            kwargs['databasefile'],
-            'json',
+        self.initialize_database(
+            data_dir=kwargs.get('datadir'),
+            base_database_name=kwargs.get('databasefile'),
         )
 
     def _is_duplicate(
@@ -60,7 +60,7 @@ class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
         :return: Created User object.
         :raises: ObjectExistsError if the object already exists.
         """
-        database = self._read_json()
+        database = self.read_db()
 
         if self._is_duplicate(database.users, user):
             raise ObjectExistsError(
@@ -70,7 +70,7 @@ class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
         self._set_password(user, user.password or '')
 
         database.users.append(user)
-        self._write_json(database)
+        self.write_db()
         return user
 
     def create_in_batch(self, users: List[User]) -> List[User]:
@@ -83,14 +83,14 @@ class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
 
         :return: List of created users.
         """
-        database = self._read_json()
+        database = self.read_db()
         non_duplicates = list(set(users).difference(set(database.users)))
         if non_duplicates:
             for user in non_duplicates:
                 self._set_id(user)
                 self._set_password(user, user.password or '')
                 database.users.append(user)
-            self._write_json(database)
+            self.write_db()
         return non_duplicates
 
     def read(self, username: str) -> User:
@@ -104,7 +104,7 @@ class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
         :raises: ObjectNotFoundError if user doesn't exist
         """
 
-        database = self._read_json()
+        database = self.read_db()
         user_match = list(
             filter(
                 lambda x: x.username == username,

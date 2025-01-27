@@ -3,6 +3,6 @@ backend/db.sqlite3
 backend/uploads/*
 config.ini
 data/database.json
-test/data/database.json
+tests/data/database.json
 /node_modules/*
 */__pycache__/*

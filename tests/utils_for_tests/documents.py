@@ -4,15 +4,16 @@ Affero GPL v3
 """
 
 import string
-import uuid
 
 from common.models.documents import DocumentDB
 from common.utils.languages import LanguageCode
 
 from common.models.documents import DocumentDB
 from tests.utils_for_tests.random_data import (
+    random_file_path,
     random_language_code,
     random_string,
+    random_uuid,
 )
 from tests.utils_for_tests.sentences import create_sentence_db_minimal
 
@@ -25,17 +26,17 @@ def create_document_db(**kwargs):
     :kwargs: arguments that will be passed to DocumentDB during creation.
     """
 
-    doc_id = uuid.uuid4(),
+    doc_id = random_uuid()
     random_data = {
-        id: doc_id,
-        user_id: uuid.uuid4(),
-        display_name: random_string().title(),
-        language_code: random_language_code(),
-        doc_file: random_file_path(),
-        sentences: [create_sentence_db_minimal(document_id=doc_id)],
-        translations: [],
+        'id': doc_id,
+        'user_id': random_uuid(),
+        'display_name': random_string().title(),
+        'language_code': random_language_code(),
+        'doc_file': random_file_path(),
+        'sentences': [create_sentence_db_minimal(document_id=doc_id)],
+        'translations': [],
     }
     random_data.update(kwargs)
 
-    document = DocumentDB(**kwargs)
+    document = DocumentDB(**random_data)
     return document

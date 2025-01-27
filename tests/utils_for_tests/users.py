@@ -5,7 +5,6 @@ Affero GPL v3
 
 import random
 import string
-import uuid
 
 from common.models.users import UserDB
 
@@ -13,6 +12,7 @@ from .random_data import (
     random_email,
     random_password,
     random_string,
+    random_uuid,
 )
 
 
@@ -26,11 +26,11 @@ def create_user_db(**kwargs) -> UserDB:
 
     username = random_string()
     random_data = {
-        id: uuid.uuid4(),
-        username: username,
-        password: random_password(),
-        email: random_email(username=username),
-        display_name: username.title(),
+        'id': random_uuid(),
+        'username': username,
+        'password': random_password(),
+        'email': random_email(username=username),
+        'display_name': username.title(),
     }
     random_data.update(kwargs)
 

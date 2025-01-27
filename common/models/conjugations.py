@@ -14,7 +14,6 @@ from pydantic import BaseModel
 
 from .base import HashableDBMixin
 from .tracking import ProgressTrackerUI
-from .words import WordDBMinimal, WordUI
 from .users import UserUI
 from ..utils.languages import LanguageCode
 
@@ -64,7 +63,7 @@ class ConjugationDBMinimal(HashableDBMixin, BaseModel):
     order: int  # Relative to the SentenceDB
 
     @property
-    def unique_together(self):
+    def unique_fields(self):
         return ['id', 'sentence_id', 'order']
 
 
@@ -77,7 +76,6 @@ class ConjugationDB(HashableDBMixin, BaseModel):
     user_id: str  # UUID.
     tracking_id: Optional[str]  # UUID
     order: int  # Relative to SentenceDB
-    word: WordDBMinimal
     language_code: LanguageCode
     text: str
     translations: Optional[List[ConjugationDBMinimal]] = None
@@ -91,7 +89,7 @@ class ConjugationDB(HashableDBMixin, BaseModel):
     tense: Optional[str] = None
 
     @property
-    def unique_together(self):
+    def unique_fields(self):
         return ['user_id', 'language_code', 'text']
 
 
@@ -111,7 +109,6 @@ class ConjugationUI(BaseModel):
     user: UserUI
     order: int  # Relative to SentenceUI
     tracking: Optional[ProgressTrackerUI]
-    word: WordUI
     language_code: LanguageCode
     text: str
     translations: Optional[List[ConjugationUIMinimal]] = None

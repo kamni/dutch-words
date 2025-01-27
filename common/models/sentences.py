@@ -8,7 +8,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from .base import HashableDBMixin
-from .conjugations import ConjugationDB, ConjugationDBMinimal, ConjugationUI
+from .conjugations import ConjugationDBMinimal, ConjugationUI
 from .users import UserUI
 from ..utils.languages import LanguageCode
 
@@ -23,7 +23,7 @@ class SentenceDBMinimal(HashableDBMixin, BaseModel):
     order: int  # Relative to the DocumentDB
 
     @property
-    def unique_together(self):
+    def unique_fields(self):
         return ['id', 'document_id', 'order']
 
 
@@ -42,7 +42,7 @@ class SentenceDB(HashableDBMixin, BaseModel):
     conjugations: List[ConjugationDBMinimal]
 
     @property
-    def unique_together(self):
+    def unique_fields(self):
         return ['user_id', 'language_code', 'text']
 
 

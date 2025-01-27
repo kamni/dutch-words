@@ -16,7 +16,8 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
-from .base import HashableDBMixin
+from .base import HashableMixin
+from .conjugations import ConjugationDBMinimal, ConjugationUI
 from .users import UserUI
 from ..utils.languages import LanguageCode
 
@@ -35,7 +36,7 @@ class PartOfSpeechType(StrEnum):
       They should be paired with either a verb, noun, or an expression.
 
     * Expressions are for multiple words that mean something different
-      than their individual words, and are normally learned together.
+      than their individual words, and are normally learned fields.
       Examples: 'Merry Christmas' and 'It's raining cats and dogs'
 
     * The 'unknown' type is used for newly imported words,
@@ -52,7 +53,7 @@ class PartOfSpeechType(StrEnum):
     expression = 'expression'
 
 
-class WordDBMinimal(HashableDBMixin, BaseModel):
+class WordDBMinimal(HashableMixin, BaseModel):
     """
     Minimal representation of a word in the database
     """
@@ -61,11 +62,11 @@ class WordDBMinimal(HashableDBMixin, BaseModel):
     conjugation_id: str  # UUID
 
     @property
-    def unique_together(self):
-        return ['id', 'conjugation_id']
+    def unique_fields(self):
+        return ['id']
 
 
-class WordDB(HashableDBMixin, BaseModel):
+class WordDB(HashableMixin, BaseModel):
     """
     Database representation of a word
     """
@@ -77,14 +78,14 @@ class WordDB(HashableDBMixin, BaseModel):
     text: str
     audio_file: Optional[str] = None  # Relative path in the file system
     translations: Optional[List[WordDBMinimal]] = None
-    conjugations: List['ConjugationDBMinimal']
+    conjugations: List[ConjugationDBMinimal]
 
     @property
-    def unique_together(self):
+    def unique_fields(self):
         return ['user_id', 'language_code', 'type', 'text']
 
 
-class WordUIMinimal(BaseModel):
+class WordUIMinimal(HashableMixin, BaseModel):
     """
     Minimal representation of the word in the UI.
     Does not include conjugations
@@ -96,8 +97,12 @@ class WordUIMinimal(BaseModel):
     text: str
     audioFile: Optional[str] = None  # Relative path from the UI's perspective
 
+    @property
+    def unique_fields(self):
+        return ['id']
 
-class WordUI(BaseModel):
+
+class WordUI(HashableMixin, BaseModel):
     """
     Full representation of a word in the UI.
     Includes conjugations with user tracking information.
@@ -110,4 +115,8 @@ class WordUI(BaseModel):
     text: str
     audioFile: Optional[str] = None  # Relative path from the UI's perspective
     translations: Optional[List[WordUIMinimal]] = None
-    conjugations: List['ConjugationUI']
+    conjugations: List[ConjugationUI]
+
+    @property
+    def unique_fields(self):
+        return ['id']

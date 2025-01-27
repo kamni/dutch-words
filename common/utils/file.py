@@ -65,11 +65,11 @@ class JSONFileMixin:
             return self._database
 
         # Ensure the file exists
-        Path(self.database_file).touch()
+        Path(self.database_file).touch(exist_ok=True)
 
         database = Database()
         try:
-            with open(self.database, 'r') as input_file:
+            with open(self.database_file, 'r') as input_file:
                 data = json.load(input_file) or data
 
             database = Database.model_validate(data)
@@ -77,7 +77,8 @@ class JSONFileMixin:
             # File is empty; ignore
             pass
 
-        return database
+        self._database = database
+        return self._database
 
     def write_db(self, database: Optional[Database]=None):
         """

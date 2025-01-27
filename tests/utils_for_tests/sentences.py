@@ -7,7 +7,7 @@ import random
 import string
 import uuid
 
-from common.models.user import SentenceDBMinimal
+from common.models.sentences import SentenceDBMinimal
 from common.utils.languages import LanguageCode
 
 from common.models.documents import SentenceDBMinimal

@@ -3,9 +3,12 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
+from typing import List, Optional
+
 from ..models.documents import DocumentDB, DocumentUIMinimal
 from ..ports.documents import DocumentPort
 from ..utils.file import JSONFileMixin
+from ..utils.languages import LanguageCode
 
 
 class DocumentJSONFileAdapter(JSONFileMixin, DocumentPort):

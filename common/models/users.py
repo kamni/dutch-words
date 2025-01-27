@@ -39,7 +39,7 @@ class UserUI(BaseModel):
     displayName: Optional[str] = None
 
     @classmethod
-    def from_user(cls, user: User) -> 'UserDisplay':
+    def from_user_db(cls, user: UserDB) -> 'UserUI':
         """
         Convert a database user into a UI-friendly user object.
 
@@ -47,9 +47,9 @@ class UserUI(BaseModel):
         :return: UserDisplay for the UI.
         """
 
-        user_display = UserDisplay(
+        user_ui = cls(
             user_id=user.id,
             username=user.username,
             displayName=user.display_name or user.username,
         )
-        return user_display
+        return user_ui

@@ -68,7 +68,7 @@ class AuthnJSONFileAdapter(AuthnPort):
             raise AuthError(f'ERROR: {ex}')
 
         if self._password_valid(user, password):
-            user_display = UserDisplay.from_user(user)
+            user_display = UserDisplay.from_user_db(user)
             return user_display
         else:
             # Error information for logging purposes only.

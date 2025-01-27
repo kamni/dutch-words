@@ -26,7 +26,7 @@ class JSONFileMixin:
 
     _database = None
 
-    def initialize_db(
+    def initialize_database(
         self,
         data_dir: Optional[str]=None,
         base_database_name: Optional[str]=None,

@@ -11,7 +11,7 @@ from typing import Optional
 from common.utils.languages import LanguageCode
 
 
-def random_email(username: Optional[str]=None, domain: Optional[str]=None) -> str
+def random_email(username: Optional[str]=None, domain: Optional[str]=None) -> str:
     username = username or random_string()
     if not domain:
         company = random_string()

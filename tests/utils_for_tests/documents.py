@@ -6,7 +6,7 @@ Affero GPL v3
 import string
 import uuid
 
-from common.models.user import DocumentDB
+from common.models.documents import DocumentDB
 from common.utils.languages import LanguageCode
 
 from common.models.documents import DocumentDB

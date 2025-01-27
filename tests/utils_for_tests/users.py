@@ -7,8 +7,9 @@ import random
 import string
 import uuid
 
-from common.models.user import UserDB
-from tests.utils_for_test.random_data import (
+from common.models.users import UserDB
+
+from .random_data import (
     random_email,
     random_password,
     random_string,
@@ -26,7 +27,7 @@ def create_user_db(**kwargs) -> UserDB:
     username = random_string()
     random_data = {
         id: uuid.uuid4(),
-        username: username
+        username: username,
         password: random_password(),
         email: random_email(username=username),
         display_name: username.title(),

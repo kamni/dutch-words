@@ -4,6 +4,7 @@ Affero GPL v3
 """
 
 from abc import ABC, abstractmethod
+from typing import List, Optional
 
 from ..models.documents import DocumentUIMinimal
 from ..models.users import UserUI

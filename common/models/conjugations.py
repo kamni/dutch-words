@@ -8,7 +8,7 @@ such as 'went', 'goes', 'will have gone'.
 """
 
 from enum import StrEnum
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 

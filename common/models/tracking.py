@@ -8,7 +8,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from .base import HashableDBMixin:
+from .base import HashableDBMixin
 from .users import UserUI
 from ..utils.languages import LanguageCode
 

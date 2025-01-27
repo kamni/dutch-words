@@ -8,7 +8,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from .base import HashableDBMixin
-from .sentences import SentenceDB, SentenceUI
+from .sentences import SentenceDB, SentenceDBMinimal, SentenceUI
 from .users import UserUI
 from ..utils.languages import LanguageCode
 
@@ -67,5 +67,5 @@ class DocumentUI(BaseModel):
     id: str  # UUID
     user: UserUI
     displayName: str
-    languageCode: languageCode
+    languageCode: LanguageCode
     sentences: List[SentenceUI]

@@ -2,6 +2,11 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from pathlib import Path
+
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
+if PROJECT_DIR not in sys.path:
+    sys.path.append(PROJECT_DIR)
 
 
 def main():

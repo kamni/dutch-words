@@ -12,7 +12,7 @@ from typing import List
 
 from common.models.errors import ObjectExistsError, ObjectNotFoundError
 from common.models.database import Database
-from common.models.users import User
+from common.models.users import UserDB
 from common.ports.users import UserPort
 from common.utils.file import JSONFileMixin
 
@@ -33,23 +33,23 @@ class UserJSONFileAdapter(JSONFileMixin, UserPort):
 
     def _is_duplicate(
         self,
-        existing_users: List[User],
-        new_user: List[User],
+        existing_users: List[UserDB],
+        new_user: List[UserDB],
     ) -> bool:
         return new_user in existing_users
 
-    def _set_id(self, user: User):
+    def _set_id(self, user: UserDB):
         if not user.id:
             user.id = str(uuid.uuid4())
 
-    def _set_password(self, user: User, password: str):
+    def _set_password(self, user: UserDB, password: str):
         # REMINDER: don't use this in production
         salt = str(time.monotonic())
         pswd_str = f'{salt}{password}'.encode('utf-8')
         phash = hashlib.sha256(pswd_str).hexdigest()
         user.password = f'{salt}${phash}'
 
-    def create(self, user: User) -> User:
+    def create(self, user: UserDB) -> UserDB:
         """
         Create a new user in the database.
 
@@ -73,7 +73,7 @@ class UserJSONFileAdapter(JSONFileMixin, UserPort):
         self.write_db()
         return user
 
-    def create_in_batch(self, users: List[User]) -> List[User]:
+    def create_in_batch(self, users: List[UserDB]) -> List[UserDB]:
         """
         Batch create multiple users.
         Ignores users that already exist.
@@ -93,7 +93,7 @@ class UserJSONFileAdapter(JSONFileMixin, UserPort):
             self.write_db()
         return non_duplicates
 
-    def read(self, username: str) -> User:
+    def read(self, username: str) -> UserDB:
         """
         Read a single User from the database.
 

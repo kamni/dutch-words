@@ -20,11 +20,12 @@ class DatabasePort(ABC):
     Commands to manage the app database
     """
 
-    def initialize_database(self):
+    def initialize_database(self, data_dir: str, base_database_name: str):
         """
         Set up the expected tables in the database.
         Ignores if tables already exist.
 
+        
         :raises: DatabaseError if something goes wrong.
         """
         pass

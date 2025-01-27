@@ -7,7 +7,7 @@ Interfaces for authentication and authentication
 
 from abc import ABC, abstractmethod
 
-from common.models.users import UserDisplay
+from common.models.users import UserUI
 
 
 class AuthError(Exception):
@@ -27,21 +27,21 @@ class AuthnPort(ABC):
     # For right now, just working with the json database.
 
     @abstractmethod
-    def login(self, username: str, password: str) -> UserDisplay:
+    def login(self, username: str, password: str) -> UserUI:
         """
         Log the user into the system.
 
         :username: username of the person logging in.
         :password: password of the person loggint in.
 
-        :return: UserDisplay for the UI
+        :return: UserUI for the UI
         :raises: AuthError for problems communicating with the authn backend;
             AuthValidationError when authentication is invalid.
         """
         pass
 
     @abstractmethod
-    def logout(self, user: UserDisplay) -> bool:
+    def logout(self, user: UserUI) -> bool:
         """
         Logs a user out of the system.
 

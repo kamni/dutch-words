@@ -2,13 +2,15 @@
 
 ## Show document list
 
-* [ ] Cleanup HashableDBMixin references
 * [ ] Add document_port
-  * [ ] DocumentJSONAdapter
-  * [ ] DocumentDjangoORMAdapter
+  * [x] DocumentJSONAdapter
+    * [x] tests
   * [ ] DocumentAPIAdapter
-* [ ] Tests for adapters
+    * [ ] tests
+  * [ ] DocumentDjangoORMAdapter
 * [ ] Tests for database adapter
+* [ ] Tests for user adapter?
+* [ ] Tests for auth adapter?
 * [ ] Import document for testing
 * [ ] Django API
 

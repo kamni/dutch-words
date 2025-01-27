@@ -10,7 +10,7 @@ import hashlib
 from common.adapters.users import UserJSONFileAdapter
 from common.models.errors import ObjectNotFoundError
 from common.stores.adapter import AdapterStore
-from common.models.users import User, UserDisplay
+from common.models.users import UserDB, UserUI
 from common.ports.auth import AuthnPort, AuthError, AuthValidationError
 
 
@@ -36,7 +36,7 @@ class AuthnJSONFileAdapter(AuthnPort):
             self._user_port = adapters.get('UserPort')
         return self._user_port
 
-    def _password_valid(self, user: User, password: str) -> bool:
+    def _password_valid(self, user: UserDB, password: str) -> bool:
         # REMINDER: don't use this adapter in production!!
         divider = user.password.index('$')
         psalt = user.password[:divider]
@@ -47,14 +47,14 @@ class AuthnJSONFileAdapter(AuthnPort):
         is_valid = vhash == phash
         return is_valid
 
-    def login(self, username: str, password: str) -> UserDisplay:
+    def login(self, username: str, password: str) -> UserUI:
         """
         Log the user into the system.
 
         :username: username of the person logging in.
         :password: password of the person loggint in.
 
-        :return: UserDisplay for the UI
+        :return: UserUI for the UI
         :raises: AuthError for problems communicating with the authn backend;
             AuthValidationError when authentication is invalid.
         """
@@ -68,14 +68,14 @@ class AuthnJSONFileAdapter(AuthnPort):
             raise AuthError(f'ERROR: {ex}')
 
         if self._password_valid(user, password):
-            user_display = UserDisplay.from_user_db(user)
+            user_display = UserUI.from_user_db(user)
             return user_display
         else:
             # Error information for logging purposes only.
             # Don't display to user
             raise AuthValidationError('Invalid login: bad password')
 
-    def logout(self, user_display: UserDisplay) -> bool:
+    def logout(self, user_display: UserUI) -> bool:
         """
         Logs a user out of the system.
 

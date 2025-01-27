@@ -2,13 +2,13 @@
 Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 
-Port for working with Users
+Port for working with UserDBs
 """
 
 from abc import ABC, abstractmethod
 from typing import List
 
-from common.models.users import User
+from common.models.users import UserDB
 
 
 class UserPort(ABC):
@@ -17,28 +17,28 @@ class UserPort(ABC):
     """
 
     @abstractmethod
-    def create(self, user: User) -> User:
+    def create(self, user: UserDB) -> UserDB:
         """
         Create a new user in the database.
 
-        :user: New User object to add to the database.
-            User is counted as a duplicate when it has the same
-            languageCode and baseUser.
+        :user: New UserDB object to add to the database.
+            UserDB is counted as a duplicate when it has the same
+            languageCode and baseUserDB.
 
-        :return: Created User object.
+        :return: Created UserDB object.
         :raises: ObjectExistsError if the object already exists.
         """
         pass
 
     @abstractmethod
-    def create_in_batch(self, users: List[User]) -> List[User]:
+    def create_in_batch(self, users: List[UserDB]) -> List[UserDB]:
         """
         Batch create multiple users.
         Ignores users that already exist.
 
-        :user: New User object to add to the database.
-            User is counted as a duplicate when it has the same
-            languageCode and baseUser.
+        :user: New UserDB object to add to the database.
+            UserDB is counted as a duplicate when it has the same
+            languageCode and baseUserDB.
 
         :return: List of created users.
             Returns None for any users that were not created,
@@ -47,12 +47,12 @@ class UserPort(ABC):
         pass
 
     @abstractmethod
-    def read(self, username: str) -> User:
+    def read(self, username: str) -> UserDB:
         """
-        Read a single User from the database.
+        Read a single UserDB from the database.
 
         :username: The username to search for.
-            Username is expected to be unique.
+            UserDBname is expected to be unique.
 
         :return: The user that was found.
         :raises: ObjectNotFoundError if user doesn't exist

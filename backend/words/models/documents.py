@@ -48,7 +48,7 @@ class Document(models.Model):
         max_length=255,
         help_text=_('How the document will be named in the UI'),
     )
-    language = models.CharField(
+    language_code = models.CharField(
         max_length=8,
         choices=language_choices(),
         help_text=_('Language that the sentence belongs to'),

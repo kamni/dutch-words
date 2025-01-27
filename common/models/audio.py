@@ -7,10 +7,11 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from .base import HashableMixin
 from ..utils.languages import LanguageCode
 
 
-class AudioFileUI(BaseModel):
+class AudioFileUI(HashableMixin, BaseModel):
     """
     Representation of an audio file in the UI.
     """

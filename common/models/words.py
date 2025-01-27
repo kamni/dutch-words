@@ -61,10 +61,6 @@ class WordDBMinimal(HashableMixin, BaseModel):
     id: str  # UUID
     conjugation_id: str  # UUID
 
-    @property
-    def unique_fields(self):
-        return ['id']
-
 
 class WordDB(HashableMixin, BaseModel):
     """
@@ -97,10 +93,6 @@ class WordUIMinimal(HashableMixin, BaseModel):
     text: str
     audioFile: Optional[str] = None  # Relative path from the UI's perspective
 
-    @property
-    def unique_fields(self):
-        return ['id']
-
 
 class WordUI(HashableMixin, BaseModel):
     """
@@ -116,7 +108,3 @@ class WordUI(HashableMixin, BaseModel):
     audioFile: Optional[str] = None  # Relative path from the UI's perspective
     translations: Optional[List[WordUIMinimal]] = None
     conjugations: List[ConjugationUI]
-
-    @property
-    def unique_fields(self):
-        return ['id']

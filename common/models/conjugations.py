@@ -12,7 +12,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from .base import HashableDBMixin
+from .base import HashableMixin
 from .tracking import ProgressTrackerUI
 from .users import UserUI
 from ..utils.languages import LanguageCode
@@ -52,7 +52,7 @@ class Emphasis(StrEnum):
     unstressed = 'unstressed'
 
 
-class ConjugationDBMinimal(HashableDBMixin, BaseModel):
+class ConjugationDBMinimal(HashableMixin, BaseModel):
     """
     Minimal representation of a conjugation stored in the database
     """
@@ -62,12 +62,8 @@ class ConjugationDBMinimal(HashableDBMixin, BaseModel):
     tracking_id: str  # UUID
     order: int  # Relative to the SentenceDB
 
-    @property
-    def unique_fields(self):
-        return ['id', 'sentence_id', 'order']
 
-
-class ConjugationDB(HashableDBMixin, BaseModel):
+class ConjugationDB(HashableMixin, BaseModel):
     """
     Representation of a conjugation in the Database.
     """
@@ -93,10 +89,10 @@ class ConjugationDB(HashableDBMixin, BaseModel):
         return ['user_id', 'language_code', 'text']
 
 
-class ConjugationUIMinimal(BaseModel):
+class ConjugationUIMinimal(HashableMixin, BaseModel):
     """
     Minimal representation of a conjugation in the UI.
-    Does not include individual words or user tracking
+    Does not include user tracking data
     """
     id: str  # UUID
     languageCode: LanguageCode
@@ -104,8 +100,13 @@ class ConjugationUIMinimal(BaseModel):
     audioFile: Optional[str] = None  # Relative path from the UI's perspective
 
 
-class ConjugationUI(BaseModel):
-    id: Optional[str] = None  # UUID. Set by the database.
+class ConjugationUI(HashableMixin, BaseModel):
+    """
+    Representation of a conjugation in the UI.
+    Includes tracking data
+    """
+
+    id: str  # UUID
     user: UserUI
     order: int  # Relative to SentenceUI
     tracking: Optional[ProgressTrackerUI]

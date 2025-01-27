@@ -2,8 +2,7 @@
 
 ## Show document list
 
-* [ ] Implement HashableDBMixin
-  * [ ] Tests for HashableDBMixin
+* [ ] Cleanup HashableDBMixin references
 * [ ] Add document_port
   * [ ] DocumentJSONAdapter
   * [ ] DocumentDjangoORMAdapter

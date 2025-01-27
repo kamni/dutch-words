@@ -7,13 +7,13 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from .base import HashableDBMixin
+from .base import HashableMixin
 from .conjugations import ConjugationDBMinimal, ConjugationUI
 from .users import UserUI
 from ..utils.languages import LanguageCode
 
 
-class SentenceDBMinimal(HashableDBMixin, BaseModel):
+class SentenceDBMinimal(HashableMixin, BaseModel):
     """
     Minimal representation of a sentence stored in the database
     """
@@ -22,12 +22,8 @@ class SentenceDBMinimal(HashableDBMixin, BaseModel):
     document_id: str  # UUID
     order: int  # Relative to the DocumentDB
 
-    @property
-    def unique_fields(self):
-        return ['id', 'document_id', 'order']
 
-
-class SentenceDB(HashableDBMixin, BaseModel):
+class SentenceDB(HashableMixin, BaseModel):
     """
     Representation of a sentence to be stored in the database
     """
@@ -46,7 +42,7 @@ class SentenceDB(HashableDBMixin, BaseModel):
         return ['user_id', 'language_code', 'text']
 
 
-class SentenceUIMinimal(BaseModel):
+class SentenceUIMinimal(HashableMixin, BaseModel):
     """
     Minimal representation of a sentence in the UI.
     Does not include individual words or user tracking.
@@ -58,7 +54,7 @@ class SentenceUIMinimal(BaseModel):
     audioFile: Optional[str] = None  # Relative path from the UI's perspective
 
 
-class SentenceUI(BaseModel):
+class SentenceUI(HashableMixin, BaseModel):
     """
     Full representation of a sentence in the UI.
     Includes words with tracking information.

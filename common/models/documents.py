@@ -7,13 +7,13 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from .base import HashableDBMixin
+from .base import HashableMixin
 from .sentences import SentenceDB, SentenceDBMinimal, SentenceUI
 from .users import UserUI
 from ..utils.languages import LanguageCode
 
 
-class DocumentDBMinimal(HashableDBMixin, BaseModel):
+class DocumentDBMinimal(HashableMixin, BaseModel):
     """
     Minimal representation of a document in the database
     """
@@ -23,12 +23,8 @@ class DocumentDBMinimal(HashableDBMixin, BaseModel):
     display_name: str
     language_code: LanguageCode
 
-    @property
-    def unique_fields(self):
-        return ['user_id', 'display_name', 'language_code']
 
-
-class DocumentDB(HashableDBMixin, BaseModel):
+class DocumentDB(HashableMixin, BaseModel):
     """
     Representation of a document to be stored in the database
     """
@@ -46,7 +42,7 @@ class DocumentDB(HashableDBMixin, BaseModel):
         return ['user_id', 'display_name', 'language_code']
 
 
-class DocumentUIMinimal(BaseModel):
+class DocumentUIMinimal(HashableMixin, BaseModel):
     """
     Bare minimum display of documents in the UI
     Excludes Sentences and Words
@@ -76,7 +72,7 @@ class DocumentUIMinimal(BaseModel):
         return document_ui
 
 
-class DocumentUI(BaseModel):
+class DocumentUI(HashableMixin, BaseModel):
     """
     All information needed to display a Document and its Sentences/Words.
     Includes user tracking for learned words

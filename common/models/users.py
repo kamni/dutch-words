@@ -39,7 +39,7 @@ class UserUI(HashableMixin, BaseModel):
     displayName: Optional[str] = None
 
     @classmethod
-    def from_user_db(cls, user: UserDB) -> 'UserUI':
+    def from_db(cls, user: UserDB) -> 'UserUI':
         """
         Convert a database user into a UI-friendly user object.
 

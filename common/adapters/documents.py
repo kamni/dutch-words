@@ -5,8 +5,7 @@ Affero GPL v3
 
 from typing import List, Optional
 
-from ..models.documents import DocumentDB, DocumentUIMinimal
-from ..models.users import UserUI
+from ..models.documents import DocumentDB
 from ..ports.documents import DocumentPort
 from ..utils.file import JSONFileMixin
 from ..utils.languages import LanguageCode
@@ -23,11 +22,11 @@ class DocumentJSONFileAdapter(JSONFileMixin, DocumentPort):
             base_database_name=kwargs.get('databasefile'),
         )
 
-    def read_all_for_user(
+    def get_all(
         self,
         user_id: str,  # UUID
         language_code: Optional[LanguageCode] = None,
-    ) -> List[DocumentUIMinimal]:
+    ) -> List[DocumentDB]:
         """
         Find documents for the specified user.
 
@@ -59,11 +58,4 @@ class DocumentJSONFileAdapter(JSONFileMixin, DocumentPort):
                 documents,
             )
 
-        documents_ui = [
-            DocumentUIMinimal.from_document_db(
-                document,
-                UserUI.from_user_db(user),
-            )
-            for document in documents
-        ]
-        return documents_ui
+        return list(documents)

@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 from .base import HashableMixin
 from .sentences import SentenceDB, SentenceDBMinimal, SentenceUI
-from .users import UserUI
+from .users import UserDB, UserUI
 from ..utils.languages import LanguageCode
 
 
@@ -54,18 +54,19 @@ class DocumentUIMinimal(HashableMixin, BaseModel):
     languageCode: LanguageCode
 
     @classmethod
-    def from_document_db(
+    def from_db(
         cls,
         document: DocumentDB,
-        user: UserUI,
+        user: UserDB,
     ) -> 'DocumentUIMinimal':
         """
         Convert a DocumentDB into a DocumentUIMinimal
         """
 
+        user_ui = UserUI.from_db(user)
         document_ui = cls(
             id=document.id,
-            user=user,
+            user=user_ui,
             displayName=document.display_name,
             languageCode=document.language_code,
         )

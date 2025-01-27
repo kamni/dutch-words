@@ -38,26 +38,21 @@ class TestDocumentJSONFileAdapter(TestCase):
 
     def test_read_all_for_user(self):
         user1 = self.document_adapter._database.users[0]
-        documents = [
+        expected_documents = [
             create_document_db(
                 user_id=user1.id,
                 language_code='en',
             )
             for i in range(3)
         ]
-        documents.extend([
+        expected_documents.extend([
             create_document_db(
                 user_id=user1.id,
                 language_code='es',
             )
             for i in range(3)
         ])
-        self.document_adapter._database.documents.extend(documents)
-        user_ui1 = UserUI.from_user_db(user1)
-        expected_documents = [
-            DocumentUIMinimal.from_document_db(doc, user_ui1)
-            for doc in documents
-        ]
+        self.document_adapter._database.documents.extend(expected_documents)
 
         user2 = self.document_adapter._database.users[1]
         self.document_adapter._database.documents.extend([
@@ -67,7 +62,7 @@ class TestDocumentJSONFileAdapter(TestCase):
             for i in range(3)
         ])
 
-        returned_documents = self.document_adapter.read_all_for_user(user1.id)
+        returned_documents = self.document_adapter.get_all(user1.id)
         self.assertEqual(
             set(expected_documents),
             set(returned_documents),

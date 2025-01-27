@@ -6,8 +6,7 @@ Affero GPL v3
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from ..models.documents import DocumentUIMinimal
-from ..models.users import UserUI
+from ..models.documents import DocumentDB
 from ..utils.languages import LanguageCode
 
 
@@ -17,13 +16,13 @@ class DocumentPort(ABC):
     """
 
     @abstractmethod
-    def read_all_for_user(
+    def get_all(
         self,
         user_id: str,  # UUID
         language_code: Optional[LanguageCode] = None,
-    ) -> List[DocumentUIMinimal]:
+    ) -> List[DocumentDB]:
         """
-        Find documents for the specified user.
+        Find all documents for the specified user.
 
         :user_id: User id to search in the database.
         :language_code: optional filter to return documents for a specific

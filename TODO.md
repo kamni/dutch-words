@@ -2,10 +2,16 @@
 
 ## Show document list
 
+* [ ] Get other tests working
+* [ ] Tests for UserUI.from_db
+* [ ] Tests for DocumentUIMinimal.from_db
+
+
+* [ ] Add UserPort to django
 * [ ] Add document_port
   * [x] DocumentJSONAdapter
     * [x] tests
-  * [ ] DocumentAPIAdapter
+  * [ ] DocumentDjangoORMAdapter
     * [ ] tests
   * [ ] DocumentDjangoORMAdapter
 * [ ] Tests for database adapter

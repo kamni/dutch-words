@@ -32,5 +32,10 @@ class DocumentDjangoORMAdapter(DocumentPort):
 
         documents = Document.objects.filter(user__id=user_id)
         if language_code:
-            pass
+            documents = documents.filter(language_code=language_code)
 
+        documents_ui = [
+            DocumentUIMinimal.from_document_db(doc, doc.user)
+            for doc in documents
+        ]
+        return documents_ui

@@ -95,6 +95,43 @@ class TestUserDBDjangoORMAdapter(TestCase):
         with self.assertRaises(ObjectNotFoundError):
             adapter.get(user_id)
 
+    def test_get_first(self):
+        user = UserDB(
+            username='test_get_first',
+            password='1234567',
+            display_name='Test User',
+        )
+        adapter = UserDBDjangoORMAdapter()
+        adapter.create(user)
+
+        expected = user
+        returned = adapter.get_first()
+        self.assertEqual(expected, returned)
+
+    def test_get_first_database_empty(self):
+        adapter = UserDBDjangoORMAdapter()
+        self.assertIsNone(adapter.get_first())
+
+    def test_get_first_more_than_one(self):
+        adapter = UserDBDjangoORMAdapter()
+        user1 = UserDB(
+            username='test_get_first_more_than_one1',
+            password='1234567',
+            display_name='Test User',
+        )
+        adapter.create(user1)
+
+        user2 = UserDB(
+            username='test_get_first_more_than_one2',
+            password='1234567',
+            display_name='Test User',
+        )
+        adapter.create(user2)
+
+        expected = user1
+        returned = adapter.get_first()
+        self.assertEqual(expected, returned)
+
     def test_get_by_username(self):
         username = 'test_get_by_username'
         user = UserDB(
@@ -114,6 +151,32 @@ class TestUserDBDjangoORMAdapter(TestCase):
 
         with self.assertRaises(ObjectNotFoundError):
             adapter.get_by_username(username)
+
+    def test_get_all(self):
+        adapter = UserDBDjangoORMAdapter()
+        user1 = UserDB(
+            username='test_get_all1',
+            password='1234567',
+            display_name='Test User',
+        )
+        adapter.create(user1)
+
+        user2 = UserDB(
+            username='test_get_all2',
+            password='1234567',
+            display_name='Test User',
+        )
+        adapter.create(user2)
+
+        expected = [user1, user2]
+        returned = adapter.get_all()
+        self.assertEqual(expected, returned)
+
+    def test_get_all_table_empty(self):
+        adapter = UserDBDjangoORMAdapter()
+        expected = []
+        returned = adapter.get_all()
+        self.assertEqual(expected, returned)
 
 
 class TestUserUIDjangoORMAdapter(TestCase):

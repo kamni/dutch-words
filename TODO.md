@@ -4,6 +4,8 @@
 
 * [ ] AppSettings adapter
   * [ ] Tests
+* [ ] On first run, set up so single user, passwordless login,
+      NotImplementedErrors for other screens
 * [ ] UserDBPort.get_all
 * [ ] First run: prompt for settings if no users
   * [ ] Config screen

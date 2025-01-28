@@ -219,3 +219,34 @@ class TestUserUIDjangoORMAdapter(TestCase):
         returned = adapter.get(new_user_db)
         self.assertEqual(expected, returned)
 
+    def test_get_all(self):
+        adapter = UserDbDjangoORMAdapter()
+        user_db1 = UserDB(
+            id=uuid.uuid4(),
+            username='test_get_all1',
+            password='1234567',
+            display_name='Test User'
+        )
+        user_db2 = UserDB(
+            id=uuid.uuid4(),
+            username='test_get_all2',
+            password='1234567',
+        )
+
+        expected = [
+            UserUI(
+                id=user_db1.id,
+                username=user_db1.username,
+                displayName=user_db1.display_name,
+            ),
+            UserUI(
+                id=user_db2.id,
+                username=user_db2.username,
+                displayName=user_db2.username,
+            ),
+        ]
+        returned = adapter.get_all([user_db1, user_db2])
+        self.assertEqual(expected, returned)
+
+    def test_get_all_empty_list(self):
+        pass

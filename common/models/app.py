@@ -7,8 +7,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from .base import HashableMixin
 
-class AppSettingsDB(BaseModel):
+
+class AppSettingsDB(HashableMixin, BaseModel):
     """
     Tracks global settings for the application
     """
@@ -22,7 +24,7 @@ class AppSettingsDB(BaseModel):
     # then set this to True.
     # Set False if running as a web server
     # or local privacy is desired.
-    paswordless_login: Optional[bool] = False
+    passwordless_login: Optional[bool] = False
 
     # Show or hide the available users.
     # If running in single-user mode with passwordless login,
@@ -30,3 +32,11 @@ class AppSettingsDB(BaseModel):
     # If running on the web or with untrusted users,
     # set this to False.
     show_users_on_login_screen: Optional[bool] = False
+
+    @property
+    def unique_fields(self):
+        return [
+            'multiuser_mode',
+            'passwordless_login',
+            'show_users_on_login_screen',
+        ]

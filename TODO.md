@@ -5,6 +5,11 @@
 * [ ] AppSettings adapter
   * [ ] put in setup.cfg
   * [ ] Tests
+
+* AuthStore
+
+* init_django in all adapters? Somewhere central?
+
 * [ ] On first run, set up so single user, passwordless login,
       NotImplementedErrors for other screens
 * [ ] UserDBPort.get_all

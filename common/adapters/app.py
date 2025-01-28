@@ -16,12 +16,18 @@ class AppSettingsDjangoORMAdapter(AppSettingsPort):
     Uses the Django ORM to manage settings
     """
 
+    def __init__(self, **kwargs):
+        # Ignore any kwargs configuration.
+        # This uses the django settings.
+        super().__init__()
+
     def _django_to_pydantic(self, app_settings: AppSettings):
         app_settings_db = AppSettingsDB(
             multiuser_mode=app_settings.multiuser_mode,
             passwordless_login=app_settings.passwordless_login,
             show_users_on_login_screen=app_settings.show_users_on_login_screen,
         )
+        return app_settings_db
 
     def get(self) -> Union[AppSettingsDB, None]:
         """
@@ -31,6 +37,9 @@ class AppSettingsDjangoORMAdapter(AppSettingsPort):
         :return: AppSettingsDB object, or None
         """
         app = AppSettings.objects.all().first()
+        if not app:
+            return None
+
         app_db = self._django_to_pydantic(app)
         return app_db
 

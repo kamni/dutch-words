@@ -28,7 +28,7 @@ pip install -r requirements.txt
 pip install -r requirements_dev.txt
 ```
 
-Run the django development server:
+Set up the Django ORM:
 
 ```sh
 cd backend
@@ -42,5 +42,15 @@ Create an admin user:
 python manage.py createsuperuser
 ```
 
-You can visit the admin interface at
-[localhost:8000/admin](http://localhost:8000/admin)
+Connect to the textual terminal for debugging:
+
+```sh
+cd ..
+textual console
+```
+
+Then run the app in a separate terminal with:
+
+```sh
+textual run --dev cli/__main__.py
+```

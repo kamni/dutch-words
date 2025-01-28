@@ -36,7 +36,7 @@ class AppSettingsDjangoORMAdapter(AppSettingsPort):
 
         :return: AppSettingsDB object, or None
         """
-        app = AppSettings.objects.all().first()
+        app = AppSettings.objects.first()
         if not app:
             return None
 
@@ -50,7 +50,7 @@ class AppSettingsDjangoORMAdapter(AppSettingsPort):
 
         :return: AppSettingsDB object.
         """
-        existing_settings = AppSettings.objects.all.first()
+        existing_settings = AppSettings.objects.first()
         if existing_settings:
             existing_settings.multiuser_mode = settings.multiuser_mode
             existing_settings.passwordless_login = settings.passwordless_login

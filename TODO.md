@@ -2,11 +2,20 @@
 
 ## User
 
-* [ ] AppSettings adapter
-  * [ ] put in setup.cfg
-  * [ ] Tests
-
 * AuthStore
+  * UserDBPort.get_all
+    * Tests
+  * UserDBPort.get_first
+    * Tests
+  * UserUIPort.get_all
+    * Tests
+  * AuthnPort
+    * AuthnInvalidError
+    * logout
+    * login
+    * setup.cfgs
+    * Tests
+  * AuthStore Tests
 
 * init_django in all adapters? Somewhere central?
 

@@ -8,7 +8,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class AppSettings(BaseModel):
+class AppSettingsDB(BaseModel):
     """
     Tracks global settings for the application
     """

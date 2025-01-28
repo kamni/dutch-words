@@ -3,6 +3,7 @@
 ## User
 
 * [ ] AppSettings adapter
+  * [ ] put in setup.cfg
   * [ ] Tests
 * [ ] On first run, set up so single user, passwordless login,
       NotImplementedErrors for other screens

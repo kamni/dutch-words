@@ -4,7 +4,7 @@ Affero GPL v3
 """
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Union
 
 from common.models.users import UserDB, UserUI
 
@@ -39,6 +39,16 @@ class UserDBPort(ABC):
         pass
 
     @abstractmethod
+    def get_first(self) -> Union[UserDB, None]:
+        """
+        Get the first user in the database.
+        Useful as a default when not using a multi-user system
+
+        :return: First user in the database; None if there are no users.
+        """
+        pass
+
+    @abstractmethod
     def get_by_username(self, username: str) -> UserDB:
         """
         Get a user from the database using a username.
@@ -47,6 +57,15 @@ class UserDBPort(ABC):
 
         :return: Found user object.
         :raises: ObjectNotFoundError
+        """
+        pass
+
+    @abstractmethod
+    def get_all(self) -> List[UserDB]:
+        """
+        Get all users from the database.
+
+        :return: List of user objects (may be empty)
         """
         pass
 
@@ -67,3 +86,13 @@ class UserUIPort(ABC):
         """
         pass
 
+    @abstractmethod
+    def get_all(self, users: List[UserDB]) -> List[UserUI]:
+        """
+        Convert all database users to users for the UI.
+
+        :users: List of database representations of users.
+
+        :return: List of UI representations of the users.
+        """
+        pass

@@ -3,6 +3,8 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
+from typing import List, Union
+
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 
@@ -80,6 +82,18 @@ class UserDBDjangoORMAdapter(UserDBPort):
         user = self._django_to_pydantic(settings)
         return user
 
+    def get_first(self) -> Union[UserDB, None]:
+        """
+        Get the first user in the database.
+        Useful as a default when not using a multi-user system
+
+        :return: First user in the database; None if there are no users.
+        """
+
+        user = UserSettings.objects.first()
+        userdb = self._django_to_pydantic(user) if user else None
+        return userdb
+
     def get_by_username(self, username: str) -> UserDB:
         """
         Get a user from the database using a username.
@@ -97,6 +111,16 @@ class UserDBDjangoORMAdapter(UserDBPort):
 
         user = self._django_to_pydantic(settings)
         return user
+
+    def get_all(self) -> List[UserDB]:
+        """
+        Get all users from the database.
+
+        :return: List of user objects (may be empty)
+        """
+        users = UserSettings.objects.all()
+        usersdb = [self._django_to_pydantic(user) for user in users]
+        return usersdb
 
 
 class UserUIDjangoORMAdapter(UserUIPort):
@@ -128,3 +152,14 @@ class UserUIDjangoORMAdapter(UserUIPort):
         user_ui = self._db_to_ui(user)
         return user_ui
 
+    def get_all(self, users: List[UserDB]) -> List[UserUI]:
+        """
+        Convert all database users to users for the UI.
+
+        :users: List of database representations of users.
+
+        :return: List of UI representations of the users.
+        """
+
+        usersui = [self._db_to_ui(user) for user in users]
+        return usersui

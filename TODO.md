@@ -1,9 +1,12 @@
 # TODOS
 
-## Adapter Store
+## User
 
-* [ ] Get tests working
-* [ ] Do other existing tests work?
+* [ ] AppSettings adapter
+  * [ ] Tests
+* [ ] UserDBPort.get_all
+* [ ] First run: prompt for settings if no users
+  * [ ] Config screen
 
 ## Document
 

@@ -12,9 +12,6 @@ from textual.reactive import reactive
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Input, Label, Static
 
-from common.ports.auth import AuthError, AuthValidationError
-from common.stores.adapter import AdapterStore
-from common.stores.auth import AuthStore
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -48,23 +45,6 @@ SUBTITLE_TEXT = 'Teach yourself 10,000+ words in another language'
 class LoginScreen(Screen):
     CSS_PATH = 'login.tcss'
 
-    _authn_port = None
-    _auth_store = None
-
-    @property
-    def authn_port(self):
-        if not self._authn_port:
-            adapters = AdapterStore()
-            adapters.initialize()
-            self._authn_port = adapters.get('AuthnPort')
-        return self._authn_port
-
-    @property
-    def auth_store(self):
-        if not self._auth_store:
-            self._auth_store = AuthStore()
-        return self._auth_store
-
     def compose(self) -> ComposeResult:
         yield Container(
             Center(
@@ -93,7 +73,6 @@ class LoginScreen(Screen):
             ),
             id='wrapper'
         )
-        yield Footer()
 
     def action_submit_form(self):
         button = self.query_one('#login-button')
@@ -102,24 +81,9 @@ class LoginScreen(Screen):
         username_field = self.query_one('#username-input')
         password_field = self.query_one('#password-input')
 
-        try:
-            user = self.authn_port.login(
-                username=username_field.value,
-                password=password_field.value,
-            )
-            logging.debug(f'Successful login from {user.username}')
-        except AuthValidationError as avex:
-            logging.error(avex)
-            # TODO: display message
-            button.disabled = False
-            raise
-        except AuthError as aex:
-            logging.error(aex)
-            # TODO: display message
-            button.disabled = False
-            raise
-        finally:
-            button.remove_class('login-disabled')
+        from time import sleep
+        sleep(5)
+        button.remove_class('login-disabled')
 
         # TODO: remove/uninstall login screen; move to next one
 

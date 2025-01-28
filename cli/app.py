@@ -7,29 +7,26 @@ import os
 import sys
 
 from textual.app import App
-from textual.theme import BUILTIN_THEMES
 
-from cli.views.edit import EditScreen
-from cli.views.learn import LearnScreen
-from cli.views.login import LoginScreen
+from common.stores.adapters import AdapterStore
 from common.stores.auth import AuthStore
+
+from .views.login import LoginScreen
 
 
 
 class TenThousandWordsApp(App):
-    SCREENS = {
-        'edit': EditScreen,
-        'learn': LearnScreen,
-    }
-
-    _auth_store = None
+    @property
+    def adapters(self):
+        if not hasattr(self._adapters) or not self._adapters:
+            self._adapters = AdapterStore()
+        return self._adapters
 
     @property
-    def auth_store(self):
-        if not self._auth_store:
-            self._auth_store = AuthStore()
-        return self._auth_store
-
+    def auth(self):
+        if not hasattr(self._auth) or not self._auth:
+            self._auth = AuthStore()
+        return self._auth
 
     def on_mount(self):
         self.theme = 'flexoki'

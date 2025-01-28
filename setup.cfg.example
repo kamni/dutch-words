@@ -23,19 +23,15 @@ DefaultConfig = dev.django
 UploadDir = data/uploads
 
 [dev.django.ports]
+AppSettingsPort = common.adapters.app.AppSettingsDjangoORMAdapter
 UserDBPort = common.adapters.users.UserDBDjangoORMAdapter
 UserUIPort = common.adapters.users.UserUIDjangoORMAdapter
 
+# Any settings that all adapters should share
 [dev.django.adapters.common]
-DatabaseFile = database
-DataDir = data
-
-[dev.django.setup]
-CreateDefaultWords = yes
-CreateDefaultUsers = yes
 
 # Adapter-specific settings go here
 # Example:
 #
-#   [dev.django.adapters.AuthnPort]
-#   SingleUserSystem = yes
+#   [dev.django.adapters.FooPort]
+#   UseFoo = yes

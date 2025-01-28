@@ -60,7 +60,7 @@ class AdapterStore(metaclass=Singleton):
             try:
                 AdapterCls = self._get_adapter_cls(port)
                 adapter_options = {}
-                for key in self._settings.get('adapters.common'):
+                for key in self._settings.get('adapters.common', {}):
                     value = self._settings.get('adapters.common', key)
                     adapter_options[key] = value
 

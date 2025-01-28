@@ -220,7 +220,7 @@ class TestUserUIDjangoORMAdapter(TestCase):
         self.assertEqual(expected, returned)
 
     def test_get_all(self):
-        adapter = UserDbDjangoORMAdapter()
+        adapter = UserUIDjangoORMAdapter()
         user_db1 = UserDB(
             id=uuid.uuid4(),
             username='test_get_all1',
@@ -249,4 +249,7 @@ class TestUserUIDjangoORMAdapter(TestCase):
         self.assertEqual(expected, returned)
 
     def test_get_all_empty_list(self):
-        pass
+        adapter = UserUIDjangoORMAdapter()
+        expected = []
+        returned = adapter.get_all([])
+        self.assertEqual(expected, returned)

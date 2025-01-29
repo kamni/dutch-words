@@ -3,18 +3,15 @@
 ## User
 
 * AuthStore
-  * UserDBPort.get_all
-    * Tests
-  * UserDBPort.get_first
-    * Tests
-  * UserUIPort.get_all
-    * Tests
   * AuthnPort
     * AuthnInvalidError
     * logout
+        checks whether password is necessary?
     * login
     * setup.cfgs
     * Tests
+
+  * Don't get users where the django user is inactive
   * AuthStore Tests
 
 * init_django in all adapters? Somewhere central?

@@ -5,9 +5,10 @@ Affero GPL v3
 
 from typing import Any, Optional, Union
 
-from ..adapters.auth import AuthnInvalidError
+from ..ports.auth import AuthnInvalidError
 from ..models.errors import ObjectNotFoundError
 from ..models.users import UserUI
+from ..ports.auth import AuthnInvalidError
 from ..stores.adapter import AdapterStore
 from ..utils.singleton import Singleton
 
@@ -93,7 +94,10 @@ class AuthStore(Singleton):
                 userdb = self._user_db_adapter.get_by_username(username)
                 userui = self._user_ui_adapter.get(userdb)
             except ObjectNotFoundError:
-                raise AuthnInvalidError()
+                # This message is only for internal logging.
+                # Do not show this to users,
+                # as it could facilitate brute-forcing usernames.
+                raise AuthnInvalidError(f'User {username} not found')
         else:
             # Raises AuthnInvalidError if not successful
             userui = self._authn_adapter.login(username, password)

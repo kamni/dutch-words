@@ -28,6 +28,7 @@ class TestAdapterStore(TestCase):
     Tests for common.stores.adapter.AdapterStore
     """
 
+    @classmethod
     def setUpClass(cls):
         # Get rid of lurking instances before starting tests
         Singleton.destroy(AdapterStore)

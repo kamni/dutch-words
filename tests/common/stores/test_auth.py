@@ -7,7 +7,7 @@ from django.test import TestCase
 
 from common.stores.adapter import AdapterStore
 from common.stores.auth import AuthStore
-from common.sotres.settings import SettingsStore
+from common.stores.settings import SettingsStore
 from common.utils.singleton import Singleton
 
 

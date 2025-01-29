@@ -75,11 +75,48 @@ class TestSettingsStore(TestCase):
         )
 
     def test_initialize_already_initialized(self):
-        settings_store
-        pass
+        settings_store = SettingsStore(
+            config=TEST_CONFIG,
+            subsection='dev.django',
+        )
+        expected_config = 'testDefault'
+        expected_subsection = 'dev.django'
+
+        settings_store._config_name='/tmp/not-a-config.cfg'
+        settings_store._subsection_name='foo.bar'
+        settings_store.initialize()
+
+        # We expect nothing has changed
+        self.assertEqual(
+            expected_config,
+            settings_store._config['config.meta']['name'],
+        )
+        self.assertEqual(
+            expected_subsection,
+            settings_store._subsection,
+        )
 
     def test_initialize_forced(self):
-        pass
+        settings_store = SettingsStore(
+            config=TEST_CONFIG,
+            subsection='dev.django',
+        )
+
+        settings_store._config_name='/tmp/not-a-config.cfg'
+        settings_store._subsection_name='foo.bar'
+        settings_store.initialize(force=True)
+
+        # This really is different
+        expected_config_sections = []
+        expected_subsection = 'foo.bar'
+        self.assertEqual(
+            expected_config_sections,
+            settings_store._config.sections()
+        )
+        self.assertEqual(
+            expected_subsection,
+            settings_store._subsection,
+        )
 
     def test_name(self):
         settings_store = SettingsStore()

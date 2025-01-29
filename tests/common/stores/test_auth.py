@@ -6,10 +6,16 @@ Affero GPL v3
 from django.test import TestCase
 
 from app.models.app import AppSettings
+from common.adapters.users import (
+    UserDBDjangoORMAdapter,
+    UserUIDjangoORMAdapter,
+)
 from common.stores.adapter import AdapterStore
 from common.stores.auth import AuthStore
 from common.stores.settings import SettingsStore
 from common.utils.singleton import Singleton
+
+from ...utils_for_tests.users import make_user_db
 
 
 class TestAuthStore(TestCase):
@@ -27,23 +33,20 @@ class TestAuthStore(TestCase):
         adapter_store = AdapterStore(subsection='dev.django')
         super().setUpClass()
 
-    def setUp(self):
-        AppSettings.objects.all().delete()
-
     def tearDown(self):
         Singleton.destroy(AuthStore)
 
     def test_is_singleton(self):
-        adapter_store1 = AuthStore()
-        self.assertFalse(adapter_store1.get(AuthStore.IS_CONFIGURED))
+        auth_store1 = AuthStore()
+        self.assertFalse(auth_store1.get(AuthStore.IS_CONFIGURED))
 
         AppSettings.objects.create(
             multiuser_mode=True,
             passwordless_login=True,
             show_users_on_login_screen=True,
         )
-        adapter_store2 = AuthStore()
-        self.assertFalse(adapter_store2.get(AuthStore.IS_CONFIGURED))
+        auth_store2 = AuthStore()
+        self.assertFalse(auth_store2.get(AuthStore.IS_CONFIGURED))
 
     def test_initialize_already_initialized(self):
         AppSettings.objects.create(
@@ -52,12 +55,12 @@ class TestAuthStore(TestCase):
             show_users_on_login_screen=True,
         )
 
-        adapter_store = AuthStore()
-        self.assertTrue(adapter_store.get(AuthStore.IS_CONFIGURED))
+        auth_store = AuthStore()
+        self.assertTrue(auth_store.get(AuthStore.IS_CONFIGURED))
 
         AppSettings.objects.all().delete()
-        adapter_store.initialize()
-        self.assertTrue(adapter_store.get(AuthStore.IS_CONFIGURED))
+        auth_store.initialize()
+        self.assertTrue(auth_store.get(AuthStore.IS_CONFIGURED))
 
     def test_initialize_forced(self):
         AppSettings.objects.create(
@@ -66,15 +69,21 @@ class TestAuthStore(TestCase):
             show_users_on_login_screen=True,
         )
 
-        adapter_store = AuthStore()
-        self.assertTrue(adapter_store.get(AuthStore.IS_CONFIGURED))
+        auth_store = AuthStore()
+        self.assertTrue(auth_store.get(AuthStore.IS_CONFIGURED))
 
         AppSettings.objects.all().delete()
-        adapter_store.initialize(force=True)
-        self.assertFalse(adapter_store.get(AuthStore.IS_CONFIGURED))
+        auth_store.initialize(force=True)
+        self.assertFalse(auth_store.get(AuthStore.IS_CONFIGURED))
 
     def test_init_settings_does_not_exist(self):
-        adapter_store = AuthStore()
+        usersdb = [
+            UserDBDjangoORMAdapter().create(make_user_db())
+            for i in range(3)
+        ]
+        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+
+        auth_store = AuthStore()
         expected = {
             AuthStore.LOGGED_IN_USER: None,
             AuthStore.IS_CONFIGURED: False,
@@ -83,7 +92,7 @@ class TestAuthStore(TestCase):
             AuthStore.SHOW_PASSWORD_FIELD: False,
             AuthStore.SHOW_USER_SELECT: False,
         }
-        returned = adapter_store._settings
+        returned = auth_store._settings
         self.assertEqual(expected, returned)
 
     def test_init_settings_false_false_false(self):
@@ -92,41 +101,30 @@ class TestAuthStore(TestCase):
         passwordless_login = False
         show_users_on_login_screen = False
         """
-        pass
 
-    '''
-    def __init__(self):
-        adapter_store = AdapterStore()
-        self._settings_adapter = adapter_store.get('AppSettingsPort')
-        self._authn_adapter = adapter_store.get('AuthnPort')
-        self._user_db_adapter = adapter_store.get('UserDBPort')
-        self._user_ui_adapter = adapter_store.get('UserUIPort')
+        usersdb = [
+            UserDBDjangoORMAdapter().create(make_user_db())
+            for i in range(3)
+        ]
+        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
 
-        settings = self._settings_adapter.get()
-        self._settings = {
-            self.LOGGED_IN_USER: None,
-            self.IS_CONFIGURED: False,
-            self.USER_SELECT_OPTIONS: [],
-            self.SHOW_REGISTRATION: False,
-            self.SHOW_PASSWORD_FIELD: False,
-            self.SHOW_USER_SELECT: False,
+        AppSettings.objects.create(
+            multiuser_mode=False,
+            passwordless_login=False,
+            show_users_on_login_screen=False,
+        )
+        auth_store = AuthStore()
+
+        expected = {
+            AuthStore.LOGGED_IN_USER: None,
+            AuthStore.IS_CONFIGURED: True,
+            AuthStore.USER_SELECT_OPTIONS: [],
+            AuthStore.SHOW_REGISTRATION: False,
+            AuthStore.SHOW_PASSWORD_FIELD: True,
+            AuthStore.SHOW_USER_SELECT: False,
         }
-        }
-
-        if not settings.multiuser_mode and settings.passwordless_login:
-            userdb = self._user_db_adapter.get_first()
-            userui = self._user_ui_adapter.get(userdb)
-            self._settings[LOGGED_IN_USER] = userui
-
-        if settings.show_users_on_login_screen:
-            usersdb = self._user_db_adapter.get_all()
-            usersui = self._user_ui_adapter.get_all(usersdb)
-
-            if not settings.multiuser_mode and len(usersui) > 1:
-                usersui = usersui[0]
-
-            self._settings[USER_SELECT_OPTIONS] = usersui
-    '''
+        returned = auth_store._settings
+        self.assertEqual(expected, returned)
 
     def test_init_settings_true_false_false(self):
         """
@@ -134,7 +132,30 @@ class TestAuthStore(TestCase):
         passwordless_login = False
         show_users_on_login_screen = False
         """
-        pass
+
+        usersdb = [
+            UserDBDjangoORMAdapter().create(make_user_db())
+            for i in range(3)
+        ]
+        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+
+        AppSettings.objects.create(
+            multiuser_mode=True,
+            passwordless_login=False,
+            show_users_on_login_screen=False,
+        )
+        auth_store = AuthStore()
+
+        expected = {
+            AuthStore.LOGGED_IN_USER: None,
+            AuthStore.IS_CONFIGURED: True,
+            AuthStore.USER_SELECT_OPTIONS: [],
+            AuthStore.SHOW_REGISTRATION: True,
+            AuthStore.SHOW_PASSWORD_FIELD: True,
+            AuthStore.SHOW_USER_SELECT: False,
+        }
+        returned = auth_store._settings
+        self.assertEqual(expected, returned)
 
     def test_init_settings_true_true_false(self):
         """
@@ -142,7 +163,30 @@ class TestAuthStore(TestCase):
         passwordless_login = True
         show_users_on_login_screen = False
         """
-        pass
+
+        usersdb = [
+            UserDBDjangoORMAdapter().create(make_user_db())
+            for i in range(3)
+        ]
+        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+
+        AppSettings.objects.create(
+            multiuser_mode=True,
+            passwordless_login=True,
+            show_users_on_login_screen=False,
+        )
+        auth_store = AuthStore()
+
+        expected = {
+            AuthStore.LOGGED_IN_USER: None,
+            AuthStore.IS_CONFIGURED: True,
+            AuthStore.USER_SELECT_OPTIONS: [],
+            AuthStore.SHOW_REGISTRATION: True,
+            AuthStore.SHOW_PASSWORD_FIELD: False,
+            AuthStore.SHOW_USER_SELECT: False,
+        }
+        returned = auth_store._settings
+        self.assertEqual(expected, returned)
 
     def test_init_settings_true_true_true(self):
         """
@@ -150,7 +194,30 @@ class TestAuthStore(TestCase):
         passwordless_login = True
         show_users_on_login_screen = True
         """
-        pass
+
+        usersdb = [
+            UserDBDjangoORMAdapter().create(make_user_db())
+            for i in range(3)
+        ]
+        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+
+        AppSettings.objects.create(
+            multiuser_mode=True,
+            passwordless_login=True,
+            show_users_on_login_screen=True,
+        )
+        auth_store = AuthStore()
+
+        expected = {
+            AuthStore.LOGGED_IN_USER: None,
+            AuthStore.IS_CONFIGURED: True,
+            AuthStore.USER_SELECT_OPTIONS: usersui,
+            AuthStore.SHOW_REGISTRATION: True,
+            AuthStore.SHOW_PASSWORD_FIELD: False,
+            AuthStore.SHOW_USER_SELECT: True,
+        }
+        returned = auth_store._settings
+        self.assertEqual(expected, returned)
 
     def test_init_settings_false_true_false(self):
         """
@@ -158,8 +225,62 @@ class TestAuthStore(TestCase):
         passwordless_login = True
         show_users_on_login_screen = False
         """
+
+        usersdb = [
+            UserDBDjangoORMAdapter().create(make_user_db())
+            for i in range(3)
+        ]
+        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+
+        AppSettings.objects.create(
+            multiuser_mode=False,
+            passwordless_login=True,
+            show_users_on_login_screen=False,
+        )
+        auth_store = AuthStore()
+
+        expected = {
+            AuthStore.LOGGED_IN_USER: usersui[0],
+            AuthStore.IS_CONFIGURED: True,
+            AuthStore.USER_SELECT_OPTIONS: [],
+            AuthStore.SHOW_REGISTRATION: False,
+            AuthStore.SHOW_PASSWORD_FIELD: False,
+            AuthStore.SHOW_USER_SELECT: False,
+        }
+        returned = auth_store._settings
+        self.assertEqual(expected, returned)
+
+    def test_init_settings_false_true_false_no_users(self):
         pass
 
+    '''
+        usersdb = [
+            UserDBDjangoORMAdapter().create(make_user_db())
+            for i in range(3)
+        ]
+        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+
+        if settings:
+            self._settings.update({
+                self.IS_CONFIGURED: True,
+                self.SHOW_REGISTRATION: settings.multiuser_mode,
+                self.SHOW_PASSWORD_FIELD: settings.passwordless_login,
+                self.SHOW_USER_SELECT: settings.show_users_on_login_screen,
+            })
+            if not settings.multiuser_mode and settings.passwordless_login:
+                userdb = self._user_db_adapter.get_first()
+                userui = self._user_ui_adapter.get(userdb)
+                self._settings[self.LOGGED_IN_USER] = userui
+
+            if settings.show_users_on_login_screen:
+                usersdb = self._user_db_adapter.get_all()
+                usersui = self._user_ui_adapter.get_all(usersdb)
+
+                if not settings.multiuser_mode and len(usersui) > 1:
+                    usersui = usersui[0]
+
+                self._settings[self.USER_SELECT_OPTIONS] = usersui
+    '''
     def test_init_settings_false_true_true(self):
         """
         multiuser_mode = False

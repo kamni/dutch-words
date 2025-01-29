@@ -62,7 +62,7 @@ class AuthStore(metaclass=Singleton):
             self._settings.update({
                 self.IS_CONFIGURED: True,
                 self.SHOW_REGISTRATION: settings.multiuser_mode,
-                self.SHOW_PASSWORD_FIELD: settings.passwordless_login,
+                self.SHOW_PASSWORD_FIELD: not settings.passwordless_login,
                 self.SHOW_USER_SELECT: settings.show_users_on_login_screen,
             })
             if not settings.multiuser_mode and settings.passwordless_login:
@@ -74,7 +74,7 @@ class AuthStore(metaclass=Singleton):
                 usersdb = self._user_db_adapter.get_all()
                 usersui = self._user_ui_adapter.get_all(usersdb)
 
-                if not settings.multiuser_mode and len(usersui) > 1:
+                if not settings.multiuser_mode and len(usersui) > 0:
                     usersui = usersui[0]
 
                 self._settings[self.USER_SELECT_OPTIONS] = usersui

@@ -16,7 +16,7 @@ from .random_data import (
 )
 
 
-def create_user_db(**kwargs) -> UserDB:
+def make_user_db(**kwargs) -> UserDB:
     """
     Create a UserDB object.
     Not written to database.

@@ -21,7 +21,7 @@ class SettingsStore(metaclass=Singleton):
 
     def __init__(
         self,
-        config: str=DEFAULT_CONFIG,
+        config: Optional[str]=None,
         subsection: Optional[str]=None,
     ):
         """
@@ -33,6 +33,7 @@ class SettingsStore(metaclass=Singleton):
             If not specified, uses the config.meta.DefaultConfig setting.
             Please look at the config.ini file for configuration optiions.
         """
+        config = config or DEFAULT_CONFIG
         self._config = configparser.ConfigParser()
         self._config.read(config)
         self._subsection = (

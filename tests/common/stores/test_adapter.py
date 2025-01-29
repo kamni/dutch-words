@@ -53,8 +53,7 @@ class TestAdapterStore(TestCase):
         )
 
     def test_init_with_custom_settings(self):
-        settings_store = SettingsStore(TEST_CONFIG)
-        adapter_store = AdapterStore(settings_store)
+        adapter_store = AdapterStore(config=TEST_CONFIG)
         expected_settings_name = 'testDefault'
 
         self.assertEqual(
@@ -63,8 +62,7 @@ class TestAdapterStore(TestCase):
         )
 
     def test_initialize(self):
-        settings_store = SettingsStore(TEST_CONFIG)
-        adapter_store = AdapterStore(settings_store)
+        adapter_store = AdapterStore(config=TEST_CONFIG)
         expected_pre_initialize_adapters = {}
 
         self.assertEqual(
@@ -73,12 +71,11 @@ class TestAdapterStore(TestCase):
         )
 
         adapter_store.initialize()
-        for port in settings_store.get('ports'):
+        for port in adapter_store._settings.get('ports'):
             self.assertTrue(port in adapter_store._adapters)
 
     def test_initialize_doesnt_override_existing_adapters(self):
-        settings_store = SettingsStore(TEST_CONFIG)
-        adapter_store = AdapterStore(settings_store)
+        adapter_store = AdapterStore(config=TEST_CONFIG)
         adapter_store.initialize()
 
         expected_value = 'override'
@@ -93,10 +90,9 @@ class TestAdapterStore(TestCase):
             )
 
     def test_initialize_some_adapters_missing(self):
-        settings_store = SettingsStore(TEST_CONFIG)
-        adapter_store = AdapterStore(settings_store)
+        adapter_store = AdapterStore(config=TEST_CONFIG)
 
-        ports = settings_store.get('ports')
+        ports = adapter_store._settings.get('ports')
         overridden_ports = []
         for idx, port in enumerate(ports):
             if idx % 2:
@@ -118,10 +114,9 @@ class TestAdapterStore(TestCase):
                 )
 
     def test_initialize_overrides_exising_adapters_on_force(self):
-        settings_store = SettingsStore(TEST_CONFIG)
-        adapter_store = AdapterStore(settings_store)
+        adapter_store = AdapterStore(config=TEST_CONFIG)
 
-        ports = settings_store.get('ports')
+        ports = adapter_store._settings.get('ports')
         for port in ports:
             adapter_store._adapters[port] = 'override'
 
@@ -134,15 +129,16 @@ class TestAdapterStore(TestCase):
             )
 
     def test_initialize_waits_to_end_to_aggregate_errors(self):
-        settings_store = SettingsStore(TEST_CONFIG)
-        adapter_store = AdapterStore(settings_store)
+        adapter_store = AdapterStore(config=TEST_CONFIG)
 
-        ports = settings_store.get('ports')
+        ports = adapter_store._settings.get('ports')
         overridden_config = []
         for idx, port in enumerate(ports):
             if idx % 2:
                 overridden_config.append(port)
-                settings_store._config[f'{settings_store.subsection}.ports'][port] = 'override'
+                adapter_store._settings._config[
+                    f'{adapter_store._settings.subsection}.ports'
+                ][port] = 'override'
 
         with self.assertRaises(Exception) as exc:
             adapter_store.initialize()
@@ -160,8 +156,7 @@ class TestAdapterStore(TestCase):
                 self.assertTrue(port in adapter_store._adapters)
 
     def test_get(self):
-        settings_store = SettingsStore(TEST_CONFIG)
-        adapter_store = AdapterStore(settings_store)
+        adapter_store = AdapterStore(config=TEST_CONFIG)
         adapter_store.initialize()
 
         # Not testing all ports; just a few for examples
@@ -177,8 +172,7 @@ class TestAdapterStore(TestCase):
             )
 
     def test_get_throws_error_if_adapter_not_found(self):
-        settings_store = SettingsStore(TEST_CONFIG)
-        adapter_store = AdapterStore(settings_store)
+        adapter_store = AdapterStore(config=TEST_CONFIG)
         adapter_store.initialize()
 
         with self.assertRaises(AdapterNotFoundError):

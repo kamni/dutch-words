@@ -44,8 +44,16 @@ class TestAuthnDjangoORMAdapter(TestCase):
             self.auth_adapter.login('foo', 'bar')
 
     def test_login_user_does_not_have_settings(self):
-        # Admin
-        pass
+        # This might happen if an admin user was created
+        # for the django admin
+        username = 'test_login_user_no_settings'
+        password = '1234567'
+        user = User.objects.create(username=username)
+        user.set_password(password)
+        user.save()
+
+        with self.assertRaises(AuthnInvalidError):
+            self.auth_adapter.login(username, password)
 
     def test_logout(self):
         pass

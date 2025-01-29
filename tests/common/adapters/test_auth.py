@@ -22,8 +22,6 @@ class TestAuthnDjangoORMAdapter(TestCase):
     @classmethod
     def setUpClass(cls):
         adapters = AdapterStore(subsection='dev.django')
-        adapters.initialize()
-
         cls.auth_adapter = adapters.get('AuthnPort')
         cls.user_db_adapter = adapters.get('UserDBPort')
         cls.user_ui_adapter = adapters.get('UserUIPort')

@@ -26,6 +26,22 @@ class AuthStore(metaclass=Singleton):
     USER_SELECT_OPTIONS = 'user_select_options'
 
     def __init__(self):
+        self._settings = {}
+        self.initialize()
+
+    def initialize(self, force: Optional[bool]=False):
+        """
+        Initialize this store.
+        This is a singleton,
+        so if you want to re-initialize the settings,
+        you should use `force=True`.
+
+        :force: Even if this has been initialized, re-initialize it
+        """
+
+        if self._settings and not force:
+            return
+
         adapter_store = AdapterStore()
         self._settings_adapter = adapter_store.get('AppSettingsPort')
         self._authn_adapter = adapter_store.get('AuthnPort')

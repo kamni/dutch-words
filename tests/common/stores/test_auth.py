@@ -17,12 +17,15 @@ class TestAuthStore(TestCase):
     @classmethod
     def setUpClass(cls):
         adapter_store = AdapterStore(subsection='dev.django')
-        adapter_store.initialize()
         cls.store = AuthStore()
 
         super().setUpClass()
 
+    def test_is_singleton(self):
+        pass
+
     def test_init_settings_does_not_exist(self):
+        
         pass
 
     def test_init_settings_false_false_false(self):

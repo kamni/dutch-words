@@ -4,6 +4,7 @@
 
 * AuthStore
   * AuthStore Tests
+    * Method to update settings
     * test is singleton
 
 * init_django in all adapters? Somewhere central?

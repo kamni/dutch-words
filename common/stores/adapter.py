@@ -37,6 +37,7 @@ class AdapterStore(metaclass=Singleton):
         """
         self._adapters = {}
         self._settings = SettingsStore(config, subsection)
+        self.initialize()
 
     def _get_adapter_cls(self, port_name: str):
         module_name, cls_name = self._settings.get('ports', port_name).rsplit('.', 1)
@@ -44,18 +45,18 @@ class AdapterStore(metaclass=Singleton):
         AdapterCls = getattr(module, cls_name)
         return AdapterCls
 
-    def initialize(self, force_rebuild: bool=False):
+    def initialize(self, force: bool=False):
         """
         Initialize adapters for use in the app.
 
         This is done as a separate step from __init__
         so we can troubleshoot individual adapter initializations.
 
-        :force_rebuild: Re-import the adapters.
+        :force: Re-import the adapters.
             If false, ignores build if adapters already exist.
         """
 
-        if force_rebuild:
+        if force:
             self._adapters = {}
 
         ports = self._settings.get('ports')

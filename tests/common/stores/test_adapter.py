@@ -61,22 +61,13 @@ class TestAdapterStore(TestCase):
             adapter_store._settings._config['config.meta']['name'],
         )
 
-    def test_initialize(self):
+    def test_initialize_at_init(self):
         adapter_store = AdapterStore(config=TEST_CONFIG)
-        expected_pre_initialize_adapters = {}
-
-        self.assertEqual(
-            expected_pre_initialize_adapters,
-            adapter_store._adapters,
-        )
-
-        adapter_store.initialize()
         for port in adapter_store._settings.get('ports'):
             self.assertTrue(port in adapter_store._adapters)
 
     def test_initialize_doesnt_override_existing_adapters(self):
         adapter_store = AdapterStore(config=TEST_CONFIG)
-        adapter_store.initialize()
 
         expected_value = 'override'
         for key in adapter_store._adapters.keys():
@@ -120,7 +111,7 @@ class TestAdapterStore(TestCase):
         for port in ports:
             adapter_store._adapters[port] = 'override'
 
-        adapter_store.initialize(force_rebuild=True)
+        adapter_store.initialize(force=True)
         for port in ports:
             adapter_cls = adapter_store._get_adapter_cls(port)
             self.assertEqual(
@@ -141,7 +132,7 @@ class TestAdapterStore(TestCase):
                 ][port] = 'override'
 
         with self.assertRaises(Exception) as exc:
-            adapter_store.initialize()
+            adapter_store.initialize(force=True)
         self.assertEqual(
             AdapterInitializationError,
             type(exc.exception),
@@ -157,7 +148,6 @@ class TestAdapterStore(TestCase):
 
     def test_get(self):
         adapter_store = AdapterStore(config=TEST_CONFIG)
-        adapter_store.initialize()
 
         # Not testing all ports; just a few for examples
         port_to_adapter_cls = {
@@ -173,7 +163,5 @@ class TestAdapterStore(TestCase):
 
     def test_get_throws_error_if_adapter_not_found(self):
         adapter_store = AdapterStore(config=TEST_CONFIG)
-        adapter_store.initialize()
-
         with self.assertRaises(AdapterNotFoundError):
             adapter_store.get('FooBarPort')

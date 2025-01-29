@@ -3,10 +3,6 @@
 ## User
 
 * AuthStore
-
-  * Don't get users where the django user is inactive
-  * Ignore getting the superuser when fetching users
-
   * AuthStore Tests
     * test is singleton
 

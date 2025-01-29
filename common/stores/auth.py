@@ -13,7 +13,7 @@ from ..stores.adapter import AdapterStore
 from ..utils.singleton import Singleton
 
 
-class AuthStore(Singleton):
+class AuthStore(metaclass=Singleton):
     """
     Tracks auth settings and current authenticated user
     """
@@ -32,29 +32,36 @@ class AuthStore(Singleton):
         self._user_db_adapter = adapter_store.get('UserDBPort')
         self._user_ui_adapter = adapter_store.get('UserUIPort')
 
-        settings = self._settings_adapter.get()
         self._settings = {
-            LOGGED_IN_USER: None,
-            IS_CONFIGURED: settings is not None,
-            SHOW_REGISTRATION: settings.multiuser_mode,
-            SHOW_PASSWORD_FIELD: settings.passwordless_login,
-            SHOW_USER_SELECT: settings.show_users_on_login_screen,
-            USER_SELECT_OPTIONS: [],
+            self.LOGGED_IN_USER: None,
+            self.IS_CONFIGURED: False,
+            self.USER_SELECT_OPTIONS: [],
+            self.SHOW_REGISTRATION: False,
+            self.SHOW_PASSWORD_FIELD: False,
+            self.SHOW_USER_SELECT: False,
         }
 
-        if not settings.multiuser_mode and settings.passwordless_login:
-            userdb = self._user_db_adapter.get_first()
-            userui = self._user_ui_adapter.get(userdb)
-            self._settings[LOGGED_IN_USER] = userui
+        settings = self._settings_adapter.get()
+        if settings:
+            self._settings.update({
+                self.IS_CONFIGURED: True,
+                self.SHOW_REGISTRATION: settings.multiuser_mode,
+                self.SHOW_PASSWORD_FIELD: settings.passwordless_login,
+                self.SHOW_USER_SELECT: settings.show_users_on_login_screen,
+            })
+            if not settings.multiuser_mode and settings.passwordless_login:
+                userdb = self._user_db_adapter.get_first()
+                userui = self._user_ui_adapter.get(userdb)
+                self._settings[self.LOGGED_IN_USER] = userui
 
-        if settings.show_users_on_login_screen:
-            usersdb = self._user_db_adapter.get_all()
-            usersui = self._user_ui_adapter.get_all(usersdb)
+            if settings.show_users_on_login_screen:
+                usersdb = self._user_db_adapter.get_all()
+                usersui = self._user_ui_adapter.get_all(usersdb)
 
-            if not settings.multiuser_mode and len(usersui) > 1:
-                usersui = usersui[0]
+                if not settings.multiuser_mode and len(usersui) > 1:
+                    usersui = usersui[0]
 
-            self._settings[USER_SELECT_OPTIONS] = usersui
+                self._settings[self.USER_SELECT_OPTIONS] = usersui
 
     def get(self, setting: str) -> Union[Any, None]:
         """
@@ -89,7 +96,7 @@ class AuthStore(Singleton):
         :raises: AuthnInvalidError if username/password don't work
         """
 
-        if not self.get(SHOW_PASSWORD_FIELD)
+        if not self.get(self.SHOW_PASSWORD_FIELD):
             try:
                 userdb = self._user_db_adapter.get_by_username(username)
                 userui = self._user_ui_adapter.get(userdb)
@@ -102,7 +109,7 @@ class AuthStore(Singleton):
             # Raises AuthnInvalidError if not successful
             userui = self._authn_adapter.login(username, password)
 
-        self._settings[LOGGED_IN_USER] = userui
+        self._settings[self.LOGGED_IN_USER] = userui
         return userui
 
     def logout(self):
@@ -110,5 +117,7 @@ class AuthStore(Singleton):
         Log current user out of the system.
         """
 
-        self._user_db_adapter.logout(self.logged_in_user)
-        self._settings[LOGGED_IN_USER] = None
+        user = self.get(self.LOGGED_IN_USER)
+        if user:
+            self._user_db_adapter.logout(user)
+            self._settings[self.LOGGED_IN_USER] = None

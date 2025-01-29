@@ -8,6 +8,7 @@ from django.test import TestCase
 
 from common.adapters.auth import AuthnDjangoORMAdapter
 from common.models.users import UserUI, UserDB
+from common.ports.auth import AuthnInvalidError
 from common.stores.adapter import AdapterStore
 
 
@@ -39,7 +40,8 @@ class TestAuthnDjangoORMAdapter(TestCase):
         self.assertEqual(expected, returned)
 
     def test_login_user_does_not_exist(self):
-        pass
+        with self.assertRaises(AuthnInvalidError):
+            self.auth_adapter.login('foo', 'bar')
 
     def test_login_user_does_not_have_settings(self):
         # Admin

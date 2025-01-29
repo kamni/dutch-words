@@ -82,6 +82,7 @@ class AuthnDjangoORMAdapter(AuthnPort):
             raise AuthnInvalidError('Django user found, but UserSettings missing')
 
         userui = self.user_ui_adapter.get(userdb)
+        return userui
 
     def logout(self, user: UserUI):
         """

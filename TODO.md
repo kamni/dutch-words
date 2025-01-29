@@ -2,10 +2,6 @@
 
 ## User
 
-* Allow adapterstore to define config
-* Fix adapterstore, settingsstore tests
-* Go through and create setUpClass for all adapter tests
-
 * AuthStore
   * AuthnPort
     * AuthnInvalidError

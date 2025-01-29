@@ -3,6 +3,8 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
+import uuid
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -56,7 +58,20 @@ class TestAuthnDjangoORMAdapter(TestCase):
             self.auth_adapter.login(username, password)
 
     def test_logout(self):
-        pass
+        user = UserDB(
+            username='test_logout',
+            password='1234567',
+            display_name='Test User',
+        )
+        userdb = self.user_db_adapter.create(user)
+        userui = self.user_ui_adapter.get(userdb)
+
+        self.assertIsNone(self.auth_adapter.logout(userui))
 
     def test_logout_user_does_not_exist(self):
-        pass
+        userui = UserUI(
+            id=uuid.uuid4(),
+            username='test_logout_doesnt_exist',
+            display_name='Test User',
+        )
+        self.assertIsNone(self.auth_adapter.logout(userui))

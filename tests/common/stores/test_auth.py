@@ -306,6 +306,37 @@ class TestAuthStore(TestCase):
         returned = auth_store._settings
         self.assertEqual(expected, returned)
 
+    def test_init_settings_false_false_true(self):
+        """
+        multiuser_mode = False
+        passwordless_login = False
+        show_users_on_login_screen = True
+        """
+
+        usersdb = [
+            UserDBDjangoORMAdapter().create(make_user_db())
+            for i in range(3)
+        ]
+        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+
+        AppSettings.objects.create(
+            multiuser_mode=False,
+            passwordless_login=False,
+            show_users_on_login_screen=True,
+        )
+        auth_store = AuthStore()
+
+        expected = {
+            AuthStore.LOGGED_IN_USER: None,
+            AuthStore.IS_CONFIGURED: True,
+            AuthStore.USER_SELECT_OPTIONS: [usersui[0]],
+            AuthStore.SHOW_REGISTRATION: False,
+            AuthStore.SHOW_PASSWORD_FIELD: True,
+            AuthStore.SHOW_USER_SELECT: True,
+        }
+        returned = auth_store._settings
+        self.assertEqual(expected, returned)
+
     '''
         usersdb = [
             UserDBDjangoORMAdapter().create(make_user_db())
@@ -334,14 +365,6 @@ class TestAuthStore(TestCase):
 
                 self._settings[self.USER_SELECT_OPTIONS] = usersui
     '''
-    def test_init_settings_false_false_true(self):
-        """
-        multiuser_mode = False
-        passwordless_login = False
-        show_users_on_login_screen = True
-        """
-        pass
-
     def test_login(self):
         pass
 

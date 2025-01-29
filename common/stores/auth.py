@@ -66,27 +66,28 @@ class AuthStore(metaclass=Singleton):
                 self.SHOW_USER_SELECT: settings.show_users_on_login_screen,
             })
 
-            # We're going to log the first user in automatically
-            if not settings.multiuser_mode and settings.passwordless_login:
-                # Why show this, when we're not showing the login form?
-                self._settings[self.SHOW_USER_SELECT] = False
-
+            if not settings.multiuser_mode:
                 userdb = self._user_db_adapter.get_first()
+
+                # We need to be able to add a user.
+                # Enable registration form, even if not explicitly enabled
                 if not userdb:
-                    # We need to be able to add a user.
-                    # Enable registration form, even if not explicitly enabled
                     self._settings[self.SHOW_REGISTRATION] = True
                 else:
                     userui = self._user_ui_adapter.get(userdb)
-                    self._settings[self.LOGGED_IN_USER] = userui
 
-            elif settings.show_users_on_login_screen:
+                    # We're going to log the user in automatically
+                    if settings.passwordless_login:
+                        self._settings[self.LOGGED_IN_USER] = userui
+                        # No need to show this
+                        self._settings[self.SHOW_USER_SELECT] = False
+
+                    elif settings.show_users_on_login_screen:
+                        self._settings[self.USER_SELECT_OPTIONS] = [userui]
+
+            elif self._settings[self.SHOW_USER_SELECT]:
                 usersdb = self._user_db_adapter.get_all()
                 usersui = self._user_ui_adapter.get_all(usersdb)
-
-                if not settings.multiuser_mode and len(usersui) > 0:
-                    usersui = [usersui[0]]
-
                 self._settings[self.USER_SELECT_OPTIONS] = usersui
 
     def get(self, setting: str) -> Union[Any, None]:

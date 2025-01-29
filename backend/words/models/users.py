@@ -18,6 +18,7 @@ class UserSettings(UserBase, models.Model):
     """
 
     class Meta:
+        ordering = ['created']
         verbose_name_plural = 'User Settings'
 
     id = models.UUIDField(
@@ -25,6 +26,11 @@ class UserSettings(UserBase, models.Model):
         blank=True,
         editable=False,
         default=uuid.uuid4,
+    )
+    created = models.DateTimeField(
+        blank=True,
+        auto_now_add=True,
+        editable=False,
     )
     user = models.OneToOneField(
         User,

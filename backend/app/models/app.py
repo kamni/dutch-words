@@ -14,6 +14,14 @@ class AppSettings(models.Model):
     WARNING: Highlander Model -- THERE CAN BE ONLY ONE!
     """
 
+    class Meta:
+        ordering = ['created']
+
+    created = models.DateTimeField(
+        blank=True,
+        auto_now_add=True,
+        editable=False,
+    )
     multiuser_mode = models.BooleanField(
         blank=True,
         default=False,

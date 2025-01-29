@@ -251,7 +251,60 @@ class TestAuthStore(TestCase):
         self.assertEqual(expected, returned)
 
     def test_init_settings_false_true_false_no_users(self):
-        pass
+        """
+        mutliuser_mode = False
+        passwordless_login = True
+        show_users_on_login_screen = False
+        """
+
+        AppSettings.objects.create(
+            multiuser_mode=False,
+            passwordless_login=True,
+            show_users_on_login_screen=False,
+        )
+        auth_store = AuthStore()
+
+        expected = {
+            AuthStore.LOGGED_IN_USER: None,
+            AuthStore.IS_CONFIGURED: True,
+            AuthStore.USER_SELECT_OPTIONS: [],
+            AuthStore.SHOW_REGISTRATION: True,
+            AuthStore.SHOW_PASSWORD_FIELD: False,
+            AuthStore.SHOW_USER_SELECT: False,
+        }
+        returned = auth_store._settings
+        self.assertEqual(expected, returned)
+
+    def test_init_settings_false_true_true(self):
+        """
+        multiuser_mode = False
+        passwordless_login = True
+        show_users_on_login_screen = True
+        """
+
+        usersdb = [
+            UserDBDjangoORMAdapter().create(make_user_db())
+            for i in range(3)
+        ]
+        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+
+        AppSettings.objects.create(
+            multiuser_mode=False,
+            passwordless_login=True,
+            show_users_on_login_screen=True,
+        )
+        auth_store = AuthStore()
+
+        expected = {
+            AuthStore.LOGGED_IN_USER: usersui[0],
+            AuthStore.IS_CONFIGURED: True,
+            AuthStore.USER_SELECT_OPTIONS: [],
+            AuthStore.SHOW_REGISTRATION: False,
+            AuthStore.SHOW_PASSWORD_FIELD: False,
+            AuthStore.SHOW_USER_SELECT: False,
+        }
+        returned = auth_store._settings
+        self.assertEqual(expected, returned)
 
     '''
         usersdb = [
@@ -281,14 +334,6 @@ class TestAuthStore(TestCase):
 
                 self._settings[self.USER_SELECT_OPTIONS] = usersui
     '''
-    def test_init_settings_false_true_true(self):
-        """
-        multiuser_mode = False
-        passwordless_login = True
-        show_users_on_login_screen = True
-        """
-        pass
-
     def test_init_settings_false_false_true(self):
         """
         multiuser_mode = False

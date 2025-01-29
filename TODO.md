@@ -2,6 +2,10 @@
 
 ## User
 
+* Allow adapterstore to define config
+* Fix adapterstore, settingsstore tests
+* Go through and create setUpClass for all adapter tests
+
 * AuthStore
   * AuthnPort
     * AuthnInvalidError
@@ -12,6 +16,8 @@
     * Tests
 
   * Don't get users where the django user is inactive
+  * Ignore getting the superuser when fetching users
+
   * AuthStore Tests
 
 * init_django in all adapters? Somewhere central?

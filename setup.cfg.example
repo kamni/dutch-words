@@ -24,6 +24,7 @@ UploadDir = data/uploads
 
 [dev.django.ports]
 AppSettingsPort = common.adapters.app.AppSettingsDjangoORMAdapter
+AuthnPort = common.adapters.auth.AuthnDjangoORMAdapter
 UserDBPort = common.adapters.users.UserDBDjangoORMAdapter
 UserUIPort = common.adapters.users.UserUIDjangoORMAdapter
 

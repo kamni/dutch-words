@@ -6,11 +6,12 @@ Affero GPL v3
 from django.contrib.auth import authenticate, login
 
 from ..models.errors import ObjectNotFoundError
+from ..models.users import UserUI
 from ..ports.auth import AuthnInvalidError, AuthnPort
 from ..stores.adapter import AdapterStore
 
 
-class AuthnDjangoORMAdapter(ABC):
+class AuthnDjangoORMAdapter(AuthnPort):
     """
     Handles authentication of a user using the Django ORM.
 
@@ -35,7 +36,6 @@ class AuthnDjangoORMAdapter(ABC):
         self._user_db_adapter = adapters.get('UserDBPort')
         self._user_ui_adapter = adapters.get('UserUIPort')
 
-    @abstractmethod
     def login(self, username: str, password: str) -> UserUI:
         """
         Log a user in.
@@ -67,7 +67,6 @@ class AuthnDjangoORMAdapter(ABC):
 
         userui = self._user_ui_adapter.get(userdb)
 
-    @abstractmethod
     def logout(self, user: UserUI):
         """
         Log a user out.

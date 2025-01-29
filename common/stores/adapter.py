@@ -26,9 +26,17 @@ class AdapterStore(metaclass=Singleton):
     Singleton that instantiates all adapters using the specified config
     """
 
-    def __init__(self, settings_store: Optional[SettingsStore]=None):
+    def __init__(
+        self,
+        config: Optional[str]=None,
+        subsection: Optional[str]=None,
+    ):
+        """
+        :config: setup.cfg to use to create adapters
+        :subsection: subsection of setup.cfg to use for settings
+        """
         self._adapters = {}
-        self._settings = settings_store or SettingsStore()
+        self._settings = SettingsStore(config, subsection)
 
     def _get_adapter_cls(self, port_name: str):
         module_name, cls_name = self._settings.get('ports', port_name).rsplit('.', 1)

@@ -7,6 +7,8 @@ from django.test import TestCase
 
 from common.stores.adapter import AdapterStore
 from common.stores.auth import AuthStore
+from common.sotres.settings import SettingsStore
+from common.utils.singleton import Singleton
 
 
 class TestAuthStore(TestCase):
@@ -16,10 +18,17 @@ class TestAuthStore(TestCase):
 
     @classmethod
     def setUpClass(cls):
+        # Get rid of lurking instances before starting tests
+        Singleton.destroy(AdapterStore)
+        Singleton.destroy(AuthStore)
+        Singleton.destroy(SettingsStore)
+
         adapter_store = AdapterStore(subsection='dev.django')
         cls.store = AuthStore()
-
         super().setUpClass()
+
+    def tearDown(self):
+        Singleton.destroy(AuthStore)
 
     def test_is_singleton(self):
         pass

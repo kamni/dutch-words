@@ -33,12 +33,12 @@ class SettingsStore(metaclass=Singleton):
             If not specified, uses the config.meta.DefaultConfig setting.
             Please look at the config.ini file for configuration optiions.
         """
-        config = config or DEFAULT_CONFIG
-        self._config = configparser.ConfigParser()
-        self._config.read(config)
-        self._subsection = (
-            subsection or self._config['config.meta']['defaultconfig']
-        )
+        self._config_name = config
+        self._subsection_name = subsection
+
+        self._config = {}
+        self._subsection = ''
+        self.initialize()
 
     @property
     def name(self):
@@ -62,6 +62,24 @@ class SettingsStore(metaclass=Singleton):
 
     def _get_ini_path(self, subpath: str):
         return f'{self._subsection}.{subpath}'
+
+    def initialize(self, force=True):
+        """
+        Initialize this store.
+        If it has already been initialized,
+        this will skip initialization.
+
+        :force: Force re-initialization
+        """
+        if self._config and not force:
+            return
+
+        config = config or DEFAULT_CONFIG
+        self._config = configparser.ConfigParser()
+        self._config.read(self._config_name)
+        self._subsection = (
+            self._subsection_name or self._config['config.meta']['defaultconfig']
+        )
 
     def get(
         self,

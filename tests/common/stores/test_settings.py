@@ -23,6 +23,7 @@ class TestSettingsStore(TestCase):
     def setUpClass(cls):
         # In case there is already lurking from somewhere else in the code
         Singleton.destroy(SettingsStore)
+        super().setUpClass()
 
     def tearDown(self):
         Singleton.destroy(SettingsStore)
@@ -72,6 +73,13 @@ class TestSettingsStore(TestCase):
             expected_subsection,
             settings_store._subsection,
         )
+
+    def test_initialize_already_initialized(self):
+        settings_store
+        pass
+
+    def test_initialize_forced(self):
+        pass
 
     def test_name(self):
         settings_store = SettingsStore()

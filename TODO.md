@@ -6,6 +6,7 @@
   * AuthStore Tests
     * Method to update settings
     * test is singleton
+    * be sure to singleton.destroy with each teardown
 
 * init_django in all adapters? Somewhere central?
 

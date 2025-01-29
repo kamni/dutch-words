@@ -74,8 +74,17 @@ class TestAuthStore(TestCase):
         self.assertFalse(adapter_store.get(AuthStore.IS_CONFIGURED))
 
     def test_init_settings_does_not_exist(self):
-        
-        pass
+        adapter_store = AuthStore()
+        expected = {
+            AuthStore.LOGGED_IN_USER: None,
+            AuthStore.IS_CONFIGURED: False,
+            AuthStore.USER_SELECT_OPTIONS: [],
+            AuthStore.SHOW_REGISTRATION: False,
+            AuthStore.SHOW_PASSWORD_FIELD: False,
+            AuthStore.SHOW_USER_SELECT: False,
+        }
+        returned = adapter_store._settings
+        self.assertEqual(expected, returned)
 
     def test_init_settings_false_false_false(self):
         """
@@ -95,12 +104,13 @@ class TestAuthStore(TestCase):
 
         settings = self._settings_adapter.get()
         self._settings = {
-            LOGGED_IN_USER: None,
-            IS_CONFIGURED: settings is not None,
-            SHOW_REGISTRATION: settings.multiuser_mode,
-            SHOW_PASSWORD_FIELD: settings.passwordless_login,
-            SHOW_USER_SELECT: settings.show_users_on_login_screen,
-            USER_SELECT_OPTIONS: [],
+            self.LOGGED_IN_USER: None,
+            self.IS_CONFIGURED: False,
+            self.USER_SELECT_OPTIONS: [],
+            self.SHOW_REGISTRATION: False,
+            self.SHOW_PASSWORD_FIELD: False,
+            self.SHOW_USER_SELECT: False,
+        }
         }
 
         if not settings.multiuser_mode and settings.passwordless_login:

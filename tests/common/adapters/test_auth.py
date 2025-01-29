@@ -16,15 +16,14 @@ class TestAuthnDjangoORMAdapter(TestCase):
     Tests for common.adapters.auth.AuthnDjangoORMAdapter
     """
 
-    '''
     @classmethod
     def setUpClass(cls):
         adapters = AdapterStore(subsection='dev.django')
         adapters.initialize()
 
-        self.auth_adapter = adapters.get('AuthnPort')
-        self.user_db_adapter = adapters.get('UserDBPort')
-        self.user_ui_adapter = adapters.get('UserUIPort')
+        cls.auth_adapter = adapters.get('AuthnPort')
+        cls.user_db_adapter = adapters.get('UserDBPort')
+        cls.user_ui_adapter = adapters.get('UserUIPort')
         super().setUpClass()
 
     def test_login(self):
@@ -33,7 +32,7 @@ class TestAuthnDjangoORMAdapter(TestCase):
             password='1234567',
             display_name='Test User',
         )
-        userdb = self._user_db_adapter.create(user)
+        userdb = self.user_db_adapter.create(user)
 
         expected = self.user_ui_adapter.get(userdb)
         returned = self.auth_adapter.login(user.username, user.password)
@@ -51,4 +50,3 @@ class TestAuthnDjangoORMAdapter(TestCase):
 
     def test_logout_user_does_not_exist(self):
         pass
-    '''

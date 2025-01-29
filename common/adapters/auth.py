@@ -31,10 +31,26 @@ class AuthnDjangoORMAdapter(AuthnPort):
         # Ignore any kwargs configuration.
         # This uses the django settings.
         super().__init__()
+        self._user_db_adapter = None
+        self._user_ui_adapter = None
 
-        adapters = AdapterStore()
-        self._user_db_adapter = adapters.get('UserDBPort')
-        self._user_ui_adapter = adapters.get('UserUIPort')
+    @property
+    def user_db_adapter(self):
+        # We can't instantiate these during __init__
+        # because it interferes with AdapterStore.initialize.
+        # Lazy load this adapters.
+        if not self._user_db_adapter:
+            self._user_db_adapter = AdapterStore().get('UserDBPort')
+        return self._user_db_adapter
+
+    @property
+    def user_ui_adapter(self):
+        # We can't instantiate these during __init__
+        # because it interferes with AdapterStore.initialize.
+        # Lazy load this adapters.
+        if not self._user_ui_adapter:
+            self._user_ui_adapter = AdapterStore().get('UserUIPort')
+        return self._user_ui_adapter
 
     def login(self, username: str, password: str) -> UserUI:
         """
@@ -59,13 +75,13 @@ class AuthnDjangoORMAdapter(AuthnPort):
             raise AuthnInvalidError('Failed to authenticate with Django')
 
         try:
-            userdb = self._user_db_adapter.get_by_username(username)
+            userdb = self.user_db_adapter.get_by_username(username)
         except ObjectNotFoundError:
             # This message is only for internal logging.
             # Do not show to users.
             raise AuthnInvalidError('Django user found, but UserSettings missing')
 
-        userui = self._user_ui_adapter.get(userdb)
+        userui = self.user_ui_adapter.get(userdb)
 
     def logout(self, user: UserUI):
         """

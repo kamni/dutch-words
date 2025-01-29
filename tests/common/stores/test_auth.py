@@ -5,6 +5,7 @@ Affero GPL v3
 
 from django.test import TestCase
 
+from app.models.app import AppSettings
 from common.stores.adapter import AdapterStore
 from common.stores.auth import AuthStore
 from common.stores.settings import SettingsStore
@@ -24,14 +25,53 @@ class TestAuthStore(TestCase):
         Singleton.destroy(SettingsStore)
 
         adapter_store = AdapterStore(subsection='dev.django')
-        cls.store = AuthStore()
         super().setUpClass()
+
+    def setUp(self):
+        AppSettings.objects.all().delete()
 
     def tearDown(self):
         Singleton.destroy(AuthStore)
 
     def test_is_singleton(self):
-        pass
+        adapter_store1 = AuthStore()
+        self.assertFalse(adapter_store1.get(AuthStore.IS_CONFIGURED))
+
+        AppSettings.objects.create(
+            multiuser_mode=True,
+            passwordless_login=True,
+            show_users_on_login_screen=True,
+        )
+        adapter_store2 = AuthStore()
+        self.assertFalse(adapter_store2.get(AuthStore.IS_CONFIGURED))
+
+    def test_initialize_already_initialized(self):
+        AppSettings.objects.create(
+            multiuser_mode=True,
+            passwordless_login=True,
+            show_users_on_login_screen=True,
+        )
+
+        adapter_store = AuthStore()
+        self.assertTrue(adapter_store.get(AuthStore.IS_CONFIGURED))
+
+        AppSettings.objects.all().delete()
+        adapter_store.initialize()
+        self.assertTrue(adapter_store.get(AuthStore.IS_CONFIGURED))
+
+    def test_initialize_forced(self):
+        AppSettings.objects.create(
+            multiuser_mode=True,
+            passwordless_login=True,
+            show_users_on_login_screen=True,
+        )
+
+        adapter_store = AuthStore()
+        self.assertTrue(adapter_store.get(AuthStore.IS_CONFIGURED))
+
+        AppSettings.objects.all().delete()
+        adapter_store.initialize(force=True)
+        self.assertFalse(adapter_store.get(AuthStore.IS_CONFIGURED))
 
     def test_init_settings_does_not_exist(self):
         
@@ -40,7 +80,7 @@ class TestAuthStore(TestCase):
     def test_init_settings_false_false_false(self):
         """
         multiuser_mode = False
-        paswordless_login = False
+        passwordless_login = False
         show_users_on_login_screen = False
         """
         pass

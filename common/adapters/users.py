@@ -75,7 +75,10 @@ class UserDBDjangoORMAdapter(UserDBPort):
         """
 
         try:
-            settings = UserSettings.objects.get(id=id)
+            settings = UserSettings.objects.get(
+                id=id,
+                user__is_active=True,
+            )
         except UserSettings.DoesNotExist as exc:
             raise ObjectNotFoundError(exc)
 
@@ -90,7 +93,9 @@ class UserDBDjangoORMAdapter(UserDBPort):
         :return: First user in the database; None if there are no users.
         """
 
-        user = UserSettings.objects.first()
+        user = UserSettings.objects.filter(
+            user__is_active=True,
+        ).first()
         userdb = self._django_to_pydantic(user) if user else None
         return userdb
 
@@ -105,7 +110,10 @@ class UserDBDjangoORMAdapter(UserDBPort):
         """
 
         try:
-            settings = UserSettings.objects.get(user__username=username)
+            settings = UserSettings.objects.get(
+                user__username=username,
+                user__is_active=True,
+            )
         except UserSettings.DoesNotExist as exc:
             raise ObjectNotFoundError(exc)
 
@@ -118,7 +126,7 @@ class UserDBDjangoORMAdapter(UserDBPort):
 
         :return: List of user objects (may be empty)
         """
-        users = UserSettings.objects.all()
+        users = UserSettings.objects.filter(user__is_active=True)
         usersdb = [self._django_to_pydantic(user) for user in users]
         return usersdb
 

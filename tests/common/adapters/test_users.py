@@ -98,6 +98,20 @@ class TestUserDBDjangoORMAdapter(TestCase):
         with self.assertRaises(ObjectNotFoundError):
             self.adapter.get(user_id)
 
+    def test_get_user_is_active_false(self):
+        user = UserDB(
+            username='test_get_inactive',
+            password='1234567',
+            display_name='Test User',
+        )
+        userdb = self.adapter.create(user)
+        settings = UserSettings.objects.get(id=userdb.id)
+        settings.user.is_active = False
+        settings.user.save()
+
+        with self.assertRaises(ObjectNotFoundError):
+            self.adapter.get(userdb.id)
+
     def test_get_first(self):
         user = UserDB(
             username='test_get_first',
@@ -132,6 +146,24 @@ class TestUserDBDjangoORMAdapter(TestCase):
         returned = self.adapter.get_first()
         self.assertEqual(expected, returned)
 
+    def test_get_first_is_active_false(self):
+        user = UserDB(
+            username='test_get_first_inactive',
+            password='1234567',
+            display_name='Test User',
+        )
+        userdb = self.adapter.create(user)
+
+        expected = userdb
+        returned = self.adapter.get_first()
+        self.assertEqual(expected, returned)
+
+        settings = UserSettings.objects.get(id=userdb.id)
+        settings.user.is_active = False
+        settings.user.save()
+
+        self.assertIsNone(self.adapter.get_first())
+
     def test_get_by_username(self):
         username = 'test_get_by_username'
         user = UserDB(
@@ -150,6 +182,21 @@ class TestUserDBDjangoORMAdapter(TestCase):
         with self.assertRaises(ObjectNotFoundError):
             self.adapter.get_by_username(username)
 
+    def test_get_by_username_user_inactive(self):
+        user = UserDB(
+            username='test_get_username_inactive',
+            password='1234567',
+            display_name='Test User',
+        )
+        userdb = self.adapter.create(user)
+
+        settings = UserSettings.objects.get(id=userdb.id)
+        settings.user.is_active = False
+        settings.user.save()
+
+        with self.assertRaises(ObjectNotFoundError):
+            self.assertIsNone(self.adapter.get_by_username(userdb.username))
+
     def test_get_all(self):
         user1 = UserDB(
             username='test_get_all1',
@@ -164,6 +211,17 @@ class TestUserDBDjangoORMAdapter(TestCase):
             display_name='Test User',
         )
         self.adapter.create(user2)
+
+        # ignore this user
+        user3 = UserDB(
+            username='test_get_all3',
+            password='1234567',
+            display_name='Test User',
+        )
+        userdb3 = self.adapter.create(user3)
+        settings = UserSettings.objects.get(id=userdb3.id)
+        settings.user.is_active = False
+        settings.user.save()
 
         expected = [user1, user2]
         returned = self.adapter.get_all()

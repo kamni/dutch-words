@@ -123,7 +123,10 @@ class AuthStore(metaclass=Singleton):
         :raises: AuthnInvalidError if username/password don't work
         """
 
-        if not self.get(self.SHOW_PASSWORD_FIELD):
+        if (
+            not self.get(self.SHOW_PASSWORD_FIELD) and
+            self.get(self.IS_CONFIGURED)
+        ):
             try:
                 userdb = self._user_db_adapter.get_by_username(username)
                 userui = self._user_ui_adapter.get(userdb)
@@ -133,6 +136,11 @@ class AuthStore(metaclass=Singleton):
                 # as it could facilitate brute-forcing usernames.
                 raise AuthnInvalidError(f'User {username} not found')
         else:
+            # Django apparently allows this (at least with sqlite),
+            # but we're not going to allow this
+            if not password:
+                raise AuthnInvalidError(f'No password supplied')
+
             # Raises AuthnInvalidError if not successful
             userui = self._authn_adapter.login(username, password)
 

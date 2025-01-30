@@ -356,7 +356,7 @@ class TestAuthStore(TestCase):
 
     def test_login_user_has_no_password(self):
         auth_store = AuthStore()
-        user = make_user_db(password='')
+        user = make_user_db(password=None)
         userdb = UserDBDjangoORMAdapter().create(user)
 
         with self.assertRaises(AuthnInvalidError):

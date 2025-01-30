@@ -2,10 +2,9 @@
 
 ## User
 
-* [ ] UserDB, UserUI have property is_admin
-* [ ] Rename AuthnPort/Adapter to just be Auth (handle both authn and authz)
+* [ ] Let auth call properties directly
 * [ ] Escape lets you exit AppSettings screen, but if not configured,
-      dumps you right back
+      asks if you want to go with default settings
 
 * [ ] On first run, set up so single user, passwordless login,
       NotImplementedErrors for other screens

@@ -29,6 +29,30 @@ class AuthStore(metaclass=Singleton):
         self._settings = {}
         self.initialize()
 
+    @property
+    def logged_in_user(self):
+        return self.get(self.LOGGED_IN_USER)
+
+    @property
+    def is_configured(self):
+        return self.get(self.IS_CONFIGURED)
+
+    @property
+    def user_select_options(self):
+        return self.get(self.USER_SELECT_OPTIONS)
+
+    @property
+    def show_registration(self):
+        return self.get(self.SHOW_REGISTRATION)
+
+    @property
+    def show_password_field(self):
+        return self.get(self.SHOW_PASSWORD_FIELD)
+
+    @property
+    def show_user_select(self):
+        return self.get(self.SHOW_USER_SELECT)
+
     def initialize(self, force: Optional[bool]=False):
         """
         Initialize this store.

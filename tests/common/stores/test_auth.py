@@ -16,7 +16,7 @@ from common.stores.auth import AuthStore
 from common.stores.settings import SettingsStore
 from common.utils.singleton import Singleton
 
-from ...utils_for_tests.users import make_user_db
+from ...utils_for_tests.users import make_user_db, make_user_ui
 
 
 class TestAuthStore(TestCase):
@@ -336,6 +336,56 @@ class TestAuthStore(TestCase):
             AuthStore.SHOW_USER_SELECT: True,
         }
         returned = auth_store._settings
+        self.assertEqual(expected, returned)
+
+    def test_logged_in_user(self):
+        auth_store = AuthStore()
+        userui = make_user_ui()
+        auth_store._settings[AuthStore.LOGGED_IN_USER] = userui
+
+        expected = userui
+        returned = auth_store.logged_in_user
+        self.assertEqual(expected, returned)
+
+    def test_is_configured(self):
+        auth_store = AuthStore()
+        auth_store._settings[AuthStore.IS_CONFIGURED] = True
+
+        expected = True
+        returned = auth_store.is_configured
+        self.assertEqual(expected, returned)
+
+    def test_user_select_options(self):
+        auth_store = AuthStore()
+        usersui = [make_user_ui() for i in range(3)]
+        auth_store._settings[AuthStore.USER_SELECT_OPTIONS] = usersui
+
+        expected = usersui
+        returned = auth_store.user_select_options
+        self.assertEqual(expected, returned)
+
+    def test_show_registration(self):
+        auth_store = AuthStore()
+        auth_store._settings[AuthStore.SHOW_REGISTRATION] = True
+
+        expected = True
+        returned = auth_store.show_registration
+        self.assertEqual(expected, returned)
+
+    def test_show_password_field(self):
+        auth_store = AuthStore()
+        auth_store._settings[AuthStore.SHOW_PASSWORD_FIELD] = True
+
+        expected = True
+        returned = auth_store.show_password_field
+        self.assertEqual(expected, returned)
+
+    def test_show_user_select(self):
+        auth_store = AuthStore()
+        auth_store._settings[AuthStore.SHOW_USER_SELECT] = True
+
+        expected = True
+        returned = auth_store.show_user_select
         self.assertEqual(expected, returned)
 
     def test_login(self):

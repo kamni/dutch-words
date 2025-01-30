@@ -24,27 +24,41 @@ class TenThousandWordsApp(App):
     CLI app for the 10,000 Words project
     """
 
-    SCREENS = {
-        'app_settings': AppSettingsScreen,
+    BINDINGS = [
+        ('e', 'app.switch_mode("edit")', 'Edit'),
+        ('l', 'app.switch_mode("learn")', 'Learn'),
+        ('s', 'app.switch_mode("settings")', 'Settings'),
+        ('q', 'logout', 'Log Out'),
+    ]
+
+    MODES = {
         'edit': EditScreen,
         'learn': LearnScreen,
         'login': LoginScreen,
-        'registration': RegistrationScreen,
-        'upload': UploadScreen,
+        'settings': SettingsScreen,
     }
 
-    def on_mount(self):
-        self._auth = AuthStore()
-        self._adapters = AdapterStore()
+    SCREENS = {
+        'upload': UploadScreen,
+        'register': RegistrationScreen,
+    }
 
+    @property
+    def auth(self):
+        if not hasattr(self, '_auth') or self._auth is None:
+            adapters = AdapterStore()
+            self._auth = adapters.get('AuthPort')
+        return self._auth
+
+    def on_mount(self):
         self.theme = 'flexoki'
 
-        # First time using the app
-        if self._login_not_configured:
-            self.push_screen('login')
-            self.push_screen('app_settings')
+        if not self.auth.is_configured:
+            self.switch_mode('settings')
         else:
-            self.push_screen('login')
+            self.switch_mode('login')
 
-    def _login_not_configured(self):
-        return self._auth.get(AuthStore.IS_CONFIGURED)
+    def action_logout(self):
+        self.auth.logout()
+        # TODO: Need to pop all other screens
+        self.switch_mode('login')

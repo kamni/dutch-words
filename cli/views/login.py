@@ -4,6 +4,7 @@ Affero GPL v3
 """
 
 import logging
+import os
 
 from textual.app import ComposeResult
 from textual.containers import Center, Container, VerticalGroup
@@ -43,7 +44,7 @@ SUBTITLE_TEXT = 'Teach yourself 10,000+ words in another language'
 
 
 class LoginScreen(Screen):
-    CSS_PATH = 'login.tcss'
+    CSS_PATH = os.path.join('css', 'login.tcss')
 
     def compose(self) -> ComposeResult:
         yield Container(

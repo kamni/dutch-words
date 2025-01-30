@@ -6,6 +6,7 @@ Affero GPL v3
 from django.test import TestCase
 
 from app.models.app import AppSettings
+from common.adapters.auth import AuthnInvalidError
 from common.adapters.users import (
     UserDBDjangoORMAdapter,
     UserUIDjangoORMAdapter,
@@ -349,7 +350,9 @@ class TestAuthStore(TestCase):
         self.assertEqual(expected, auth_store.get(AuthStore.LOGGED_IN_USER))
 
     def test_login_user_does_not_exist(self):
-        pass
+        auth_store = AuthStore()
+        with self.assertRaises(AuthnInvalidError):
+            auth_store.login('foo', 'bar')
 
     def test_login_user_has_no_password(self):
         pass

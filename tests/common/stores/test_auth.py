@@ -355,7 +355,12 @@ class TestAuthStore(TestCase):
             auth_store.login('foo', 'bar')
 
     def test_login_user_has_no_password(self):
-        pass
+        auth_store = AuthStore()
+        user = make_user_db(password='')
+        userdb = UserDBDjangoORMAdapter().create(user)
+
+        with self.assertRaises(AuthnInvalidError):
+            auth_store.login(user.username, user.password)
 
     def test_login_passwordless_login(self):
         pass

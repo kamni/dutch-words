@@ -5,10 +5,10 @@ Affero GPL v3
 
 from typing import Any, Optional, Union
 
-from ..ports.auth import AuthnInvalidError
+from ..ports.auth import AuthInvalidError
 from ..models.errors import ObjectNotFoundError
 from ..models.users import UserUI
-from ..ports.auth import AuthnInvalidError
+from ..ports.auth import AuthInvalidError
 from ..stores.adapter import AdapterStore
 from ..utils.singleton import Singleton
 
@@ -44,7 +44,7 @@ class AuthStore(metaclass=Singleton):
 
         adapter_store = AdapterStore()
         self._settings_adapter = adapter_store.get('AppSettingsPort')
-        self._authn_adapter = adapter_store.get('AuthnPort')
+        self._authn_adapter = adapter_store.get('AuthPort')
         self._user_db_adapter = adapter_store.get('UserDBPort')
         self._user_ui_adapter = adapter_store.get('UserUIPort')
 
@@ -120,7 +120,7 @@ class AuthStore(metaclass=Singleton):
         :password: User's password.
             Not required if passwordless login is enabled
 
-        :raises: AuthnInvalidError if username/password don't work
+        :raises: AuthInvalidError if username/password don't work
         """
 
         if (
@@ -134,14 +134,14 @@ class AuthStore(metaclass=Singleton):
                 # This message is only for internal logging.
                 # Do not show this to users,
                 # as it could facilitate brute-forcing usernames.
-                raise AuthnInvalidError(f'User {username} not found')
+                raise AuthInvalidError(f'User {username} not found')
         else:
             # Django apparently allows this (at least with sqlite),
             # but we're not going to allow this
             if not password:
-                raise AuthnInvalidError(f'No password supplied')
+                raise AuthInvalidError(f'No password supplied')
 
-            # Raises AuthnInvalidError if not successful
+            # Raises AuthInvalidError if not successful
             userui = self._authn_adapter.login(username, password)
 
         self._settings[self.LOGGED_IN_USER] = userui

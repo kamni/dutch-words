@@ -8,7 +8,7 @@ from textual.screen import Screen
 from textual.widgets import Static
 
 
-class LearningScreen(Screen):
+class LearnScreen(Screen):
     BINDINGS = [('escape', 'app.pop_screen', 'Back')]
 
     def compose(self) -> ComposeResult:

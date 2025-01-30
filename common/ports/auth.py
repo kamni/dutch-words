@@ -8,11 +8,11 @@ from abc import ABC, abstractmethod
 from ..models.users import UserUI
 
 
-class AuthnInvalidError(Exception):
+class AuthInvalidError(Exception):
     pass
 
 
-class AuthnPort(ABC):
+class AuthPort(ABC):
     """
     Handles authentication of a user
     """

@@ -31,6 +31,7 @@ class UserDBDjangoORMAdapter(UserDBPort):
             username=user.username,
             display_name=user.display_name,
             password=user.password,
+            is_admin=user.is_admin,
         )
         return pydantic_user
 
@@ -45,7 +46,10 @@ class UserDBDjangoORMAdapter(UserDBPort):
         """
 
         try:
-            new_user = User.objects.create(username=user.username)
+            new_user = User.objects.create(
+                username=user.username,
+                is_superuser=user.is_admin,
+            )
         except IntegrityError as exc:
             raise ObjectExistsError(exc)
 
@@ -146,6 +150,7 @@ class UserUIDjangoORMAdapter(UserUIPort):
             id=user.id,
             username=user.username,
             displayName=user.display_name or user.username,
+            isAdmin=user.is_admin,
         )
         return user_ui
 

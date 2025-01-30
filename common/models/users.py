@@ -33,6 +33,7 @@ class UserDB(UserBase, BaseModel):
     username: str
     password: Optional[str] = None
     display_name: Optional[str] = None
+    is_admin: Optional[bool] = False
 
     @property
     def unique_fields(self):
@@ -48,3 +49,4 @@ class UserUI(UserBase, BaseModel):
     id: uuid.UUID
     username: str
     displayName: Optional[str] = None
+    is_admin: Optional[bool] = False

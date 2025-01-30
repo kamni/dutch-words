@@ -69,6 +69,18 @@ class TestUserDBDjangoORMAdapter(TestCase):
         self.assertEqual(new_user.username, new_db_user.username)
         self.assertEqual(new_user.display_name, new_db_user.display_name)
 
+    def test_create_admin(self):
+        user = UserDB(
+            username='test_create_admin',
+            password='1234567',
+            display_name='Test User',
+            is_admin=True,
+        )
+        userdb = self.adapter.create(user)
+
+        new_user = UserSettings.objects.get(id=userdb.id)
+        self.assertTrue(new_user.is_admin)
+
     def test_create_duplicate_user(self):
         user = UserDB(
             username='test_create_user_duplicate_django_user',

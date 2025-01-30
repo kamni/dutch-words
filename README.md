@@ -52,5 +52,5 @@ textual console
 Then run the app in a separate terminal with:
 
 ```sh
-textual run --dev cli/__main__.py
+textual run --dev cli.app:TenThousandWordsApp
 ```

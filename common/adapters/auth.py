@@ -7,11 +7,11 @@ from django.contrib.auth import authenticate, login
 
 from ..models.errors import ObjectNotFoundError
 from ..models.users import UserUI
-from ..ports.auth import AuthnInvalidError, AuthnPort
+from ..ports.auth import AuthInvalidError, AuthPort
 from ..stores.adapter import AdapterStore
 
 
-class AuthnDjangoORMAdapter(AuthnPort):
+class AuthDjangoORMAdapter(AuthPort):
     """
     Handles authentication of a user using the Django ORM.
 
@@ -60,7 +60,7 @@ class AuthnDjangoORMAdapter(AuthnPort):
         :password: Password of the user.
 
         :return: UserUI:
-        :raises: AuthnInvalidError if user is not sucessfully authenticated.
+        :raises: AuthInvalidError if user is not sucessfully authenticated.
         """
         user = authenticate(
             request=None,
@@ -72,14 +72,14 @@ class AuthnDjangoORMAdapter(AuthnPort):
             # Do not show the message to users,
             # as it reveals the internals of the system
             # and may encourage hacking.
-            raise AuthnInvalidError('Failed to authenticate with Django')
+            raise AuthInvalidError('Failed to authenticate with Django')
 
         try:
             userdb = self.user_db_adapter.get_by_username(username)
         except ObjectNotFoundError:
             # This message is only for internal logging.
             # Do not show to users.
-            raise AuthnInvalidError('Django user found, but UserSettings missing')
+            raise AuthInvalidError('Django user found, but UserSettings missing')
 
         userui = self.user_ui_adapter.get(userdb)
         return userui

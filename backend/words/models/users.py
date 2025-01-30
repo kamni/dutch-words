@@ -45,9 +45,13 @@ class UserSettings(UserBase, models.Model):
     )
 
     @property
-    def username(self):
-        return self.user.username
+    def is_admin(self):
+        return self.user.is_superuser
 
     @property
     def password(self):
         return self.user.password
+
+    @property
+    def username(self):
+        return self.user.username

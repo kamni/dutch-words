@@ -6,7 +6,7 @@ Affero GPL v3
 from django.test import TestCase
 
 from app.models.app import AppSettings
-from common.adapters.auth import AuthnInvalidError
+from common.adapters.auth import AuthInvalidError
 from common.adapters.users import (
     UserDBDjangoORMAdapter,
     UserUIDjangoORMAdapter,
@@ -351,7 +351,7 @@ class TestAuthStore(TestCase):
 
     def test_login_user_does_not_exist(self):
         auth_store = AuthStore()
-        with self.assertRaises(AuthnInvalidError):
+        with self.assertRaises(AuthInvalidError):
             auth_store.login('foo', 'bar')
 
     def test_login_user_has_no_password(self):
@@ -364,7 +364,7 @@ class TestAuthStore(TestCase):
         user = make_user_db(password=None)
         userdb = UserDBDjangoORMAdapter().create(user)
 
-        with self.assertRaises(AuthnInvalidError):
+        with self.assertRaises(AuthInvalidError):
             auth_store.login(user.username, None)
 
     def test_login_user_has_no_password_and_unconfigured(self):
@@ -372,7 +372,7 @@ class TestAuthStore(TestCase):
         user = make_user_db(password=None)
         userdb = UserDBDjangoORMAdapter().create(user)
 
-        with self.assertRaises(AuthnInvalidError):
+        with self.assertRaises(AuthInvalidError):
             auth_store.login(user.username, None)
 
     def test_login_passwordless_login(self):
@@ -398,7 +398,7 @@ class TestAuthStore(TestCase):
         )
         auth_store = AuthStore()
 
-        with self.assertRaises(AuthnInvalidError):
+        with self.assertRaises(AuthInvalidError):
             auth_store.login('foo', None)
 
     def test_get(self):

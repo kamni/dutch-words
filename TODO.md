@@ -2,8 +2,10 @@
 
 ## User
 
-* [ ] init_django in all adapters? Somewhere central?
-  * [ ] tests
+* [ ] UserDB, UserUI have property is_admin
+* [ ] Rename AuthnPort/Adapter to just be Auth (handle both authn and authz)
+* [ ] Escape lets you exit AppSettings screen, but if not configured,
+      dumps you right back
 
 * [ ] On first run, set up so single user, passwordless login,
       NotImplementedErrors for other screens

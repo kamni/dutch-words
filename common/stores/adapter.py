@@ -45,6 +45,12 @@ class AdapterStore(metaclass=Singleton):
         AdapterCls = getattr(module, cls_name)
         return AdapterCls
 
+    def _get_init_script(self, initialize_script: str):
+        script_path, script_name = initialize_script.rsplit('.', 1)
+        module = importlib.import_module(script_path)
+        script = getattr(module, script_name)
+        return script
+
     def initialize(self, force: bool=False):
         """
         Initialize adapters for use in the app.
@@ -58,6 +64,12 @@ class AdapterStore(metaclass=Singleton):
 
         if force:
             self._adapters = {}
+
+        if not self._adapters or force:
+            init_script = self._settings.get('', 'InitializeScript')
+            if init_script:
+                script = self._get_init_script(init_script)
+                script()
 
         ports = self._settings.get('ports')
         exceptions = {}

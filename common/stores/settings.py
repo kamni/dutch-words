@@ -61,7 +61,10 @@ class SettingsStore(metaclass=Singleton):
             return value_type(value)
 
     def _get_ini_path(self, subpath: str):
-        return f'{self._subsection}.{subpath}'
+        if not subpath:
+            return self._subsection
+
+        return '.'.join([self._subsection, subpath])
 
     def initialize(self, force=False):
         """

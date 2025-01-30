@@ -2,13 +2,8 @@
 
 ## User
 
-* AuthStore
-  * AuthStore Tests
-    * Method to update settings
-    * test is singleton
-    * be sure to singleton.destroy with each teardown
-
-* init_django in all adapters? Somewhere central?
+* [ ] init_django in all adapters? Somewhere central?
+  * [ ] tests
 
 * [ ] On first run, set up so single user, passwordless login,
       NotImplementedErrors for other screens

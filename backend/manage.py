@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+
 import os
 import sys
 import warnings
@@ -7,8 +8,8 @@ from pathlib import Path
 
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
-if str(PROJECT_DIR) not in sys.path:
-    sys.path.append(str(PROJECT_DIR))
+if PROJECT_DIR.as_posix() not in sys.path:
+    sys.path.append(PROJECT_DIR.as_posix())
 
 
 def main():

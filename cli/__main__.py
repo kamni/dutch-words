@@ -5,12 +5,17 @@ Affero GPL v3
 
 import os
 import sys
+from pathlib import Path
 
-TOP_LEVEL_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if not TOP_LEVEL_FOLDER in sys.path:
-    sys.path.append(TOP_LEVEL_FOLDER)
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+if not PROJECT_DIR.as_posix() in sys.path:
+    sys.path.append(PROJECT_DIR.as_posix())
 
-from cli.app import TenThousandWordsApp
+BACKEND_DIR = PROJECT_DIR / 'backend'
+if not BACKEND_DIR.as_posix() in sys.path:
+    sys.path.append(BACKEND_DIR.as_posix())
+
+from .app import TenThousandWordsApp
 
 
 app = TenThousandWordsApp()

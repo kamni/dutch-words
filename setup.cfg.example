@@ -18,6 +18,7 @@ DefaultConfig = dev.django
 ###############################################################################
 
 [dev.django]
+InitializeScript = common.utils.initialization.init_django
 
 [dev.django.common]
 UploadDir = data/uploads

@@ -26,8 +26,6 @@ class TenThousandWordsApp(App):
     """
 
     BINDINGS = [
-        ('e', 'edit', 'Edit'),
-        ('l', 'learn', 'Learn'),
         ('q', 'logout', 'Log Out'),
     ]
 
@@ -52,6 +50,36 @@ class TenThousandWordsApp(App):
             self._auth = AuthStore()
         return self._auth
 
+    @property
+    def admin_bindings(self):
+        bindings = [
+            ('s', 'settings', 'Settings')
+            ('e', 'edit', 'Edit'),
+            ('l', 'learn', 'Learn'),
+            ('q', 'logout', 'Log Out'),
+        ]
+        return bindings
+
+    @property
+    def is_admin_session(self):
+        return self.auth.logged_in_user and self.auth.logged_in_user.is_admin
+
+    @property
+    def minimal_bindings(self):
+        bindings = [
+            ('q', 'logout', 'Log Out'),
+        ]
+        return bindings
+
+    @property
+    def standard_bindings(self):
+        bindings = [
+            ('e', 'edit', 'Edit'),
+            ('l', 'learn', 'Learn'),
+            ('q', 'logout', 'Log Out'),
+        ]
+        return bindings
+
     def on_mount(self):
         self.theme = 'flexoki'
 
@@ -65,16 +93,22 @@ class TenThousandWordsApp(App):
     def action_edit(self):
         if not self.auth.logged_in_user:
             return self.action_login()
+
+        self.set_bindings()
         self.switch_mode('edit')
 
     def action_learn(self):
         if not self.auth.logged_in_user:
             return self.action_login()
+
+        self.set_bindings()
         self.switch_mode('learn')
 
     def action_login(self):
         if not self.auth.is_configured:
             self.action_settings()
+
+        self.set_bindings(minimal=True)
         self.switch_mode('login', self.update_current_user)
 
     def action_logout(self):
@@ -84,6 +118,7 @@ class TenThousandWordsApp(App):
 
     def action_settings(self):
         if not self.auth.is_configured:
+            self.set_bindings(minimal=True)
             return self.switch_mode('settings')
 
         user = self.auth.logged_in_user
@@ -92,7 +127,16 @@ class TenThousandWordsApp(App):
         elif not user.is_admin:
             self.push_screen('permission_denied')
         else:
+            self.set_bindings(minimal=True)
             self.switch_mode('settings')
+
+    def set_bindings(self, minimal=False):
+        if minimal:
+            self.BINDINGS = self.minimal_bindings
+        elif self.is_admin_session:
+            self.BINDINGS = self.admin_bindings
+        else:
+            self.BINDINGS = self.standard_bindings
 
     def update_current_user(self):
         self.current_user = self.auth.logged_in_user
@@ -101,7 +145,7 @@ class TenThousandWordsApp(App):
         settings_bindings = ('s', 'settings', 'Settings')
         if self.current_user and self.current_user.is_admin:
             if settings_bindings not in self.BINDINGS:
-                self.BINDINGS.append(settings_bindings)
+                self.BINDINGS.insert(0, settings_bindings)
         else:
             if settings_bindings in self.BINDINGS:
                 self.BINDINGS.pop(self.BINDING.index(settings_bindings))

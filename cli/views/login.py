@@ -73,6 +73,7 @@ class LoginScreen(Screen):
             ),
             id='wrapper'
         )
+        yield Footer()
 
     def action_submit_form(self):
         button = self.query_one('#login-button')

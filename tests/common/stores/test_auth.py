@@ -428,4 +428,8 @@ class TestAuthStore(TestCase):
         self.assertIsNone(auth_store.get(AuthStore.LOGGED_IN_USER))
 
     def test_logout_user_not_logged_in(self):
-        pass
+        auth_store = AuthStore()
+        self.assertIsNone(auth_store.get(AuthStore.LOGGED_IN_USER))
+
+        auth_store.logout()
+        self.assertIsNone(auth_store.get(AuthStore.LOGGED_IN_USER))

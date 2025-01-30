@@ -355,15 +355,39 @@ class TestAuthStore(TestCase):
             auth_store.login('foo', 'bar')
 
     def test_login_user_has_no_password(self):
+        AppSettings.objects.create(
+            multiuser_mode=False,
+            passwordless_login=False,
+            show_users_on_login_screen=False,
+        )
         auth_store = AuthStore()
         user = make_user_db(password=None)
         userdb = UserDBDjangoORMAdapter().create(user)
 
         with self.assertRaises(AuthnInvalidError):
-            auth_store.login(user.username, user.password)
+            auth_store.login(user.username, None)
+
+    def test_login_user_has_no_password_and_unconfigured(self):
+        auth_store = AuthStore()
+        user = make_user_db(password=None)
+        userdb = UserDBDjangoORMAdapter().create(user)
+
+        with self.assertRaises(AuthnInvalidError):
+            auth_store.login(user.username, None)
 
     def test_login_passwordless_login(self):
-        pass
+        AppSettings.objects.create(
+            multiuser_mode=False,
+            passwordless_login=True,
+            show_users_on_login_screen=False,
+        )
+        auth_store = AuthStore()
+
+        user = make_user_db(password=None)
+        userdb = UserDBDjangoORMAdapter().create(user)
+
+        expected = UserUIDjangoORMAdapter().get(userdb)
+        returned = auth_store.login(user.username, None)
 
     def test_login_passwordless_login_user_does_not_exist(self):
         pass

@@ -388,6 +388,7 @@ class TestAuthStore(TestCase):
 
         expected = UserUIDjangoORMAdapter().get(userdb)
         returned = auth_store.login(user.username, None)
+        self.assertEqual(expected, returned)
 
     def test_login_passwordless_login_user_does_not_exist(self):
         pass

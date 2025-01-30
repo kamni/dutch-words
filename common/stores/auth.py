@@ -108,7 +108,7 @@ class AuthStore(metaclass=Singleton):
         :return: Specified setting, if exists; otherwise None
         """
 
-        setting = self._settings.get(setting)
+        setting = self._settings[setting]
         return setting
 
     def login(self, username: str, password: Optional[str]=None) -> UserUI:
@@ -154,5 +154,5 @@ class AuthStore(metaclass=Singleton):
 
         user = self.get(self.LOGGED_IN_USER)
         if user:
-            self._user_db_adapter.logout(user)
+            self._authn_adapter.logout(user)
             self._settings[self.LOGGED_IN_USER] = None

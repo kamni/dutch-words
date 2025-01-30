@@ -409,10 +409,23 @@ class TestAuthStore(TestCase):
             self.assertEqual(expected, returned)
 
     def test_get_setting_does_not_exist(self):
-        pass
+        auth_store = AuthStore()
+        with self.assertRaises(KeyError):
+            auth_store.get('foo')
 
     def test_logout(self):
-        pass
+        auth_store = AuthStore()
+
+        user = make_user_db()
+        userdb = UserDBDjangoORMAdapter().create(user)
+        userui = auth_store.login(user.username, user.password)
+
+        expected=userui
+        returned = auth_store.get(AuthStore.LOGGED_IN_USER)
+        self.assertEqual(expected, returned)
+
+        auth_store.logout()
+        self.assertIsNone(auth_store.get(AuthStore.LOGGED_IN_USER))
 
     def test_logout_user_not_logged_in(self):
         pass

@@ -337,36 +337,16 @@ class TestAuthStore(TestCase):
         returned = auth_store._settings
         self.assertEqual(expected, returned)
 
-    '''
-        usersdb = [
-            UserDBDjangoORMAdapter().create(make_user_db())
-            for i in range(3)
-        ]
-        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
-
-        if settings:
-            self._settings.update({
-                self.IS_CONFIGURED: True,
-                self.SHOW_REGISTRATION: settings.multiuser_mode,
-                self.SHOW_PASSWORD_FIELD: settings.passwordless_login,
-                self.SHOW_USER_SELECT: settings.show_users_on_login_screen,
-            })
-            if not settings.multiuser_mode and settings.passwordless_login:
-                userdb = self._user_db_adapter.get_first()
-                userui = self._user_ui_adapter.get(userdb)
-                self._settings[self.LOGGED_IN_USER] = userui
-
-            if settings.show_users_on_login_screen:
-                usersdb = self._user_db_adapter.get_all()
-                usersui = self._user_ui_adapter.get_all(usersdb)
-
-                if not settings.multiuser_mode and len(usersui) > 1:
-                    usersui = usersui[0]
-
-                self._settings[self.USER_SELECT_OPTIONS] = usersui
-    '''
     def test_login(self):
-        pass
+        auth_store = AuthStore()
+        user = make_user_db()
+        userdb = UserDBDjangoORMAdapter().create(user)
+
+        expected = UserUIDjangoORMAdapter().get(userdb)
+        returned = auth_store.login(user.username, user.password)
+        self.assertEqual(expected, returned)
+
+        self.assertEqual(expected, auth_store.get(AuthStore.LOGGED_IN_USER))
 
     def test_login_user_does_not_exist(self):
         pass

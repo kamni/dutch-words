@@ -401,6 +401,13 @@ class TestAuthStore(TestCase):
         with self.assertRaises(AuthnInvalidError):
             auth_store.login('foo', None)
 
+    def test_get(self):
+        auth_store = AuthStore()
+        for key, value in auth_store._settings.items():
+            expected = value
+            returned = auth_store.get(key)
+            self.assertEqual(expected, returned)
+
     def test_get_setting_does_not_exist(self):
         pass
 

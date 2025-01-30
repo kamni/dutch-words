@@ -391,7 +391,15 @@ class TestAuthStore(TestCase):
         self.assertEqual(expected, returned)
 
     def test_login_passwordless_login_user_does_not_exist(self):
-        pass
+        AppSettings.objects.create(
+            multiuser_mode=False,
+            passwordless_login=True,
+            show_users_on_login_screen=False,
+        )
+        auth_store = AuthStore()
+
+        with self.assertRaises(AuthnInvalidError):
+            auth_store.login('foo', None)
 
     def test_get_setting_does_not_exist(self):
         pass

@@ -66,12 +66,15 @@ class AdapterStore(metaclass=Singleton):
             self._adapters = {}
 
         if not self._adapters or force:
-            init_script = self._settings.get('', 'InitializeScript')
+            init_script = self._settings.get('', 'InitScript')
             if init_script:
                 script = self._get_init_script(init_script)
                 script()
 
         ports = self._settings.get('ports')
+        if not ports:
+            return
+
         exceptions = {}
         for port in ports:
             # Don't override existing adapters

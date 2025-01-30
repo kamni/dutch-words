@@ -18,6 +18,7 @@ from common.stores.adapter import (
 from common.stores.settings import SettingsStore
 from common.utils.singleton import Singleton
 
+from ...utils_for_tests.init_scripts import FakeStore
 
 TEST_CONFIG_DIR = Path(__file__).resolve().parent.parent.parent
 TEST_CONFIG = TEST_CONFIG_DIR / 'setup.cfg'
@@ -33,11 +34,13 @@ class TestAdapterStore(TestCase):
         # Get rid of lurking instances before starting tests
         Singleton.destroy(AdapterStore)
         Singleton.destroy(SettingsStore)
+        Singleton.destroy(FakeStore)
         super().setUpClass()
 
     def tearDown(self):
         Singleton.destroy(AdapterStore)
         Singleton.destroy(SettingsStore)
+        Singleton.destroy(FakeStore)
 
     def test_is_singleton(self):
         adapter_store = AdapterStore()
@@ -72,6 +75,20 @@ class TestAdapterStore(TestCase):
         adapter_store = AdapterStore(config=TEST_CONFIG)
         for port in adapter_store._settings.get('ports'):
             self.assertTrue(port in adapter_store._adapters)
+
+    def test_initialize_custom_init_script(self):
+        foo = FakeStore('foo')
+        self.assertEqual(foo._foo, 'foo')
+
+        adapter_store = AdapterStore(config=TEST_CONFIG, subsection='test')
+        self.assertEqual(foo._foo, 'bar')
+
+    def test_initialize_no_custom_init_script(self):
+        foo = FakeStore('foo')
+        self.assertEqual(foo._foo, 'foo')
+
+        adapter_store = AdapterStore(config=TEST_CONFIG, subsection='test2')
+        self.assertEqual(foo._foo, 'foo')
 
     def test_initialize_doesnt_override_existing_adapters(self):
         adapter_store = AdapterStore(config=TEST_CONFIG)

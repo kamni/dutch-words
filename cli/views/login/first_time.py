@@ -44,8 +44,8 @@ class FirstTimeModal(ModalScreen):
 
     def compose(self) -> ComposeResult:
         self.steps = [
-            #Step1(id='step1'),
-            #Step2(id='step2'),
+            Step1(id='step1'),
+            Step2(id='step2'),
             Step3(id='step3'),
         ]
         yield Middle(
@@ -56,11 +56,11 @@ class FirstTimeModal(ModalScreen):
     def on_button_pressed(self, event: Button.Pressed):
         button = event.button
 
-        current_step_idx = int(button.id.split('-')[0][-1])
-        current_step = self.steps[current_step_idx - 1]
-        current_step.handle_it()
-
         try:
+            current_step_idx = int(button.id.split('-')[0][-1])
+            current_step = self.steps[current_step_idx - 1]
+            current_step.handle_it()
+
             next_step_idx = int(button.name.split('-')[1])
             next_step = self.steps[next_step_idx - 1]
         except IndexError:
@@ -157,6 +157,7 @@ class Step3(BaseStep, RegistrationWidget):
         container.mount(new_button)
 
     def handle_it(self):
+        # The first user should be an admin
         user = self.userdb_adapter.get_first()
         if not user.is_admin:
             user.is_admin = True

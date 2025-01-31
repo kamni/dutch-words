@@ -17,18 +17,19 @@
 
 ## CLI User Setup
 
-* UserDB.update()
-* [ ] Save user
+* [x] Save user
   * [ ] logging
 * [ ] User screen
   * [ ] If a user already exists, drop to login screen
-  * [ ] be sure to save first user as admin
+  * [x] be sure to save first user as admin
   * [ ] Input Validation
     * [ ] Display errors
 * [ ] Return to login
 * [ ] Testing
 
 ## CLI Login
+
+* [ ] Move users model out of words.models
 
 * [ ] Make login use the main title widget
 * [ ] Change password

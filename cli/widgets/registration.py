@@ -9,6 +9,7 @@ from textual.app import ComposeResult
 from textual.containers import Center, Container
 from textual.widgets import Button, Input, Static
 
+from common.models.users import UserDB
 from common.stores.adapter import AdapterStore
 
 
@@ -30,7 +31,7 @@ class RegistrationWidget(Container):
 
     @property
     def userdb_adapter(self):
-        if not hasattr(self, _userdb_adapter) or self._userdb_adapter is None:
+        if not hasattr(self, '_userdb_adapter') or self._userdb_adapter is None:
             adapters = AdapterStore()
             self._userdb_adapter = adapters.get('UserDBPort')
         return self._userdb_adapter
@@ -55,8 +56,15 @@ class RegistrationWidget(Container):
 
     def on_button_pressed(self, event: Button.Pressed):
         event.button.disabled = True
-        # TODO: re-enable if validation errors
-        # TODO: save user
+
+        userdb = UserDB(
+            username=self.query_one('#username-input').value,
+            password=self.query_one('#password-input').value,
+        )
+        self.userdb_adapter.create(userdb)
+        # TODO: re-enable button if save errors
+        # TODO: post errors
+        # TODO: don't let the first_time form go to the next step
 
     def on_mount(self):
         first_field = self.query_one('#username-input')

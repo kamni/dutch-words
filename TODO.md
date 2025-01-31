@@ -1,14 +1,19 @@
 # TODOS
 
-## CLI App Settings
+## CLI Settings Container
 
-* [ ] Turn tab config into model?
+* [x] Get styles working when switch is changed
+* [ ] Rename the classes to be more generic
+* [ ] Refactor it into a widget
+* [ ] Initialize settings from database, if it exists
+* [ ] Save settings
+* [ ] Progress to next screen in setup
 
-* [ ] On first run, set up so single user, passwordless login,
-      NotImplementedErrors for other screens
-* [ ] UserDBPort.get_all
-* [ ] First run: prompt for settings if no users
-  * [ ] Config screen
+## CLI User Setup
+
+* [ ] Tasks TBD
+
+---
 
 ## Document
 

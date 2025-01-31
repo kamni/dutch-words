@@ -3,10 +3,59 @@
  * Affero GPL v3
  **/
 
+/* General */
+
 .step-button {
     margin: 2 0;
 }
 
 .step-text {
     text-align: center;
+}
+
+/* Step 2 */
+
+.step2-question {
+    content-align: left middle;
+    height: 100%;
+    margin-right: 2;
+    width: 25;
+}
+
+.step2-no {
+    content-align: center middle;
+    height: 100%;
+    width: 6;
+}
+.step2-no-unselected {
+    color: $text-warning;
+}
+.step2-no-selected {
+    background: $warning-muted;
+    border: tall $warning;
+    color: $text-warning;
+    text-style: bold;
+}
+
+.step2-yes {
+    content-align: center middle;
+    height: 100%;
+    width: 7;
+}
+.step2-yes-unselected {
+    color: $text-success;
+}
+.step2-yes-selected {
+    background: $warning-muted;
+    border: tall $warning;
+    color: $text-success;
+    text-style: bold;
+}
+
+.step2-switch {}
+
+.step2-switch-wrapper {
+    height: auto;
+    margin-bottom: 2;
+    width: auto;
 }

@@ -22,11 +22,11 @@ logging.basicConfig(
 
 TITLE_TEXT1 = """
    _   __        __     __     __
- /' )/' _`\    /' _`\ /' _`\ /' _`\\
+ /' )/' _`\\    /' _`\\ /' _`\\ /' _`\\
 (_, || ( ) |   | ( ) || ( ) || ( ) |
   | || | | |   | | | || | | || | | |
   | || (_) | _ | (_) || (_) || (_) |
-  (_)`\___/'( )`\___/'`\___/'`\___/'
+  (_)`\\___/'( )`\\___/'`\\___/'`\\___/'
             |/
 """
 
@@ -34,9 +34,9 @@ TITLE_TEXT2 = """
   _       _                 _
  ( )  _  ( )               ( )
  | | ( ) | |   _    _ __  _| | ___
- | | | | | | /'_`\ ( '__)'_` /',__)
- | (_/ \_) |( (_) )| | ( (_| \__, \\
- `\___x___/'`\___/'(_) `\__,_|____/
+ | | | | | | /'_`\\ ( '__)'_` /',__)
+ | (_/ \\_) |( (_) )| | ( (_| \\__, \\
+ `\\___x___/'`\\___/'(_) `\\__,_|____/
 """
 
 SUBTITLE_TEXT = 'Teach yourself 10,000+ words in another language'
@@ -44,7 +44,7 @@ SUBTITLE_TEXT = 'Teach yourself 10,000+ words in another language'
 
 
 class LoginScreen(Screen):
-    CSS_PATH = os.path.join('css', 'login.tcss')
+    CSS_PATH = os.path.join('..', 'css', 'login.tcss')
 
     def compose(self) -> ComposeResult:
         yield Container(

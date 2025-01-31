@@ -14,7 +14,7 @@ from common.stores.auth import AuthStore
 from .views.edit import EditScreen, UploadModal
 from .views.learn import LearnScreen
 from .views.login import FirstTimeModal, LoginScreen, RegistrationModal
-from .views.settings import PermissionDenied, SettingsScreen
+from .views.settings import PermissionDeniedModal, SettingsScreen
 
 
 class TenThousandWordsApp(App):
@@ -30,7 +30,7 @@ class TenThousandWordsApp(App):
         'edit': EditScreen,
         'learn': LearnScreen,
         'login': LoginScreen,
-        'settings': AppSettingsScreen,
+        'settings': SettingsScreen,
     }
 
     SCREENS = {
@@ -51,7 +51,7 @@ class TenThousandWordsApp(App):
     @property
     def admin_bindings(self):
         bindings = [
-            ('s', 'settings', 'Settings')
+            ('s', 'settings', 'Settings'),
             ('e', 'edit', 'Edit'),
             ('l', 'learn', 'Learn'),
             ('q', 'logout', 'Log Out'),
@@ -102,7 +102,7 @@ class TenThousandWordsApp(App):
 
     def action_login(self):
         self.set_bindings(minimal=True)
-        self.switch_mode('login', self.update_current_user)
+        self.switch_mode('login')
 
         if not self.auth.is_configured:
             self.push_screen('first_time')
@@ -115,7 +115,9 @@ class TenThousandWordsApp(App):
     def action_settings(self):
         if not self.auth.is_configured:
             self.set_bindings(minimal=True)
-            return self.switch_mode('settings')
+            self.switch_mode('login')
+            self.push_screen('first_time')
+            return
 
         user = self.auth.logged_in_user
         if not user:

@@ -19,12 +19,12 @@ class TempButton(Button):
     pass
 
 
-class AppSettingsScreen(Screen):
+class SettingsScreen(Screen):
     """
     Manage the settings for the app
     """
 
-    CSS_PATH = os.path.join('css', 'app_settings.tcss')
+    CSS_PATH = os.path.join('..', 'css', 'app_settings.tcss')
 
     BINDINGS = [
         ('s', 'save', 'Save'),

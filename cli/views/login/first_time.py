@@ -13,9 +13,9 @@ class TempButton(Button):
     pass
 
 
-class RegistrationModal(ModalScreen):
+class FirstTimeModal(ModalScreen):
     """
-    Register a new user
+    Configure settings and user
     """
 
     def compose(self) -> ComposeResult:

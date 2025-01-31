@@ -4,4 +4,4 @@ Affero GPL v3
 """
 
 from .main import SettingsScreen
-from .permissions import PermissionDenied
+from .permissions import PermissionDeniedModal

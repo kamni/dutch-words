@@ -17,40 +17,27 @@ models.
 ## Requirements
 
 * Python >= 3.12
+* Docker >= 27.5.1
 
 
 ## Development
 
-Install python requirements:
+Run the docker container:
 
 ```sh
-pip install -r requirements.txt
-pip install -r requirements_dev.txt
+docker compose up -d --build
 ```
 
-Set up the Django ORM:
+Then SSH into the docker container to set up Django:
 
 ```sh
+docker compose exec web bash
 cd backend
 python manage.py migrate
-python manage.py runserver
 ```
 
-Create an admin user:
+Optionally you can create a superuser to access the Django admin:
 
 ```sh
 python manage.py createsuperuser
-```
-
-Connect to the textual terminal for debugging:
-
-```sh
-cd ..
-textual console
-```
-
-Then run the app in a separate terminal with:
-
-```sh
-textual run --dev cli.app:TenThousandWordsApp
 ```

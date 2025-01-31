@@ -9,3 +9,12 @@ services:
     command: textual serve 'python -m cli' --host 0.0.0.0 --port 8000 --dev
     volumes:
       - .:/code
+  db:
+    image: postgres:17.2-bookworm
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+volumes:
+  postgres_data:

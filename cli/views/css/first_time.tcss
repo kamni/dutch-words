@@ -3,18 +3,10 @@
  * Affero GPL v3
  **/
 
-#step1 {}
-
-#step1-text {}
-
-#step1-text-wrapper {}
-
-#step1-button-wrapper {
+.step-button {
     margin: 2 0;
 }
 
-#step1-button {}
-
-.step1-text {
+.step-text {
     text-align: center;
 }

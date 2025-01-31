@@ -1,0 +1,11 @@
+# Copyright (C) J Leadbetter <j@jleadbetter.com>
+# Affero GPL v3
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    command: textual serve 'python -m cli' --host 0.0.0.0 --port 8000 --dev
+    volumes:
+      - .:/code

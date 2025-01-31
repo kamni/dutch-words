@@ -34,6 +34,13 @@ class TenThousandWordsApp(App):
     }
 
     SCREENS = {
+        # Modes
+        'edit': EditScreen,
+        'learn': LearnScreen,
+        'login': LoginScreen,
+        'settings': SettingsScreen,
+
+        # Modals
         'first_time': FirstTimeModal,
         'permission_denied': PermissionDeniedModal,
         'register': RegistrationModal,

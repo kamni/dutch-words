@@ -11,6 +11,8 @@ from common.stores.auth import AuthStore
 from common.utils.singleton import Singleton
 
 from cli.app import TenThousandWordsApp
+from cli.views.edit.main import EditScreen
+from cli.views.learn.main import LearnScreen
 from cli.views.login.first_time import FirstTimeModal
 from cli.views.login.main import LoginScreen
 
@@ -95,5 +97,12 @@ class TestTenThousandSentencesApp(TestCase):
             returned = app.screen.name
             self.assertEqual(expected, returned)
 
-    async def test_on_mount_user_logged_in(self):
+    async def test_on_mount_user_auto_logged_in(self):
+        # TODO: implement after passwordless_login redirect works
+        # Regular user should not have access to settings
+        pass
+
+    async def test_on_mount_admin_user_auto_logged_in(self):
+        # TODO: implement after passwordless_login redirect works.
+        # Admin should have access to settings
         pass

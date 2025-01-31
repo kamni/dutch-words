@@ -1,42 +1,29 @@
 # TODOS
 
-## CLI Settings Container
+## Misc
 
-* [x] Get styles working when switch is changed
-* [x] Rename the classes to be more generic
-* [x] Refactor it into a widget
-* [x] Rename title widget to have 'widget' in the name
-* [x] Refactor views/css folder into individual views
-* [x] Set button name so it progresses
-* [x] When button is clicked, disable it for double-click
+* [ ] Move UserSettings class out of words
 
-* [x] Initialize settings from database, if it exists
-* [x] Save settings
-  * [ ] logging
-* [ ] Testing
+## Logging
 
-## CLI User Setup
+* [ ] Log when user is created (username, admin status)
+* [ ] Log when user logs in (username, admin status)
 
-* [x] Save user
-  * [ ] logging
-* [ ] User screen
-  * [ ] If a user already exists, drop to login screen
-  * [x] be sure to save first user as admin
-  * [ ] Input Validation
-    * [ ] Display errors
-* [x] Return to login
-* [ ] Testing
+## UI Testing
 
-## CLI Login
+* [ ] first_time.py
 
-* [ ] Move users model out of words.models
+## First Time
 
-* [ ] Make login use the main title widget
-* [ ] Change password
+* [ ] Error handling
+  * [ ] Validation for username/password
+  * [ ] User already exists
+  * [ ] Display error messages
 
-## CLI Settings
+## Login
 
-* [ ] Make settings use the settings widget
+* [ ] Make login use MainTitleWidget
+* [ ] Redirect to Edit when successful login
 
 ---
 

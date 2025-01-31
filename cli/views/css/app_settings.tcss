@@ -1,0 +1,37 @@
+/**
+ * Copyright (C) J Leadbetter <j@jleadbetter.com>
+ * Affero GPL v3
+ **/
+
+.test {
+    color: red;
+}
+
+Screen {
+    align: center middle;
+}
+
+.container {
+    height: auto;
+    width: auto;
+}
+
+Switch {
+    height: auto;
+    width: auto;
+}
+
+.label {
+    height: 3;
+    content-align: center middle;
+    width: auto;
+}
+
+#custom-design {
+    background: darkslategrey;
+}
+
+#custom-design > .switch--slider {
+    color: dodgerblue;
+    background: darkslateblue;
+}

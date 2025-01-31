@@ -1,10 +1,8 @@
 # TODOS
 
-## User
+## CLI App Settings
 
-* [ ] Let auth call properties directly
-* [ ] Escape lets you exit AppSettings screen, but if not configured,
-      asks if you want to go with default settings
+* [ ] Turn tab config into model?
 
 * [ ] On first run, set up so single user, passwordless login,
       NotImplementedErrors for other screens
@@ -19,6 +17,8 @@
 * [ ] Port/adapter for getting DocumentDB
 * [ ] Port/adapter for converting to DocumentUI
 * [ ] Add to setup.cfg
+
+## Add some help documentation
 
 ## Cleanup
 

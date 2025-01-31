@@ -35,27 +35,6 @@ class FirstTimeModal(ModalScreen):
     ] + MainTitleWidget.CSS_PATH + SettingsWidget.CSS_PATH + \
         RegistrationWidget.CSS_PATH
 
-    @property
-    def settings(self):
-        if not hasattr(self, '_settings') or self._settings is None:
-            adapters = AdapterStore()
-            self._settings = adapters.get('AppSettingsPort')
-        return self._settings
-
-    @property
-    def user_db(self):
-        if not hasattr(self, '_user_db') or self._user_db is None:
-            adapters = AdapterStore()
-            self._user_db = adapters.get('UserDBPort')
-        return self._user_db
-
-    @property
-    def user_ui(self):
-        if not hasattr(self, '_user_ui') or self._user_ui is None:
-            adapters = AdapterStore()
-            self._user_ui = adapters.get('UserUIPort')
-        return self._user_ui
-
     def compose(self) -> ComposeResult:
         self.steps = [
             Step1(id='step1'),

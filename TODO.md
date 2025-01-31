@@ -8,22 +8,23 @@
 * [x] Rename title widget to have 'widget' in the name
 * [x] Refactor views/css folder into individual views
 * [x] Set button name so it progresses
-* [ ] When button is clicked, disable it for double-click
+* [x] When button is clicked, disable it for double-click
+
 * [ ] Initialize settings from database, if it exists
 * [ ] Save settings
-  * [ ] be sure to save first user as admin
   * [ ] logging
-* [ ] Save user
-  * [ ] logging
-* [ ] Progress to next screen in setup
-* [ ] User screen
-  * [ ] If a user already exists, drop to login screen
-  * [ ] Input Validation
-    * [ ] Display errors
 
 ## CLI User Setup
 
 * [ ] Tasks TBD
+* [ ] Save user
+  * [ ] logging
+* [ ] User screen
+  * [ ] If a user already exists, drop to login screen
+  * [ ] be sure to save first user as admin
+  * [ ] Input Validation
+    * [ ] Display errors
+* [ ] Return to login
 
 ## CLI Login
 

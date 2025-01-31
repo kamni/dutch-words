@@ -9,6 +9,9 @@ from textual.app import ComposeResult
 from textual.containers import Center, Container, Horizontal
 from textual.widgets import Button, Static, Switch
 
+from common.models.app import AppSettingsDB
+from common.stores.adapter import AdapterStore
+
 
 class SettingsWidget(Container):
     """
@@ -18,6 +21,19 @@ class SettingsWidget(Container):
     CSS_PATH = [
         (Path(__file__).resolve().parent / 'css' / 'settings.tcss').as_posix(),
     ]
+
+    @property
+    def settings(self):
+        if not hasattr(self, '_settings') or self._settings is None:
+            self._settings = self.settings_adapter.get()
+        return self._settings
+
+    @property
+    def settings_adapter(self):
+        if not hasattr(self, '_settings_adapter') or self._settings_adapter is None:
+            adapters = AdapterStore()
+            self._settings_adapter = adapters.get('AppSettingsPort')
+        return self._settings_adapter
 
     def on_switch_changed(self, event: Switch.Changed):
         switch = event.switch
@@ -129,6 +145,21 @@ class SettingsWidget(Container):
 
     def on_button_pressed(self, event: Button.Pressed):
         event.button.disabled = True
+        settings_db = AppSettingsDB(
+            multiuser_mode=self.query_one('#multiuser-switch').value,
+            passwordless_login=self.query_one('#passwordless-switch').value,
+            show_users_on_login_screen=self.query_one('#show-usernames-switch').value,
+        )
+        self.settings_adapter.create_or_update(settings_db)
 
     def on_mount(self) -> None:
+        # Initialize with existing settings, when appropriate
+        if self.settings:
+            self.query_one('#multiuser-switch').value = \
+                self.settings.multiuser_mode
+            self.query_one('#passwordless-switch').value = \
+                self.settings.passwordless_login
+            self.query_one('#show-usernames-switch').value = \
+                self.settings.show_users_on_login_screen
+
         self.query_one(Switch).focus()

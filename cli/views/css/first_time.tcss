@@ -15,7 +15,6 @@
 
 #step1-button {}
 
-
 .step1-text {
     text-align: center;
 }

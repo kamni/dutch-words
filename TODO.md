@@ -24,7 +24,7 @@
   * [x] be sure to save first user as admin
   * [ ] Input Validation
     * [ ] Display errors
-* [ ] Return to login
+* [x] Return to login
 * [ ] Testing
 
 ## CLI Login

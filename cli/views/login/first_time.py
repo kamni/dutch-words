@@ -64,7 +64,7 @@ class FirstTimeModal(ModalScreen):
             next_step_idx = int(button.name.split('-')[1])
             next_step = self.steps[next_step_idx - 1]
         except IndexError:
-            # TODO: return back to login
+            self.app.pop_screen()
             return
 
         self.query('BaseStep').last().remove()

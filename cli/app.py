@@ -11,13 +11,10 @@ from textual.reactive import reactive
 
 from common.stores.auth import AuthStore
 
-from .views.app_settings import AppSettingsScreen
-from .views.edit import EditScreen
+from .views.edit import EditScreen, UploadModal
 from .views.learn import LearnScreen
-from .views.login import LoginScreen
-from .views.permissions import PermissionDeniedModal
-from .views.registration import RegistrationModal
-from .views.upload import UploadModal
+from .views.login import FirstTimeModal, LoginScreen, RegistrationModal
+from .views.settings import PermissionDenied, SettingsScreen
 
 
 class TenThousandWordsApp(App):
@@ -37,9 +34,10 @@ class TenThousandWordsApp(App):
     }
 
     SCREENS = {
-        'upload': UploadModal,
-        'register': RegistrationModal,
+        'first_time': FirstTimeModal,
         'permission_denied': PermissionDeniedModal,
+        'register': RegistrationModal,
+        'upload': UploadModal,
     }
 
     current_user = reactive(None)
@@ -83,12 +81,10 @@ class TenThousandWordsApp(App):
     def on_mount(self):
         self.theme = 'flexoki'
 
-        if not self.auth.is_configured:
-            self.action_settings()
-        elif self.auth.logged_in_user:
+        if self.auth.logged_in_user:
             self.action_edit()
-        else:
-            self.action_login()
+
+        self.action_login()
 
     def action_edit(self):
         if not self.auth.logged_in_user:
@@ -105,11 +101,11 @@ class TenThousandWordsApp(App):
         self.switch_mode('learn')
 
     def action_login(self):
-        if not self.auth.is_configured:
-            self.action_settings()
-
         self.set_bindings(minimal=True)
         self.switch_mode('login', self.update_current_user)
+
+        if not self.auth.is_configured:
+            self.push_screen('first_time')
 
     def action_logout(self):
         self.auth.logout()

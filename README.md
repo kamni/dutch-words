@@ -41,3 +41,9 @@ Optionally you can create a superuser to access the Django admin:
 ```sh
 python manage.py createsuperuser
 ```
+
+And run tests with:
+
+```sh
+pytest tests
+```

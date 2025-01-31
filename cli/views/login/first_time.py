@@ -35,10 +35,17 @@ class FirstTimeModal(ModalScreen):
     ] + MainTitleWidget.CSS_PATH + SettingsWidget.CSS_PATH + \
         RegistrationWidget.CSS_PATH
 
+    @property
+    def userdb_adapter(self):
+        if not hasattr(self, '_userdb_adapter') or self._userdb_adapter is None:
+            adapters = AdapterStore()
+            self._userdb_adapter = adapters.get('UserDBPort')
+        return self._userdb_adapter
+
     def compose(self) -> ComposeResult:
         self.steps = [
-            Step1(id='step1'),
-            Step2(id='step2'),
+            #Step1(id='step1'),
+            #Step2(id='step2'),
             Step3(id='step3'),
         ]
         yield Middle(
@@ -148,3 +155,9 @@ class Step3(BaseStep, RegistrationWidget):
         container = self.query_one('#registration-button-wrapper')
         button.remove()
         container.mount(new_button)
+
+    def handle_it(self):
+        user = self.userdb_adapter.get_first()
+        if not user.is_admin:
+            user.is_admin = True
+        self.userdb_adapter.update(user)

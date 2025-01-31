@@ -39,15 +39,15 @@ class TestUserDBDjangoORMAdapter(TestCase):
         # Check the returned object
         new_user = self.adapter.create(user)
         self.assertIsNotNone(new_user.id)
-        self.assertTrue(new_user.password)  # non-empty string
+        self.assertFalse(new_user.password)  # We don't return passwords
         self.assertEqual(user.username, new_user.username)
         self.assertEqual(user.display_name, new_user.display_name)
         self.assertNotEqual(user.password, new_user.password)
 
         # Verify the database object
         new_db_user = UserSettings.objects.get(id=new_user.id)
+        self.assertTrue(new_db_user.password)
         self.assertEqual(new_user.username, new_db_user.username)
-        self.assertEqual(new_user.password, new_db_user.password)
         self.assertEqual(new_user.display_name, new_db_user.display_name)
 
     def test_create_without_password(self):
@@ -242,6 +242,37 @@ class TestUserDBDjangoORMAdapter(TestCase):
         expected = []
         returned = self.adapter.get_all()
         self.assertEqual(expected, returned)
+
+    def test_update(self):
+        userdb = UserDB(
+            username='test_update',
+            password='1234567',
+            display_name='Test User',
+        )
+        new_userdb = self.adapter.create(userdb)
+        old_password = UserSettings.objects.get(id=new_userdb.id).password
+
+        new_userdb.is_admin = True
+        new_userdb.display_name = 'New Test User'
+        new_userdb.password = 'foo'
+        new_userdb.username = 'Should not change!'
+
+        final_userdb = self.adapter.update(new_userdb)
+        new_password = UserSettings.objects.get(id=new_userdb.id).password
+        self.assertNotEqual(old_password, new_password)
+        self.assertEqual(new_userdb.display_name, final_userdb.display_name)
+        self.assertEqual(userdb.username, final_userdb.username)
+        self.assertTrue(final_userdb.is_admin)
+
+    def test_update_does_not_exist(self):
+        userdb = UserDB(
+            id=uuid.uuid4(),
+            username='test_update_not_exists',
+            password='1234567',
+            display_name='Test User',
+        )
+        with self.assertRaises(ObjectNotFoundError):
+            self.adapter.update(userdb)
 
 
 class TestUserUIDjangoORMAdapter(TestCase):

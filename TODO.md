@@ -10,13 +10,14 @@
 * [x] Set button name so it progresses
 * [x] When button is clicked, disable it for double-click
 
-* [ ] Initialize settings from database, if it exists
-* [ ] Save settings
+* [x] Initialize settings from database, if it exists
+* [x] Save settings
   * [ ] logging
+* [ ] Testing
 
 ## CLI User Setup
 
-* [ ] Tasks TBD
+* UserDB.update()
 * [ ] Save user
   * [ ] logging
 * [ ] User screen
@@ -25,6 +26,7 @@
   * [ ] Input Validation
     * [ ] Display errors
 * [ ] Return to login
+* [ ] Testing
 
 ## CLI Login
 

@@ -26,11 +26,12 @@ class UserDBDjangoORMAdapter(UserDBPort):
         super().__init__()
 
     def _django_to_pydantic(self, user: UserSettings) -> UserDB:
+        # We don't return the password here,
+        # because the hash is relatively useless to us.
         pydantic_user = UserDB(
             id=user.id,
             username=user.username,
             display_name=user.display_name,
-            password=user.password,
             is_admin=user.is_admin,
         )
         return pydantic_user
@@ -133,6 +134,41 @@ class UserDBDjangoORMAdapter(UserDBPort):
         users = UserSettings.objects.filter(user__is_active=True)
         usersdb = [self._django_to_pydantic(user) for user in users]
         return usersdb
+
+    def update(self, user: UserDB) -> UserDB:
+        """
+        Update an existing user.
+
+        Not all fields are editable.
+        Here's what you can edit:
+
+        * display_name
+        * password
+        * is_admin
+
+        :user: UserDB instance to update.
+            Must have id.
+
+        :return: Updated UserDB object
+        :raises: ObjectNotFoundError
+        """
+
+        try:
+            userdb = UserSettings.objects.get(id=user.id)
+        except Exception as exc:
+            raise ObjectNotFoundError(exc)
+
+        userdb.display_name = user.display_name
+        userdb.user.is_superuser = user.is_admin
+        if user.password:
+            userdb.user.set_password(user.password)
+
+        userdb.user.save()
+        userdb.save()
+
+        updated_user = UserSettings.objects.get(id=user.id)
+        updated_user_db = self._django_to_pydantic(updated_user)
+        return updated_user_db
 
 
 class UserUIDjangoORMAdapter(UserUIPort):

@@ -24,9 +24,16 @@ class RegistrationWidget(Container):
     @property
     def settings(self):
         if not hasattr(self, '_settings') or self._settings is None:
-            adapter = AdapterStore()
-            self._settings = adapter.get('AppSettingsPort')
+            adapters = AdapterStore()
+            self._settings = adapters.get('AppSettingsPort')
         return self._settings
+
+    @property
+    def userdb_adapter(self):
+        if not hasattr(self, _userdb_adapter) or self._userdb_adapter is None:
+            adapters = AdapterStore()
+            self._userdb_adapter = adapters.get('UserDBPort')
+        return self._userdb_adapter
 
     def compose(self) -> ComposeResult:
         yield Center(

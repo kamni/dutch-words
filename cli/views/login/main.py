@@ -4,7 +4,7 @@ Affero GPL v3
 """
 
 import logging
-import os
+from pathlib import Path
 
 from textual.app import ComposeResult
 from textual.containers import Center, Container, VerticalGroup
@@ -44,9 +44,7 @@ SUBTITLE_TEXT = 'Teach yourself 10,000+ words in another language'
 
 class LoginScreen(Screen):
     CSS_PATH = [
-        os.path.join('..', 'css', 'first_time.tcss'),
-        os.path.join('..', 'css', 'login.tcss'),
-        os.path.join('..', '..', 'widgets', 'css', 'title.tcss'),
+        (Path(__file__).resolve().parent / 'css' / 'main.tcss').as_posix()
     ]
 
     def compose(self) -> ComposeResult:

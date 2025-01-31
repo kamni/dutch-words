@@ -3,7 +3,7 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
-import os
+from pathlib import Path
 
 from textual.app import ComposeResult
 from textual.containers import Center, Container, Horizontal, Middle
@@ -12,7 +12,8 @@ from textual.widgets import Button, Static, Switch
 
 from common.stores.adapter import AdapterStore
 
-from ...widgets.title import MainTitle
+from ...widgets.settings import SettingsWidget
+from ...widgets.title import MainTitleWidget
 
 import logging
 from textual.logging import TextualHandler
@@ -22,12 +23,15 @@ logging.basicConfig(
     handlers=[TextualHandler()],
 )
 
+
 class FirstTimeModal(ModalScreen):
     """
     Configure the app for the first time and register a user
     """
 
-    CSS_FILE = os.path.join('..', 'css', 'first_time.tcss')
+    CSS_PATH = [
+        (Path(__file__).resolve().parent / 'css' / 'first_time.tcss').as_posix(),
+    ] + MainTitleWidget.CSS_PATH + SettingsWidget.CSS_PATH
 
     @property
     def settings(self):
@@ -94,7 +98,7 @@ class Step1(BaseStep):
     """
 
     def compose(self) -> ComposeResult:
-        yield MainTitle(id='main-title')
+        yield MainTitleWidget(id='main-title')
         yield Horizontal(
             Center(
                 Center(
@@ -117,122 +121,28 @@ class Step1(BaseStep):
         )
 
 
-class Step2(BaseStep):
+class Step2(BaseStep, SettingsWidget):
     """
     Configure the app
     """
 
-    def on_switch_changed(self, event: Switch.Changed):
-        switch = event.switch
-        base = switch.id.rsplit('-', 1)[0]
-        if switch.value:
-            yes = self.query_one(f'#{base}-yes')
-            yes.remove_class('step2-yes-unselected')
-            yes.add_class('step2-yes-selected')
-
-            no = self.query_one(f'#{base}-no')
-            no.remove_class(f'step2-no-selected')
-            no.add_class(f'step2-no-unselected')
-        else:
-            no = self.query_one(f'#{base}-no')
-            no.remove_class('step2-no-unselected')
-            no.add_class('step2-no-selected')
-
-            yes = self.query_one(f'#{base}-yes')
-            yes.remove_class(f'step2-yes-selected')
-            yes.add_class(f'step2-yes-unselected')
-
-    def compose(self) -> ComposeResult:
-        yield Center(
-            Center(
-                Center(
-                    Horizontal(
-                        Static(
-                            'Are multiple people using this app?',
-                            classes='step2-question',
-                        ),
-                        Static(
-                            'no',
-                            id='multiuser-no',
-                            classes='step2-no step2-no-selected',
-                        ),
-                        Switch(
-                            value=False,
-                            id='multiuser-switch',
-                            classes='step2-switch',
-                        ),
-                        Static(
-                            'yes',
-                            id='multiuser-yes',
-                            classes='step2-yes step2-yes-unselected',
-                        ),
-                        classes='step2-switch-wrapper',
-                    ),
-                ),
-                Center(
-                    Horizontal(
-                        Static(
-                            'Login without a password?',
-                            classes='step2-question',
-                        ),
-                        Static(
-                            'no',
-                            id='passwordless-no',
-                            classes='step2-no step2-no-unselected',
-                        ),
-                        Switch(
-                            value=True,
-                            id='passwordless-switch',
-                            classes='step2-switch',
-                        ),
-                        Static(
-                            'yes',
-                            id='passwordless-yes',
-                            classes='step2-yes step2-yes-selected',
-                        ),
-                        classes='step2-switch-wrapper',
-                    ),
-                ),
-                Center(
-                    Horizontal(
-                        Static(
-                            'Show usernames on login screen?',
-                            classes='step2-question',
-                        ),
-                        Static(
-                            'no',
-                            id='show-usernames-no',
-                            classes='step2-no step2-no-unselected',
-                        ),
-                        Switch(
-                            value=True,
-                            id='show-usernames-switch',
-                            classes='step2-switch',
-                        ),
-                        Static(
-                            'yes',
-                            id='show-usernames-yes',
-                            classes='step2-yes step2-yes-selected',
-                        ),
-                        classes='step2-switch-wrapper',
-                    ),
-                ),
-                Center(
-                    Button(
-                        'Save Settings',
-                        variant='primary',
-                        id='step2-button',
-                        name='next-3',
-                    ),
-                    id='step2-button-wrapper',
-                    classes='step-button',
-                ),
-                id='step2-text-wrapper',
-            ),
-        )
-
     def on_mount(self) -> None:
-        self.query_one(Switch).focus()
+        super().mount()
+
+        # In order to go to the next step
+        # we need to update the button from the original widget.
+        # The `name` and `id` fields are not reactive,
+        # So we need to add a new one.
+        button = self.query_one('#settings-button')
+        new_button = Button(
+            button.label,
+            variant=button.variant,
+            id='step2-button',
+            name='next-3',
+        )
+        container = self.query_one('#settings-button-wrapper')
+        button.remove()
+        container.mount(new_button)
 
 
 class Step3(BaseStep):

@@ -3,15 +3,28 @@
 ## CLI Settings Container
 
 * [x] Get styles working when switch is changed
-* [ ] Rename the classes to be more generic
-* [ ] Refactor it into a widget
+* [x] Rename the classes to be more generic
+* [x] Refactor it into a widget
+* [x] Rename title widget to have 'widget' in the name
+* [x] Refactor views/css folder into individual views
+* [ ] Set button name so it progresses
+* [ ] When button is clicked, disable it for double-click
 * [ ] Initialize settings from database, if it exists
+* [ ] User screen
 * [ ] Save settings
 * [ ] Progress to next screen in setup
 
 ## CLI User Setup
 
 * [ ] Tasks TBD
+
+## CLI Login
+
+* [ ] Make login use the main title widget
+
+## CLI Settings
+
+* [ ] Make settings use the settings widget
 
 ---
 

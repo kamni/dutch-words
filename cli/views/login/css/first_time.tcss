@@ -1,0 +1,14 @@
+/**
+ * Copyright (C) J Leadbetter
+ * Affero GPL v3
+ **/
+
+/* General */
+
+.step-button {
+    margin: 2 0;
+}
+
+.step-text {
+    text-align: center;
+}

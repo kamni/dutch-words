@@ -3,7 +3,7 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
-import os
+from pathlib import Path
 
 from textual.app import ComposeResult
 from textual.containers import Center, Container, Horizontal, Vertical, VerticalGroup
@@ -32,12 +32,14 @@ TITLE_TEXT2 = """
 SUBTITLE_TEXT = 'Teach yourself 10,000+ words in another language'
 
 
-class MainTitle(Horizontal):
+class MainTitleWidget(Horizontal):
     """
     Display a main title for 10,000 Words
     """
 
-    CSS_FILE = os.path.join('css', 'title.tcss')
+    CSS_PATH = [
+        (Path(__file__).resolve().parent / 'css' / 'title.tcss').as_posix(),
+    ]
 
     def compose(self) -> ComposeResult:
         yield Center(

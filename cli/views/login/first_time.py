@@ -12,6 +12,7 @@ from textual.widgets import Button, Static, Switch
 
 from common.stores.adapter import AdapterStore
 
+from ...widgets.registration import RegistrationWidget
 from ...widgets.settings import SettingsWidget
 from ...widgets.title import MainTitleWidget
 
@@ -31,7 +32,8 @@ class FirstTimeModal(ModalScreen):
 
     CSS_PATH = [
         (Path(__file__).resolve().parent / 'css' / 'first_time.tcss').as_posix(),
-    ] + MainTitleWidget.CSS_PATH + SettingsWidget.CSS_PATH
+    ] + MainTitleWidget.CSS_PATH + SettingsWidget.CSS_PATH + \
+        RegistrationWidget.CSS_PATH
 
     @property
     def settings(self):
@@ -145,11 +147,9 @@ class Step2(BaseStep, SettingsWidget):
         container.mount(new_button)
 
 
-class Step3(BaseStep):
+class Step3(BaseStep, RegistrationWidget):
     """
     Create the first user, who will be an admin
     """
 
-    def compose(self) -> ComposeResult:
-        # TODO: button for back, forward
-        yield Static('Step3')
+    pass

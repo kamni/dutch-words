@@ -119,7 +119,6 @@ class SettingsWidget(Container):
                         'Save Settings',
                         variant='primary',
                         id='settings-button',
-                        name='next-3',
                     ),
                     id='settings-button-wrapper',
                     classes='step-button',

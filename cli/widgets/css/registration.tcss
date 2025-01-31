@@ -1,0 +1,38 @@
+/**
+ * Copyright (C) J Leadbetter <j@jleadbetter.com>
+ * Affero GPL v3
+ **/
+
+#registration-text {
+    color: $accent;
+    margin-bottom: 2;
+    text-align: center;
+    text-style: bold;
+}
+
+#registration-text-wrapper {
+    content-align: center middle;
+}
+
+#registration-input-wrapper {
+    margin-bottom: 1;
+}
+
+#username-input {
+    background: $panel;
+}
+
+#password-input {
+    background: $panel;
+}
+
+#create-user-button {}
+
+#create-user-button_wrapper {
+    width: auto;
+}
+
+#registration-wrapper {
+    width: 50;
+}
+

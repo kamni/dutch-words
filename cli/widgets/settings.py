@@ -127,5 +127,8 @@ class SettingsWidget(Container):
             ),
         )
 
+    def on_button_pressed(self, event: Button.Pressed):
+        event.button.disabled = True
+
     def on_mount(self) -> None:
         self.query_one(Switch).focus()

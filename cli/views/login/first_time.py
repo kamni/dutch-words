@@ -79,7 +79,7 @@ class FirstTimeModal(ModalScreen):
             next_step = self.steps[next_step_idx - 1]
         except IndexError:
             # TODO: return back to login
-            pass
+            return
 
         self.query('BaseStep').last().remove()
         self.query_one('#first-time-wrapper').mount(next_step)
@@ -128,7 +128,7 @@ class Step2(BaseStep, SettingsWidget):
     Configure the app
     """
 
-    def on_mount(self) -> None:
+    def on_mount(self):
         super().mount()
 
         # In order to go to the next step
@@ -152,4 +152,20 @@ class Step3(BaseStep, RegistrationWidget):
     Create the first user, who will be an admin
     """
 
-    pass
+    def on_mount(self):
+        super().mount()
+
+        # In order to finish setup/registration
+        # we need to update the button from the original widget.
+        # The `name` and `id` fields are not reactive,
+        # So we need to add a new onw
+        button = self.query_one('#registration-button')
+        new_button = Button(
+            button.label,
+            variant=button.variant,
+            id='step3-button',
+            name='next-4',
+        )
+        container = self.query_one('#registration-button-wrapper')
+        button.remove()
+        container.mount(new_button)

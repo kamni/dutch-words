@@ -40,11 +40,16 @@ class RegistrationWidget(Container):
                 id='registration-input-wrapper',
             ),
             Center(
-                Button('Create User', variant='primary', id='create-user-button'),
-                id='create-user-button-wrapper',
+                Button('Create User', variant='primary', id='registration-button'),
+                id='registration-button-wrapper',
             ),
             id='registration-wrapper',
         )
+
+    def on_button_pressed(self, event: Button.Pressed):
+        event.button.disabled = True
+        # TODO: re-enable if validation errors
+        # TODO: save user
 
     def on_mount(self):
         first_field = self.query_one('#username-input')

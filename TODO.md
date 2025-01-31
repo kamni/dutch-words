@@ -28,6 +28,7 @@
 ## CLI Login
 
 * [ ] Make login use the main title widget
+* [ ] Change password
 
 ## CLI Settings
 

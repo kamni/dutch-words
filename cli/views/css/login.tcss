@@ -10,29 +10,6 @@ Container {
     scrollbar-background: $surface;
 }
 
-/* 10,000 Words title */
-
-#title {
-    width: 40;
-    overflow-x: hidden;
-}
-
-.title-text {
-    color: $secondary;
-    text-style: bold;
-}
-
-/* Subtitle */
-
-#subtitle-wrapper {
-    margin: 2 0;
-}
-
-.subtitle-text {
-    color: $accent;
-    text-align: center;
-}
-
 /* Login */
 
 #login {

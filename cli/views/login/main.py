@@ -42,9 +42,12 @@ TITLE_TEXT2 = """
 SUBTITLE_TEXT = 'Teach yourself 10,000+ words in another language'
 
 
-
 class LoginScreen(Screen):
-    CSS_PATH = os.path.join('..', 'css', 'login.tcss')
+    CSS_PATH = [
+        os.path.join('..', 'css', 'first_time.tcss'),
+        os.path.join('..', 'css', 'login.tcss'),
+        os.path.join('..', '..', 'widgets', 'css', 'title.tcss'),
+    ]
 
     def compose(self) -> ComposeResult:
         yield Container(

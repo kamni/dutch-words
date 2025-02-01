@@ -17,33 +17,83 @@ models.
 ## Requirements
 
 * Python >= 3.12
-* Docker >= 27.5.1
+* Docker >= 27.5.1 (optional, for postgres)
 
 
 ## Development
 
-Run the docker container:
+There are two ways to run this project,
+either with a full Postgres database or with a local sqlite database.
+
+### Quickstart with Sqlite
+
+Install dependencies:
 
 ```sh
-docker compose up -d --build
+pip install -r requirements.txt
+pip install -r requirements_dev.txt
 ```
 
-Then SSH into the docker container to set up Django:
+Then set up the sqlite database:
 
 ```sh
-docker compose exec web bash
 cd backend
 python manage.py migrate
 ```
 
-Optionally you can create a superuser to access the Django admin:
+If desired, create an admin user for the Django admin UI.
 
 ```sh
 python manage.py createsuperuser
 ```
 
-And run tests with:
+**NOTE:** This will not create a user capable of running
+the 10,000 Words app.
+
+Finally, start the app in the console:
 
 ```sh
-pytest tests
+cd ..
+textual run --dev cli.app:TenThousandWordsApp
 ```
+
+You can run tests that don't require postgres by doing:
+
+```sh
+pytest
+```
+
+And you can access the django admin at [localhost:8000](http://localhost:8000)
+by running:
+
+```sh
+cd backend
+python manage.py runserver
+```
+
+
+### Quickstart with Postgres
+
+**NOTE:** Requires Docker.
+
+Build and start the docker containers:
+
+```sh
+docker compose up -d --build
+```
+
+This will create an `admin` user with the password `dev`,
+for use with the Django admin if desired.
+
+You can visit the textual app at [localhost:8080](http://localhost:8080).
+
+If you want to use the django admin,
+you can visit [localhost:8000/admin](http://localhost:8000/admin).
+
+To run the tests that require postgres:
+
+```sh
+docker compose exec web bash
+pytest -c pytest.requires_postgres.ini
+```
+

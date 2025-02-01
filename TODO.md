@@ -3,6 +3,8 @@
 ## Misc
 
 * [ ] Move UserSettings class out of words
+* [ ] show is_admin on user settings?
+* [ ] Fix AppSettings verbose plural name (see UserSettings)
 
 ## Logging
 

@@ -4,11 +4,37 @@
 services:
   web:
     build: .
+    image: tenthousandwords/python
     ports:
-      - "8000:8000"
-    command: textual serve 'python -m cli' --host 0.0.0.0 --port 8000 --dev
+      - "8080:8080"
+      #  - "8000:8000"
+    command: textual serve 'python -m cli requires_postgres' --host 0.0.0.0 --port 8080 --dev
+    depends_on:
+      - db
     volumes:
       - .:/app
+
+  web-admin:
+    image: tenthousandwords/python
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000 --requires_postgres
+    depends_on:
+      - web
+    working_dir: /app/backend
+
+  web-setup:
+    image: tenthousandwords/python
+    depends_on:
+      - web
+    restart: no
+    environment:
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_PASSWORD: dev
+      DJANGO_SUPERUSER_EMAIL: admin@foo.ninja
+    working_dir: /app/backend
+    entrypoint: [ "bash", "-c", "python manage.py migrate --requires_postgres && python manage.py createsuperuser --no-input --requires_postgres"]
+
   db:
     image: postgres:17.2-bookworm
     volumes:

@@ -18,7 +18,8 @@ def init_django():
     import django
     from django.conf import settings
 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.core.settings')
+    if not os.environ.get('DJANGO_SETTINGS_MODULE'):
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.core.settings')
     os.environ.setdefault('DJANGO_ALLOW_ASYNC_UNSAFE', 'true')
 
     backend_dir = Path(__file__).resolve().parent.parent.parent / 'backend'

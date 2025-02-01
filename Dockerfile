@@ -7,8 +7,10 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 COPY ./requirements.txt .
+COPY ./requirements_postgres.txt .
 COPY ./requirements_dev.txt .
 RUN pip install -r requirements.txt
+RUN pip install -r requirements_postgres.txt
 RUN pip install -r requirements_dev.txt
 
 COPY . .

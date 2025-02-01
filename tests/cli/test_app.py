@@ -2,8 +2,11 @@
 Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
+import os
 from asgiref.sync import sync_to_async
 from django.test import TestCase
+
+import pytest
 
 from common.models.app import AppSettingsDB
 from common.stores.adapter import AdapterStore
@@ -19,6 +22,7 @@ from cli.views.login.main import LoginScreen
 from ..utils_for_tests.users import make_user_db
 
 
+@pytest.mark.requires_postgres
 class TestTenThousandSentencesApp(TestCase):
     """
     Tests for cli.app.TenThousandWordsApp

@@ -8,7 +8,7 @@ from typing import List, Union
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 
-from words.models.users import UserSettings
+from users.models.settings import UserSettings
 
 from ..models.errors import ObjectExistsError, ObjectNotFoundError
 from ..models.users import UserDB, UserUI

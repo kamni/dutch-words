@@ -79,7 +79,7 @@ python manage.py runserver
 Build and start the docker containers:
 
 ```sh
-docker compose up -d --build
+docker compose up -d
 ```
 
 This will create an `admin` user with the password `dev`,

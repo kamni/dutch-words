@@ -15,7 +15,7 @@ from common.models.errors import ObjectExistsError, ObjectNotFoundError
 from common.models.users import UserDB, UserUI
 from common.stores.adapter import AdapterStore
 
-from words.models.users import UserSettings
+from users.models.settings import UserSettings
 
 
 class TestUserDBDjangoORMAdapter(TestCase):

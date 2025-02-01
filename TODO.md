@@ -2,8 +2,8 @@
 
 ## Misc
 
-  * [ ] admin should work
-* [ ] Fix AppSettings verbose plural name (see UserSettings)
+* Make a pretty blank index for django
+* Fix CSS for welcome screen in browser
 
 ## Logging
 
@@ -24,6 +24,8 @@
 ## Login
 
 * [ ] Make login use MainTitleWidget
+* [ ] Respect AppSettings for showing elements
+* [ ] User creation modal
 * [ ] Redirect to Edit when successful login
 
 ---

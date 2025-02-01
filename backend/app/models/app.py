@@ -16,6 +16,8 @@ class AppSettings(models.Model):
 
     class Meta:
         ordering = ['created']
+        verbose_name_plural = 'App Settings'
+
 
     created = models.DateTimeField(
         blank=True,

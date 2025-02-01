@@ -90,6 +90,17 @@ You can visit the textual app at [localhost:8080](http://localhost:8080).
 If you want to use the django admin,
 you can visit [localhost:8000/admin](http://localhost:8000/admin).
 
+In order to handle two sets of settings,
+the `manage.py` command for Django takes an optional flag,
+`--requires-postgres`. For example:
+
+```sh
+python manage.py migrate --requires-postgres
+```
+
+If you run this without the flag,
+any changes you make will use the development sqlite database.
+
 To run the tests that require postgres:
 
 ```sh
@@ -97,3 +108,8 @@ docker compose exec web bash
 pytest -c pytest.requires_postgres.ini
 ```
 
+Deleting the database to reset the app can be done with:
+
+```sh
+docker compose down -v
+```

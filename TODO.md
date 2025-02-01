@@ -2,9 +2,6 @@
 
 ## Misc
 
-* [ ] Move UserSettings class out of words
-  * [ ] regenerate migrations
-    * [ ] drop the postgres database
   * [ ] admin should work
 * [ ] Fix AppSettings verbose plural name (see UserSettings)
 

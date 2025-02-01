@@ -7,9 +7,9 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-#from common.models.session import UserSession
-from common.models.users import User
-from common.models.words import Word
+from ..models.documents import DocumentDB
+from ..models.users import UserDB
+from ..models.words import WordDB
 
 
 class Database(BaseModel):
@@ -19,5 +19,6 @@ class Database(BaseModel):
     DO NOT USE IN PRODUCTION.
     """
 
-    users: Optional[List[User]] = []
-    words: Optional[List[Word]] = []
+    users: Optional[List[UserDB]] = []
+    documents: Optional[List[DocumentDB]] = []
+    words: Optional[List[WordDB]] = []

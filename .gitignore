@@ -1,5 +1,6 @@
 */db.sqlite3
 backend/uploads/*
 data/uploads/*
+*.log
 *setup.cfg
 */__pycache__/*

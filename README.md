@@ -42,23 +42,10 @@ pip install -r requirements_dev.txt
 Copy the configuration:
 
 ```sh
-cp config.ini.example config.ini
+cp setup.cfg.example setup.cfg
 ```
 
-Generate the database (say 'yes' to the prompt):
-
+Run tests:
 ```sh
-. ./scripts/initialize_database.py -d
-```
-
-Connect to the textual terminal for debugging:
-
-```sh
-textual console
-```
-
-Then run the app in a separate terminal with:
-
-```sh
-textual run --dev cli/__main__.py
+pytest
 ```

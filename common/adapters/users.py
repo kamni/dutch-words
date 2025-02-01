@@ -1,117 +1,214 @@
 """
 Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
-
-Implementations of UserPort
 """
 
-import hashlib
-import time
-import uuid
-from typing import List
+from typing import List, Union
 
-from common.models.errors import ObjectExistsError, ObjectNotFoundError
-from common.models.database import Database
-from common.models.users import User
-from common.ports.users import UserPort
-from common.utils.file import DatabaseFileMixin, JSONFileMixin
+from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
+
+from users.models.settings import UserSettings
+
+from ..models.errors import ObjectExistsError, ObjectNotFoundError
+from ..models.users import UserDB, UserUI
+from ..ports.users import UserDBPort, UserUIPort
 
 
-class UserJSONFileAdapter(DatabaseFileMixin, JSONFileMixin, UserPort):
+class UserDBDjangoORMAdapter(UserDBPort):
     """
-    Handler for JSON file database for Users.
-
-    WARNING: This is only intended for local development.
-    Do not use in production environments.
+    Handles CRUD for users in the database
     """
 
     def __init__(self, **kwargs):
-        self.database = self._get_db_filename(
-            kwargs['databasefile'],
-            'json',
+        # Ignore any kwargs configuration.
+        # This uses the django settings.
+        super().__init__()
+
+    def _django_to_pydantic(self, user: UserSettings) -> UserDB:
+        # We don't return the password here,
+        # because the hash is relatively useless to us.
+        pydantic_user = UserDB(
+            id=user.id,
+            username=user.username,
+            display_name=user.display_name,
+            is_admin=user.is_admin,
         )
+        return pydantic_user
 
-    def _is_duplicate(
-        self,
-        existing_users: List[User],
-        new_user: List[User],
-    ) -> bool:
-        return new_user in existing_users
-
-    def _set_id(self, user: User):
-        if not user.id:
-            user.id = str(uuid.uuid4())
-
-    def _set_password(self, user: User, password: str):
-        # REMINDER: don't use this in production
-        salt = str(time.monotonic())
-        pswd_str = f'{salt}{password}'.encode('utf-8')
-        phash = hashlib.sha256(pswd_str).hexdigest()
-        user.password = f'{salt}${phash}'
-
-    def create(self, user: User) -> User:
+    def create(self, user: UserDB) -> UserDB:
         """
         Create a new user in the database.
 
-        :user: New User object to add to the database.
-            User is counted as a duplicate when it has the same
-            languageCode and baseUser.
+        :user: New user to add to the database.
 
-        :return: Created User object.
+        :return: Created user object.
         :raises: ObjectExistsError if the object already exists.
         """
-        database = self._read_json()
 
-        if self._is_duplicate(database.users, user):
-            raise ObjectExistsError(
-                f'User with {user.username} already exists')
+        try:
+            new_user = User.objects.create(
+                username=user.username,
+                is_superuser=user.is_admin,
+            )
+        except IntegrityError as exc:
+            raise ObjectExistsError(exc)
 
-        self._set_id(user)
-        self._set_password(user, user.password or '')
+        if user.password:
+            new_user.set_password(user.password)
+            new_user.save()
 
-        database.users.append(user)
-        self._write_json(database)
+        # The user is unique on a UserSettings model.
+        # We don't have to worry about a duplicate user,
+        # because it would have failed in the previous try-except block.
+        new_settings = UserSettings.objects.create(
+            user=new_user,
+            display_name=user.display_name,
+        )
+
+        new_user_db = self._django_to_pydantic(new_settings)
+        return new_user_db
+
+    def get(self, id: str) -> UserDB:
+        """
+        Get a user from the database using an ID.
+
+        :id: User's UUID.
+
+        :return: Found user object.
+        :raises: ObjectNotFoundError if the user does not exist.
+        """
+
+        try:
+            settings = UserSettings.objects.get(
+                id=id,
+                user__is_active=True,
+            )
+        except UserSettings.DoesNotExist as exc:
+            raise ObjectNotFoundError(exc)
+
+        user = self._django_to_pydantic(settings)
         return user
 
-    def create_in_batch(self, users: List[User]) -> List[User]:
+    def get_first(self) -> Union[UserDB, None]:
         """
-        Batch create multiple users.
-        Ignores users that already exist.
+        Get the first user in the database.
+        Useful as a default when not using a multi-user system
 
-        :user: New User object to add to the database.
-            User is counted as a duplicate when it has the same username.
-
-        :return: List of created users.
-        """
-        database = self._read_json()
-        non_duplicates = list(set(users).difference(set(database.users)))
-        if non_duplicates:
-            for user in non_duplicates:
-                self._set_id(user)
-                self._set_password(user, user.password or '')
-                database.users.append(user)
-            self._write_json(database)
-        return non_duplicates
-
-    def read(self, username: str) -> User:
-        """
-        Read a single User from the database.
-
-        :username: The username to search for.
-            Username is expected to be unique.
-
-        :return: The user that was found.
-        :raises: ObjectNotFoundError if user doesn't exist
+        :return: First user in the database; None if there are no users.
         """
 
-        database = self._read_json()
-        user_match = list(
-            filter(
-                lambda x: x.username == username,
-                database.users,
+        user = UserSettings.objects.filter(
+            user__is_active=True,
+        ).first()
+        userdb = self._django_to_pydantic(user) if user else None
+        return userdb
+
+    def get_by_username(self, username: str) -> UserDB:
+        """
+        Get a user from the database using a username.
+
+        :username: User's username
+
+        :return: Found user object.
+        :raises: ObjectNotFoundError
+        """
+
+        try:
+            settings = UserSettings.objects.get(
+                user__username=username,
+                user__is_active=True,
             )
-        )
-        if not user_match:
-            raise ObjectNotFoundError(f'No user with {username} found.')
+        except UserSettings.DoesNotExist as exc:
+            raise ObjectNotFoundError(exc)
 
-        return user_match[0]
+        user = self._django_to_pydantic(settings)
+        return user
+
+    def get_all(self) -> List[UserDB]:
+        """
+        Get all users from the database.
+
+        :return: List of user objects (may be empty)
+        """
+        users = UserSettings.objects.filter(user__is_active=True)
+        usersdb = [self._django_to_pydantic(user) for user in users]
+        return usersdb
+
+    def update(self, user: UserDB) -> UserDB:
+        """
+        Update an existing user.
+
+        Not all fields are editable.
+        Here's what you can edit:
+
+        * display_name
+        * password
+        * is_admin
+
+        :user: UserDB instance to update.
+            Must have id.
+
+        :return: Updated UserDB object
+        :raises: ObjectNotFoundError
+        """
+
+        try:
+            userdb = UserSettings.objects.get(id=user.id)
+        except Exception as exc:
+            raise ObjectNotFoundError(exc)
+
+        userdb.display_name = user.display_name
+        userdb.user.is_superuser = user.is_admin
+        if user.password:
+            userdb.user.set_password(user.password)
+
+        userdb.user.save()
+        userdb.save()
+
+        updated_user = UserSettings.objects.get(id=user.id)
+        updated_user_db = self._django_to_pydantic(updated_user)
+        return updated_user_db
+
+
+class UserUIDjangoORMAdapter(UserUIPort):
+    """
+    Works with user objects for the UI
+    """
+
+    def __init__(self, **kwargs):
+        # Ignore any kwargs configuration.
+        # This uses the django settings.
+        super().__init__()
+
+    def _db_to_ui(self, user: UserDB) -> UserUI:
+        user_ui = UserUI(
+            id=user.id,
+            username=user.username,
+            displayName=user.display_name or user.username,
+            isAdmin=user.is_admin,
+        )
+        return user_ui
+
+    def get(self, user: UserDB) -> UserUI:
+        """
+        Convert a database user into a UI user.
+
+        :user: Database representation of a user.
+
+        :return: UI representation of a user.
+        """
+        user_ui = self._db_to_ui(user)
+        return user_ui
+
+    def get_all(self, users: List[UserDB]) -> List[UserUI]:
+        """
+        Convert all database users to users for the UI.
+
+        :users: List of database representations of users.
+
+        :return: List of UI representations of the users.
+        """
+
+        usersui = [self._db_to_ui(user) for user in users]
+        return usersui

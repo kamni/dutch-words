@@ -1,0 +1,39 @@
+###############################################################################
+#                                                                             #
+# Copyright (C) J Leadbetter <j@jleadbetter.com>                              #
+# Affero GPL V3                                                               #
+#                                                                             #
+# Configuration for all modules of the project                                #
+#                                                                             #
+###############################################################################
+
+[config.meta]
+Name = default
+DefaultConfig = dev.django
+
+###############################################################################
+#                                                                             #
+# Configuration for Django ORM backend                                        #
+#                                                                             #
+###############################################################################
+
+[dev.django]
+InitScript = backend.utils.django_settings.init_django
+
+[dev.django.common]
+UploadDir = data/uploads
+
+[dev.django.ports]
+AppSettingsPort = common.adapters.app.AppSettingsDjangoORMAdapter
+AuthPort = common.adapters.auth.AuthDjangoORMAdapter
+UserDBPort = common.adapters.users.UserDBDjangoORMAdapter
+UserUIPort = common.adapters.users.UserUIDjangoORMAdapter
+
+# Any settings that all adapters should share
+[dev.django.adapters.common]
+
+# Adapter-specific settings go here
+# Example:
+#
+#   [dev.django.adapters.FooPort]
+#   UseFoo = yes

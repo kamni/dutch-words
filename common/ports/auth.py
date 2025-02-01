@@ -1,53 +1,42 @@
 """
 Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
-
-Interfaces for authentication and authentication
 """
 
 from abc import ABC, abstractmethod
 
-from common.models.users import UserDisplay
+from ..models.users import UserUI
 
 
-class AuthError(Exception):
+class AuthInvalidError(Exception):
     pass
 
 
-class AuthValidationError(Exception):
-    pass
-
-
-class AuthnPort(ABC):
+class AuthPort(ABC):
     """
-    Authenticate a user for the system
+    Handles authentication of a user
     """
-
-    # TODO: handling of token refresh, sessions, etc.
-    # For right now, just working with the json database.
 
     @abstractmethod
-    def login(self, username: str, password: str) -> UserDisplay:
+    def login(self, username: str, password: str) -> UserUI:
         """
-        Log the user into the system.
+        Log a user in.
 
-        :username: username of the person logging in.
-        :password: password of the person loggint in.
+        :username: Username of the user.
+        :password: Password of the user.
 
-        :return: UserDisplay for the UI
-        :raises: AuthError for problems communicating with the authn backend;
-            AuthValidationError when authentication is invalid.
+        :return: UserUI:
+        :raises: AuthnInvalidError if user is not sucessfully authenticated.
         """
         pass
 
     @abstractmethod
-    def logout(self, user: UserDisplay) -> bool:
+    def logout(self, user: UserUI):
         """
-        Logs a user out of the system.
+        Log a user out.
+        Should not error if user is no longer logged in
+        or was never logged in.
 
-        :user: Currently logged-in user.
-
-        :return: True if successful, False if already logged out
-        :raises: AuthError for problems communicating with the authn backend.
+        :user: UserUI object that was logged in
         """
         pass

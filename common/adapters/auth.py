@@ -1,96 +1,97 @@
 """
 Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
-
-Implementations of AuthenticationPort.
 """
 
-import hashlib
+from django.contrib.auth import authenticate, login
 
-from common.adapters.users import UserJSONFileAdapter
-from common.models.errors import ObjectNotFoundError
-from common.stores.adapter import AdapterStore
-from common.models.users import User, UserDisplay
-from common.ports.auth import AuthnPort, AuthError, AuthValidationError
+from ..models.errors import ObjectNotFoundError
+from ..models.users import UserUI
+from ..ports.auth import AuthInvalidError, AuthPort
+from ..stores.adapter import AdapterStore
 
 
-class AuthnJSONFileAdapter(AuthnPort):
+class AuthDjangoORMAdapter(AuthPort):
     """
-    Authentication handler for JSON file database.
+    Handles authentication of a user using the Django ORM.
 
-    WARNING: This is only intended for local development.
-    DO NOT USE IN PRODUCTION ENVIRONMENTS.
+    NOTE: This adapter presumes that it is running locally
+          as a desktop application.
+          This authenticates directly with the Django database,
+          and does not rely on http requests.
+          For this reason the logged-in status of the user
+          is managed by the in-memory common.stores.auth.AuthStore
+          and not via Django requests.
+
+          Please create an AuthDjangoAPIAdapter
+          if you wish to authenticate via http requests
+          and let Django manage the session.
     """
-
-    _user_port = None
-
     def __init__(self, **kwargs):
-        # We don't need any of the usual kwargs.
-        pass
+        # Ignore any kwargs configuration.
+        # This uses the django settings.
+        super().__init__()
+        self._user_db_adapter = None
+        self._user_ui_adapter = None
 
     @property
-    def user_port(self):
-        if not self._user_port:
-            adapters = AdapterStore()
-            adapters.initialize()
-            self._user_port = adapters.get('UserPort')
-        return self._user_port
+    def user_db_adapter(self):
+        # We can't instantiate these during __init__
+        # because it interferes with AdapterStore.initialize.
+        # Lazy load this adapters.
+        if not self._user_db_adapter:
+            self._user_db_adapter = AdapterStore().get('UserDBPort')
+        return self._user_db_adapter
 
-    def _password_valid(self, user: User, password: str) -> bool:
-        # REMINDER: don't use this adapter in production!!
-        divider = user.password.index('$')
-        psalt = user.password[:divider]
-        phash = user.password[divider+1:]
+    @property
+    def user_ui_adapter(self):
+        # We can't instantiate these during __init__
+        # because it interferes with AdapterStore.initialize.
+        # Lazy load this adapters.
+        if not self._user_ui_adapter:
+            self._user_ui_adapter = AdapterStore().get('UserUIPort')
+        return self._user_ui_adapter
 
-        pswd_str = f'{psalt}{password}'.encode('utf-8')
-        vhash = hashlib.sha256(pswd_str).hexdigest()
-        is_valid = vhash == phash
-        return is_valid
-
-    def login(self, username: str, password: str) -> UserDisplay:
+    def login(self, username: str, password: str) -> UserUI:
         """
-        Log the user into the system.
+        Log a user in.
 
-        :username: username of the person logging in.
-        :password: password of the person loggint in.
+        :username: Username of the user.
+        :password: Password of the user.
 
-        :return: UserDisplay for the UI
-        :raises: AuthError for problems communicating with the authn backend;
-            AuthValidationError when authentication is invalid.
+        :return: UserUI:
+        :raises: AuthInvalidError if user is not sucessfully authenticated.
         """
-        try:
-            user = self.user_port.read(username=username)
-        except ObjectNotFoundError:
-            # Error information for logging purposes only.
-            # Don't display to user
-            raise AuthValidationError('Invalid login: user not found')
-        except Exception as ex:
-            raise AuthError(f'ERROR: {ex}')
-
-        if self._password_valid(user, password):
-            user_display = UserDisplay.from_user(user)
-            return user_display
-        else:
-            # Error information for logging purposes only.
-            # Don't display to user
-            raise AuthValidationError('Invalid login: bad password')
-
-    def logout(self, user_display: UserDisplay) -> bool:
-        """
-        Logs a user out of the system.
-
-        :user: Currently logged-in user.
-
-        :return: True if successful, False if already logged out
-        :raises: AuthError for problems communicating with the authn backend.
-        """
+        user = authenticate(
+            request=None,
+            username=username,
+            password=password,
+        )
+        if not user:
+            # This message is only for internal logging.
+            # Do not show the message to users,
+            # as it reveals the internals of the system
+            # and may encourage hacking.
+            raise AuthInvalidError('Failed to authenticate with Django')
 
         try:
-            user = self.user_port.read(username=user_display.username)
-            session = self.user_port.read_session(user)
+            userdb = self.user_db_adapter.get_by_username(username)
         except ObjectNotFoundError:
-            raise AuthError('ERROR: unknown')
-        except Exception as ex:
-            raise AuthError(f'ERROR: {ex}')
+            # This message is only for internal logging.
+            # Do not show to users.
+            raise AuthInvalidError('Django user found, but UserSettings missing')
 
+        userui = self.user_ui_adapter.get(userdb)
+        return userui
 
+    def logout(self, user: UserUI):
+        """
+        Log a user out.
+        Should not error if user is no longer logged in
+        or was never logged in.
+
+        :user: UserUI object that was logged in
+        """
+        # Nothing to do.
+        # The AuthStore is handling the "session"
+        return None

@@ -1,60 +1,98 @@
 """
 Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
-
-Port for working with Users
 """
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Union
 
-from common.models.users import User
+from common.models.users import UserDB, UserUI
 
 
-class UserPort(ABC):
+class UserDBPort(ABC):
     """
-    Manages users in the database
+    Handles CRUD for users in the database
     """
 
     @abstractmethod
-    def create(self, user: User) -> User:
+    def create(self, user: UserDB) -> UserDB:
         """
         Create a new user in the database.
 
-        :user: New User object to add to the database.
-            User is counted as a duplicate when it has the same
-            languageCode and baseUser.
+        :user: New user to add to the database.
 
-        :return: Created User object.
+        :return: Created user object.
         :raises: ObjectExistsError if the object already exists.
         """
         pass
 
     @abstractmethod
-    def create_in_batch(self, users: List[User]) -> List[User]:
+    def get(self, id: str) -> UserDB:
         """
-        Batch create multiple users.
-        Ignores users that already exist.
+        Get a user from the database using an ID.
 
-        :user: New User object to add to the database.
-            User is counted as a duplicate when it has the same
-            languageCode and baseUser.
+        :id: User's UUID.
 
-        :return: List of created users.
-            Returns None for any users that were not created,
-            so the lists can be compared, if needed.
+        :return: Found user object.
+        :raises: ObjectNotFoundError if the user does not exist.
         """
         pass
 
     @abstractmethod
-    def read(self, username: str) -> User:
+    def get_first(self) -> Union[UserDB, None]:
         """
-        Read a single User from the database.
+        Get the first user in the database.
+        Useful as a default when not using a multi-user system
 
-        :username: The username to search for.
-            Username is expected to be unique.
+        :return: First user in the database; None if there are no users.
+        """
+        pass
 
-        :return: The user that was found.
-        :raises: ObjectNotFoundError if user doesn't exist
+    @abstractmethod
+    def get_by_username(self, username: str) -> UserDB:
+        """
+        Get a user from the database using a username.
+
+        :username: User's username
+
+        :return: Found user object.
+        :raises: ObjectNotFoundError
+        """
+        pass
+
+    @abstractmethod
+    def get_all(self) -> List[UserDB]:
+        """
+        Get all users from the database.
+
+        :return: List of user objects (may be empty)
+        """
+        pass
+
+
+class UserUIPort(ABC):
+    """
+    Works with user objects for the UI
+    """
+
+    @abstractmethod
+    def get(self, user: UserDB) -> UserUI:
+        """
+        Convert a database user into a UI user.
+
+        :user: Database representation of a user.
+
+        :return: UI representation of a user.
+        """
+        pass
+
+    @abstractmethod
+    def get_all(self, users: List[UserDB]) -> List[UserUI]:
+        """
+        Convert all database users to users for the UI.
+
+        :users: List of database representations of users.
+
+        :return: List of UI representations of the users.
         """
         pass

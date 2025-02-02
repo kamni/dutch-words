@@ -23,6 +23,7 @@ class DocumentDBPort(ABC):
         :document: Instance of a DocumentDB to save
 
         :return: DocumentDB that was created
+        :raises: ObjectNotFound error if user does not exist
         :raises: ObjectExistsError when document with the same user
             and file_path exists
         """

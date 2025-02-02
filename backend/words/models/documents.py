@@ -18,7 +18,7 @@ from ..utils.languages import language_code_choices
 
 class Document(DocumentBase, models.Model):
     """
-    Uploaded document with words to study.
+    Document with words to study.
     """
 
     class Meta:
@@ -46,6 +46,8 @@ class Document(DocumentBase, models.Model):
         help_text=_('Language that the document belongs to'),
     )
     file = models.FileField(
+        blank=True,
+        null=True,
         upload_to=document_upload_path,
         help_text=_('Uploaded document'),
     )

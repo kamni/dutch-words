@@ -3,8 +3,17 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
+from pathlib import Path
 from typing import List
 
+from django.contrib.auth.models import User
+from django.core.files import File
+from django.db.utils import IntegrityError
+
+from backend.words.models import Document
+
+from ...models.documents import DocumentDB, DocumentUI
+from ...models.errors import ObjectExistsError, ObjectNotFoundError
 from ...ports.documents import DocumentDBPort, DocumentUIPort
 
 
@@ -20,10 +29,30 @@ class DocumentDBDjangoORMPort(DocumentDBPort):
         :document: Instance of a DocumentDB to save
 
         :return: DocumentDB that was created
+        :raises: ObjectNotFound error if user does not exist
         :raises: ObjectExistsError when document with the same user
             and file_path exists
         """
-        pass
+
+        try:
+            user = User.objects.get(username=document.user.username)
+        except User.DoesNotExist as exc:
+            raise ObjectNotFoundError(exc)
+
+        try:
+            doc = Document.objects.create(
+                user=user,
+                display_name=document.display_name,
+                language_code=document.language_code,
+            )
+        except IntegrityError as exc:
+            raise ObjectExistsError(exc)
+
+        if document.file_path:
+            file_path = Path(document.file_path)
+            with file_path.open(mode='rb') as file:
+                doc.file = File(file, name=file_path.name)
+                doc.save()
 
     def get(self, id: uuid.UUID, user_id: uuid.UUID) -> DocumentDB:
         """

@@ -41,7 +41,7 @@ class DocumentDB(DocumentBase, BaseModel):
 
     @property
     def unique_fields(self):
-        return ['user_id', 'file_path']
+        return ['user_id', 'display_name', 'language_code']
 
 
 class DocumentUIMinimal(DocumentBase, BaseModel):

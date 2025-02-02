@@ -1,5 +1,9 @@
 # TODOS
 
+## Document
+
+* upload a document file
+
 ## NiceGui
 
 * header, sidebar (closeable), area, upload at bottom of sidebar

@@ -1,5 +1,16 @@
 # TODOS
 
+## NiceGui
+
+* header, sidebar (closeable), area, upload at bottom of sidebar
+* Show all documents (should be empty) with headers of languages (scrollable)
+  * Close/open the headers to save space
+* If no documents, suggest an upload to get started
+  * display name, language code
+* On upload, parse into sentences
+  * Update the UI with sentences
+  * Right Bar to see translations
+
 ## Document Upload
 
 * Document, Sentence, Conjugation, Word pydantic models

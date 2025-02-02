@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from common.models.users import DocumentBase
+from common.models.documents import DocumentBase
 from common.utils.files import document_upload_path
 
 from ..utils.languages import language_code_choices
@@ -22,7 +22,8 @@ class Document(DocumentBase, models.Model):
     """
 
     class Meta:
-        unique_together = [['user', 'display_name', 'language']]
+        ordering = ['language_code', 'display_name']
+        unique_together = [['user', 'display_name', 'language_code']]
 
     id = models.UUIDField(
         primary_key=True,
@@ -44,16 +45,15 @@ class Document(DocumentBase, models.Model):
         choices=language_code_choices,
         help_text=_('Language that the document belongs to'),
     )
-    doc_file = models.FileField(
+    file = models.FileField(
         upload_to=document_upload_path,
         help_text=_('Uploaded document'),
     )
-    translations = models.ManytoManyField(
+    translations = models.ManyToManyField(
         'Document',
         symmetrical=True,
         help_text=_('Other language translations of this document'),
     )
-
 
     def __str__(self):
         return self.display_name

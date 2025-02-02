@@ -3,19 +3,16 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
-import uuid
-from abc import ABC, abstractmethod
 from typing import List
 
-from ..models import DocumentDB, DocumentUI, DocumentUIMinimal
+from ...ports.documents import DocumentDBPort, DocumentUIPort
 
 
-class DocumentDBPort(ABC):
+class DocumentDBDjangoORMPort(DocumentDBPort):
     """
     Represents a document in the system
     """
 
-    @abstractmethod
     def create(self, document: DocumentDB) -> DocumentDB:
         """
         Create a document in the database.
@@ -28,7 +25,6 @@ class DocumentDBPort(ABC):
         """
         pass
 
-    @abstractmethod
     def get(self, id: uuid.UUID, user_id: uuid.UUID) -> DocumentDB:
         """
         Get the specified document by id.
@@ -42,7 +38,6 @@ class DocumentDBPort(ABC):
         """
         pass
 
-    @abstractmethod
     def get_all(self, user_id: uuid.UUID) -> List[DocumentDB]:
         """
         Get all documents for the specified user.
@@ -54,12 +49,11 @@ class DocumentDBPort(ABC):
         pass
 
 
-class DocumentUIPort(ABC):
+class DocumentUIDjangoORMPort(DocumentUIPort):
     """
     Represents documents to the UI
     """
 
-    @abstractmethod
     def get(self, document: DocumentDB) -> DocumentUI:
         """
         Gets a full representation of the document,
@@ -71,7 +65,6 @@ class DocumentUIPort(ABC):
         """
         pass
 
-    @abstractmethod
     def get_all_minimal(
         self,
         documents: List[DocumentDB],

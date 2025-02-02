@@ -2,6 +2,12 @@
 
 ## Document
 
+* Document port/adapter
+  * Add adapters to config
+  * Create models
+  * Write ports
+  * Write tests
+
 * upload a document file
 
 ## NiceGui

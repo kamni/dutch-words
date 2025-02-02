@@ -16,7 +16,7 @@ from common.stores.auth import AuthStore
 from common.stores.settings import SettingsStore
 from common.utils.singleton import Singleton
 
-from ...utils_for_tests.users import make_user_db, make_user_ui
+from ...utils.users import make_user_db, make_user_ui
 
 
 class TestAuthStore(TestCase):

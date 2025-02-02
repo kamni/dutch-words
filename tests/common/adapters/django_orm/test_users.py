@@ -7,7 +7,7 @@ import uuid
 
 from django.test import TestCase
 
-from common.adapters.users import (
+from common.adapters.django_orm.users import (
     UserDBDjangoORMAdapter,
     UserUIDjangoORMAdapter,
 )

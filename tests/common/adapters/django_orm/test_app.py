@@ -6,7 +6,7 @@ Affero GPL v3
 from django.test import TestCase
 
 from app.models.app import AppSettings
-from common.adapters.app import AppSettingsDjangoORMAdapter
+from common.adapters.django_orm.app import AppSettingsDjangoORMAdapter
 from common.models.app import AppSettingsDB
 from common.stores.adapter import AdapterStore
 

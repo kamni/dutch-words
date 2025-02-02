@@ -7,8 +7,8 @@ from typing import Union
 
 from app.models.app import AppSettings
 
-from ..models.app import AppSettingsDB
-from ..ports.app import AppSettingsPort
+from ...models.app import AppSettingsDB
+from ...ports.app import AppSettingsPort
 
 
 class AppSettingsDjangoORMAdapter(AppSettingsPort):

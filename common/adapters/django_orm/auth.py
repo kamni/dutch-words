@@ -5,10 +5,10 @@ Affero GPL v3
 
 from django.contrib.auth import authenticate, login
 
-from ..models.errors import ObjectNotFoundError
-from ..models.users import UserUI
-from ..ports.auth import AuthInvalidError, AuthPort
-from ..stores.adapter import AdapterStore
+from ...models.errors import ObjectNotFoundError
+from ...models.users import UserUI
+from ...ports.auth import AuthInvalidError, AuthPort
+from ...stores.adapter import AdapterStore
 
 
 class AuthDjangoORMAdapter(AuthPort):

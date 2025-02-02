@@ -18,7 +18,7 @@ from common.stores.adapter import (
 from common.stores.settings import SettingsStore
 from common.utils.singleton import Singleton
 
-from ...utils_for_tests.init_scripts import FakeStore
+from ...utils.init_scripts import FakeStore
 
 TEST_CONFIG_DIR = Path(__file__).resolve().parent.parent.parent
 TEST_CONFIG = TEST_CONFIG_DIR / 'setup.cfg'

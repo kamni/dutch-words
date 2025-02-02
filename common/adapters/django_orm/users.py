@@ -10,9 +10,9 @@ from django.db.utils import IntegrityError
 
 from users.models.settings import UserSettings
 
-from ..models.errors import ObjectExistsError, ObjectNotFoundError
-from ..models.users import UserDB, UserUI
-from ..ports.users import UserDBPort, UserUIPort
+from ...models.errors import ObjectExistsError, ObjectNotFoundError
+from ...models.users import UserDB, UserUI
+from ...ports.users import UserDBPort, UserUIPort
 
 
 class UserDBDjangoORMAdapter(UserDBPort):

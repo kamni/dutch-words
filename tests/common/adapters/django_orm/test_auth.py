@@ -8,7 +8,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from common.adapters.auth import AuthDjangoORMAdapter
+from common.adapters.django_orm.auth import AuthDjangoORMAdapter
 from common.models.users import UserUI, UserDB
 from common.ports.auth import AuthInvalidError
 from common.stores.adapter import AdapterStore

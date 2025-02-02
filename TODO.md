@@ -21,6 +21,8 @@
 
 * NiceGUI??
 
+* Auth store doesn't handle multiple users
+
 ---
 
 ## Misc

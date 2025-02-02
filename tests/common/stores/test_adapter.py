@@ -6,7 +6,7 @@ Affero GPL v3
 from pathlib import Path
 from unittest import TestCase
 
-from common.adapters.users import (
+from common.adapters.django_orm.users import (
     UserDBDjangoORMAdapter,
     UserUIDjangoORMAdapter,
 )

@@ -9,13 +9,13 @@ from common.models.documents import DocumentDB
 from common.utils.languages import LanguageCode
 
 from common.models.documents import DocumentDB
-from tests.utils_for_tests.random_data import (
+from tests.utils.random_data import (
     random_file_path,
     random_language_code,
     random_string,
     random_uuid,
 )
-from tests.utils_for_tests.sentences import create_sentence_db_minimal
+from tests.utils.sentences import create_sentence_db_minimal
 
 
 def create_document_db(**kwargs):

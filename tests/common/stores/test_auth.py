@@ -6,8 +6,8 @@ Affero GPL v3
 from django.test import TestCase
 
 from app.models.app import AppSettings
-from common.adapters.auth import AuthInvalidError
-from common.adapters.users import (
+from common.adapters.django_orm.auth import AuthInvalidError
+from common.adapters.django_orm.users import (
     UserDBDjangoORMAdapter,
     UserUIDjangoORMAdapter,
 )

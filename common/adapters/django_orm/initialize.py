@@ -22,7 +22,7 @@ def init_django():
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.core.settings')
     os.environ.setdefault('DJANGO_ALLOW_ASYNC_UNSAFE', 'true')
 
-    backend_dir = Path(__file__).resolve().parent.parent.parent / 'backend'
+    backend_dir = Path(__file__).resolve().parent.parent.parent.parent / 'backend'
     if backend_dir.as_posix() not in sys.path:
         sys.path.append(backend_dir.as_posix())
 

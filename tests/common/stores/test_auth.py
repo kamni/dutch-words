@@ -7,10 +7,8 @@ from django.test import TestCase
 
 from app.models.app import AppSettings
 from common.adapters.django_orm.auth import AuthInvalidError
-from common.adapters.django_orm.users import (
-    UserDBDjangoORMAdapter,
-    UserUIDjangoORMAdapter,
-)
+from common.adapters.django_orm.users import UserDBDjangoORMAdapter
+from common.adapters.ui.users import UserUIAdapter
 from common.stores.adapter import AdapterStore
 from common.stores.auth import AuthStore
 from common.stores.settings import SettingsStore
@@ -82,7 +80,7 @@ class TestAuthStore(TestCase):
             UserDBDjangoORMAdapter().create(make_user_db())
             for i in range(3)
         ]
-        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+        usersui = UserUIAdapter().get_all(usersdb)
 
         auth_store = AuthStore()
         expected = {
@@ -107,7 +105,7 @@ class TestAuthStore(TestCase):
             UserDBDjangoORMAdapter().create(make_user_db())
             for i in range(3)
         ]
-        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+        usersui = UserUIAdapter().get_all(usersdb)
 
         AppSettings.objects.create(
             multiuser_mode=False,
@@ -138,7 +136,7 @@ class TestAuthStore(TestCase):
             UserDBDjangoORMAdapter().create(make_user_db())
             for i in range(3)
         ]
-        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+        usersui = UserUIAdapter().get_all(usersdb)
 
         AppSettings.objects.create(
             multiuser_mode=True,
@@ -169,7 +167,7 @@ class TestAuthStore(TestCase):
             UserDBDjangoORMAdapter().create(make_user_db())
             for i in range(3)
         ]
-        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+        usersui = UserUIAdapter().get_all(usersdb)
 
         AppSettings.objects.create(
             multiuser_mode=True,
@@ -200,7 +198,7 @@ class TestAuthStore(TestCase):
             UserDBDjangoORMAdapter().create(make_user_db())
             for i in range(3)
         ]
-        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+        usersui = UserUIAdapter().get_all(usersdb)
 
         AppSettings.objects.create(
             multiuser_mode=True,
@@ -231,7 +229,7 @@ class TestAuthStore(TestCase):
             UserDBDjangoORMAdapter().create(make_user_db())
             for i in range(3)
         ]
-        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+        usersui = UserUIAdapter().get_all(usersdb)
 
         AppSettings.objects.create(
             multiuser_mode=False,
@@ -287,7 +285,7 @@ class TestAuthStore(TestCase):
             UserDBDjangoORMAdapter().create(make_user_db())
             for i in range(3)
         ]
-        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+        usersui = UserUIAdapter().get_all(usersdb)
 
         AppSettings.objects.create(
             multiuser_mode=False,
@@ -318,7 +316,7 @@ class TestAuthStore(TestCase):
             UserDBDjangoORMAdapter().create(make_user_db())
             for i in range(3)
         ]
-        usersui = UserUIDjangoORMAdapter().get_all(usersdb)
+        usersui = UserUIAdapter().get_all(usersdb)
 
         AppSettings.objects.create(
             multiuser_mode=False,
@@ -393,7 +391,7 @@ class TestAuthStore(TestCase):
         user = make_user_db()
         userdb = UserDBDjangoORMAdapter().create(user)
 
-        expected = UserUIDjangoORMAdapter().get(userdb)
+        expected = UserUIAdapter().get(userdb)
         returned = auth_store.login(user.username, user.password)
         self.assertEqual(expected, returned)
 
@@ -436,7 +434,7 @@ class TestAuthStore(TestCase):
         user = make_user_db(password=None)
         userdb = UserDBDjangoORMAdapter().create(user)
 
-        expected = UserUIDjangoORMAdapter().get(userdb)
+        expected = UserUIAdapter().get(userdb)
         returned = auth_store.login(user.username, None)
         self.assertEqual(expected, returned)
 

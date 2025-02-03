@@ -67,7 +67,7 @@ class AuthStore(metaclass=Singleton):
             return
 
         adapter_store = AdapterStore()
-        self._settings_adapter = adapter_store.get('AppSettingsPort')
+        self._settings_adapter = adapter_store.get('AppSettingsDBPort')
         self._authn_adapter = adapter_store.get('AuthPort')
         self._user_db_adapter = adapter_store.get('UserDBPort')
         self._user_ui_adapter = adapter_store.get('UserUIPort')

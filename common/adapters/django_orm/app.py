@@ -8,10 +8,10 @@ from typing import Union
 from app.models.app import AppSettings
 
 from ...models.app import AppSettingsDB
-from ...ports.app import AppSettingsPort
+from ...ports.app import AppSettingsDBPort
 
 
-class AppSettingsDjangoORMAdapter(AppSettingsPort):
+class AppSettingsDjangoORMAdapter(AppSettingsDBPort):
     """
     Uses the Django ORM to manage settings
     """

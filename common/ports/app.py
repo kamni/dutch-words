@@ -9,7 +9,7 @@ from typing import Union
 from ..models.app import AppSettingsDB
 
 
-class AppSettingsPort(ABC):
+class AppSettingsDBPort(ABC):
     """
     Get global settings for apps
     """

@@ -19,7 +19,7 @@ class TestAppSettingsDjangoORMAdapter(TestCase):
     @classmethod
     def setUpClass(cls):
         adapters = AdapterStore(subsection='dev.django')
-        cls.adapter = adapters.get('AppSettingsPort')
+        cls.adapter = adapters.get('AppSettingsDBPort')
         super().setUpClass()
 
     def test_get(self):

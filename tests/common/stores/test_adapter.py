@@ -6,10 +6,8 @@ Affero GPL v3
 from pathlib import Path
 from unittest import TestCase
 
-from common.adapters.django_orm.users import (
-    UserDBDjangoORMAdapter,
-    UserUIDjangoORMAdapter,
-)
+from common.adapters.django_orm.users import UserDBDjangoORMAdapter
+from common.adapters.ui.users import UserUIAdapter
 from common.stores.adapter import (
     AdapterInitializationError,
     AdapterNotFoundError,
@@ -176,7 +174,7 @@ class TestAdapterStore(TestCase):
         # Not testing all ports; just a few for examples
         port_to_adapter_cls = {
             'UserDBPort': UserDBDjangoORMAdapter,
-            'UserUIPort': UserUIDjangoORMAdapter,
+            'UserUIPort': UserUIAdapter,
         }
 
         for port, adapter_cls in port_to_adapter_cls.items():

@@ -2,11 +2,16 @@
 
 ## Document
 
+* Document model should use the uuid of UserSettings
+  * Django
+  * Pydantic -- id only
 * Document port/adapter
   * Add adapters to config
   * Create models
   * Write ports
   * Write tests
+
+* Split UI adapters out of django_orm folder
 
 * upload a document file
 

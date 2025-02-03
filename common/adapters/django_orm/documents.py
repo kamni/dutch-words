@@ -3,6 +3,7 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
+import uuid
 from pathlib import Path
 from typing import List
 
@@ -10,14 +11,14 @@ from django.contrib.auth.models import User
 from django.core.files import File
 from django.db.utils import IntegrityError
 
-from backend.words.models import Document
+from words.models import Document
 
-from ...models.documents import DocumentDB, DocumentUI
+from ...models.documents import DocumentDB
 from ...models.errors import ObjectExistsError, ObjectNotFoundError
 from ...ports.documents import DocumentDBPort, DocumentUIPort
 
 
-class DocumentDBDjangoORMPort(DocumentDBPort):
+class DocumentDBDjangoORMAdapter(DocumentDBPort):
     """
     Represents a document in the system
     """
@@ -74,34 +75,5 @@ class DocumentDBDjangoORMPort(DocumentDBPort):
         :user_id: The user's id who owns the documents
 
         :return: List of documents (may be empty)
-        """
-        pass
-
-
-class DocumentUIDjangoORMPort(DocumentUIPort):
-    """
-    Represents documents to the UI
-    """
-
-    def get(self, document: DocumentDB) -> DocumentUI:
-        """
-        Gets a full representation of the document,
-        including child sentences and conjugations.
-
-        :document: Database representation of the document.
-
-        :return: Document instance ready for display in the UI.
-        """
-        pass
-
-    def get_all_minimal(
-        self,
-        documents: List[DocumentDB],
-    ) -> List[DocumentUIMinimal]:
-        """
-        Convert a list of database documents into a list of minimal UI objects.
-
-        :documents: DocumentDB instances.
-        :return: List of DocumentUIMinimal objects.
         """
         pass

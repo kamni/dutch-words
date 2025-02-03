@@ -7,7 +7,7 @@ import uuid
 from abc import ABC, abstractmethod
 from typing import List
 
-from ..models import DocumentDB, DocumentUI, DocumentUIMinimal
+from ..models.documents import DocumentDB, DocumentUI, DocumentUIMinimal
 
 
 class DocumentDBPort(ABC):

@@ -34,13 +34,13 @@ class BaseView:
         Header().display()
 
         # Body
-        self.set_content()
+        self.setup()
         for content in self._page_content:
             content.display()
 
         return self.return_next()
 
-    def set_content(self):
+    def setup(self):
         """
         Set the widgets or other content to be displayed.
         All content must implement a `display` function.

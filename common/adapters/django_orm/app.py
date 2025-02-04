@@ -43,6 +43,21 @@ class AppSettingsDjangoORMAdapter(AppSettingsDBPort):
         app_db = self._django_to_pydantic(app)
         return app_db
 
+    def get_or_default(self) -> AppSettingsDB:
+        """
+        Get the settings.
+        If they don't exist, return default settings (all false)
+
+        :return: AppSettingsDB
+        """
+        app = AppSettings.objects.first()
+        if app:
+            app_db = self._django_to_pydantic(app)
+        else:
+            app_db = AppSettingsDB()
+
+        return app_db
+
     def create_or_update(self, settings: AppSettingsDB) -> AppSettingsDB:
         """
         Create a new settings item, or update if one exists.

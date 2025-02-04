@@ -18,7 +18,7 @@ class LoginView(BaseView):
         super().__init__()
         self._auth = self._adapters.get('AuthPort')
 
-    def set_content(self):
+    def setup(self):
         if not self._app_settings.is_configured:
             self._redirect = '/configure'
 

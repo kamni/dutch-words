@@ -57,6 +57,23 @@ class TestAppSettingsDjangoORMAdapter(TestCase):
         self.assertEqual(expected, returned)
         self.assertNotEqual(app_db2, returned)
 
+    def test_get_or_default_settings_exist(self):
+        app_db1 = AppSettingsDB(
+            multiuser_mode=True,
+            passwordless_login=True,
+            show_users_on_login_screen=True,
+        )
+        AppSettings.objects.create(**app_db1.model_dump())
+
+        expected = app_db1
+        returned = self.adapter.get_or_default()
+        self.assertEqual(expected, returned)
+
+    def test_get_or_default_no_settings(self):
+        expected = AppSettingsDB()
+        returned = self.adapter.get_or_default()
+        self.assertEqual(expected, returned)
+
     def test_create_or_update_when_created(self):
         app_db = AppSettingsDB(
             multiuser_mode=True,

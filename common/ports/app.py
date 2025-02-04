@@ -25,6 +25,16 @@ class AppSettingsDBPort(ABC):
         pass
 
     @abstractmethod
+    def get_or_default(self) -> AppSettingsDB:
+        """
+        Get the settings.
+        If they don't exist, return default settings (all false)
+
+        :return: AppSettingsDB
+        """
+        pass
+
+    @abstractmethod
     def create_or_update(self, settings: AppSettingsDB) -> AppSettingsDB:
         """
         Create a new settings item, or update if one exists.

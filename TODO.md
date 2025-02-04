@@ -1,5 +1,14 @@
 # TODOS
 
+## AppSettingsStore
+
+* Remove login components
+* Move login components to auth adapter
+* Tests work?
+* New tests:
+  * show_login
+  * show_logout
+
 ## Login
 
 * App Storage instead of auth store

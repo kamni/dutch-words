@@ -18,28 +18,28 @@ class AppSettingsStore(metaclass=Singleton):
     Tracks auth settings and current authenticated user
     """
 
-    LOGGED_IN_USER = 'logged_in_user'
     IS_CONFIGURED = 'is_configured'
+    SHOW_LOGIN = 'show_login'
+    SHOW_LOGOUT = 'show_logout'
     SHOW_REGISTRATION = 'show_registration'
     SHOW_PASSWORD_FIELD = 'show_password_field'
     SHOW_USER_SELECT = 'show_user_select'
-    USER_SELECT_OPTIONS = 'user_select_options'
 
     def __init__(self):
         self._settings = {}
         self.initialize()
 
     @property
-    def logged_in_user(self):
-        return self.get(self.LOGGED_IN_USER)
-
-    @property
     def is_configured(self):
         return self.get(self.IS_CONFIGURED)
 
     @property
-    def user_select_options(self):
-        return self.get(self.USER_SELECT_OPTIONS)
+    def show_login(self):
+        return self.get(self.SHOW_LOGIN)
+
+    @property
+    def show_logout(self):
+        return self.get(self.SHOW_LOGOUT)
 
     @property
     def show_registration(self):
@@ -68,14 +68,12 @@ class AppSettingsStore(metaclass=Singleton):
 
         adapter_store = AdapterStore()
         self._settings_adapter = adapter_store.get('AppSettingsDBPort')
-        self._authn_adapter = adapter_store.get('AuthPort')
         self._user_db_adapter = adapter_store.get('UserDBPort')
-        self._user_ui_adapter = adapter_store.get('UserUIPort')
 
         self._settings = {
-            self.LOGGED_IN_USER: None,
             self.IS_CONFIGURED: False,
-            self.USER_SELECT_OPTIONS: [],
+            self.SHOW_LOGIN: False,
+            self.SHOW_LOGOUT: False,
             self.SHOW_REGISTRATION: False,
             self.SHOW_PASSWORD_FIELD: False,
             self.SHOW_USER_SELECT: False,
@@ -85,34 +83,30 @@ class AppSettingsStore(metaclass=Singleton):
         if settings:
             self._settings.update({
                 self.IS_CONFIGURED: True,
+                self.SHOW_LOGIN: True,
+                self.SHOW_LOGOUT: True,
                 self.SHOW_REGISTRATION: settings.multiuser_mode,
                 self.SHOW_PASSWORD_FIELD: not settings.passwordless_login,
                 self.SHOW_USER_SELECT: settings.show_users_on_login_screen,
             })
 
+            if settings.show_users_on_login_screen:
+                self._settings[self.SHOW_USER_SELECT] = True
+
+            if settings.passwordless_login and not settings.multiuser_mode:
+                # We don't need to show this
+                # because we're just logging in automatically
+                # with the first user in the database
+                self._settings[self.SHOW_USER_SELECT] = False
+                self._settings[self.SHOW_LOGIN] = False
+                self._settings[self.SHOW_LOGOUT] = False
+
             if not settings.multiuser_mode:
                 userdb = self._user_db_adapter.get_first()
-
                 # We need to be able to add a user.
                 # Enable registration form, even if not explicitly enabled
                 if not userdb:
                     self._settings[self.SHOW_REGISTRATION] = True
-                else:
-                    userui = self._user_ui_adapter.get(userdb)
-
-                    # We're going to log the user in automatically
-                    if settings.passwordless_login:
-                        self._settings[self.LOGGED_IN_USER] = userui
-                        # No need to show this
-                        self._settings[self.SHOW_USER_SELECT] = False
-
-                    elif settings.show_users_on_login_screen:
-                        self._settings[self.USER_SELECT_OPTIONS] = [userui]
-
-            elif self._settings[self.SHOW_USER_SELECT]:
-                usersdb = self._user_db_adapter.get_all()
-                usersui = self._user_ui_adapter.get_all(usersdb)
-                self._settings[self.USER_SELECT_OPTIONS] = usersui
 
     def get(self, setting: str) -> Union[Any, None]:
         """
@@ -120,12 +114,12 @@ class AppSettingsStore(metaclass=Singleton):
 
         Available settings:
 
-        * logged_in_user
         * is_configured
+        * show_login
+        * show_logout
         * show_registration
         * show_password_field
         * show_user_select
-        * user_select_options
 
         :setting: One of the available settings
 
@@ -134,49 +128,3 @@ class AppSettingsStore(metaclass=Singleton):
 
         setting = self._settings[setting]
         return setting
-
-    def login(self, username: str, password: Optional[str]=None) -> UserUI:
-        """
-        Log in the user.
-        Sets the LOGGED_IN_USER key in the settings.
-
-        :username: User's username
-        :password: User's password.
-            Not required if passwordless login is enabled
-
-        :raises: AuthInvalidError if username/password don't work
-        """
-
-        if (
-            not self.get(self.SHOW_PASSWORD_FIELD) and
-            self.get(self.IS_CONFIGURED)
-        ):
-            try:
-                userdb = self._user_db_adapter.get_by_username(username)
-                userui = self._user_ui_adapter.get(userdb)
-            except ObjectNotFoundError:
-                # This message is only for internal logging.
-                # Do not show this to users,
-                # as it could facilitate brute-forcing usernames.
-                raise AuthInvalidError(f'User {username} not found')
-        else:
-            # Django apparently allows this (at least with sqlite),
-            # but we're not going to allow this
-            if not password:
-                raise AuthInvalidError(f'No password supplied')
-
-            # Raises AuthInvalidError if not successful
-            userui = self._authn_adapter.login(username, password)
-
-        self._settings[self.LOGGED_IN_USER] = userui
-        return userui
-
-    def logout(self):
-        """
-        Log current user out of the system.
-        """
-
-        user = self.get(self.LOGGED_IN_USER)
-        if user:
-            self._authn_adapter.logout(user)
-            self._settings[self.LOGGED_IN_USER] = None

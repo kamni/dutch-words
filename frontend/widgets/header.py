@@ -13,25 +13,29 @@ class Header(BaseWidget):
     Displays a header on the page
     """
 
+    @property
+    def show_logout(self):
+        return self._app_settings.show_logout
+
     def display(self):
-        '''
         def logout() -> None:
             app.storage.user.clear()
             ui.navigate.to('/')
 
         user = app.storage.user
+        user_authenticated = user.get('authenticated', False)
+        show_logout = self.show_logout
 
         with ui.header():
             ui.label('10,000 Words').classes('text-2xl')
             ui.space()
-            if user.get('authenticated', False):
-                ui.icon('user')
-                ui.label(user['display_name'])
+            if user_authenticated:
+                ui.icon('user').classes('text-2xl')
+                ui.label(user['display_name']).classes('text-2xl')
 
-                if settings.show_logout:
+                if show_logout:
                     ui.button(
                         on_click=logout,
                         icon='logout',
                     ).props('outline round')
-        '''
-        ui.header()
+

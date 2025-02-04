@@ -17,8 +17,8 @@ class BaseWidget(ABC):
     """
 
     def __init__(self):
-        #self._adapters = AdapterStore()
-        #self._app_settings = AppSettingsStore()
+        self._adapters = AdapterStore()
+        self._app_settings = AppSettingsStore()
         pass
 
     @abstractmethod

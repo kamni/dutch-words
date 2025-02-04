@@ -18,7 +18,8 @@ if PROJECT_DIR.as_posix() not in sys.path:
     sys.path.append(PROJECT_DIR.as_posix())
 
 from frontend.middleware.auth import AuthMiddleware
-from frontend.views.base import BaseView
+from frontend.views.configure import ConfigureView
+from frontend.views.login import LoginView
 
 
 UNSAFE_SECRET_KEY = 'UNSAFE_jsn9wx-vje-+#k%(b*kra1std2^v43^jtq&)5x26whm'
@@ -27,10 +28,15 @@ app.add_middleware(AuthMiddleware)
 
 
 @ui.page('/')
-def login():
-    ui.label('login')
-    #view = BaseView()
-    #return view.display()
+async def login():
+    view = LoginView()
+    return await view.display()
+
+
+@ui.page('/configure')
+async def configure():
+    view = ConfigureView()
+    return await view.display()
 
 
 @ui.page('/edit')

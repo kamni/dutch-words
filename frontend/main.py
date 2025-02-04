@@ -28,8 +28,9 @@ app.add_middleware(AuthMiddleware)
 
 @ui.page('/')
 def login():
-    view = BaseView()
-    return view.display()
+    ui.label('login')
+    #view = BaseView()
+    #return view.display()
 
 
 @ui.page('/edit')

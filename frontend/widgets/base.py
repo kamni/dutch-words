@@ -6,6 +6,7 @@ Affero GPL v3
 from abc import ABC, abstractmethod
 
 from common.stores.adapter import AdapterStore
+from common.stores.app import AppSettingsStore
 
 
 class BaseWidget(ABC):
@@ -16,12 +17,13 @@ class BaseWidget(ABC):
     """
 
     def __init__(self):
-        self._adapters = AdapterStore()
+        #self._adapters = AdapterStore()
+        #self._app_settings = AppSettingsStore()
+        pass
 
     @abstractmethod
     def display(self):
         """
         Display the content of the widget.
         """
-
         pass

@@ -6,7 +6,7 @@ Affero GPL v3
 from pathlib import Path
 from unittest import TestCase
 
-from common.stores.settings import SettingsStore
+from common.stores.config import ConfigStore
 from common.utils.singleton import Singleton
 
 
@@ -14,22 +14,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 TEST_CONFIG = BASE_DIR / 'setup.cfg'
 
 
-class TestSettingsStore(TestCase):
+class TestConfigStore(TestCase):
     """
-    Tests for common.stores.settings.SettingsStore
+    Tests for common.stores.settings.ConfigStore
     """
 
     @classmethod
     def setUpClass(cls):
         # In case there is already lurking from somewhere else in the code
-        Singleton.destroy(SettingsStore)
+        Singleton.destroy(ConfigStore)
         super().setUpClass()
 
     def tearDown(self):
-        Singleton.destroy(SettingsStore)
+        Singleton.destroy(ConfigStore)
 
     def test_class_is_singleton(self):
-        settings_store = SettingsStore(config=TEST_CONFIG)
+        settings_store = ConfigStore(config=TEST_CONFIG)
         expected_config = 'testDefault'
         self.assertEqual(
             expected_config,
@@ -37,14 +37,14 @@ class TestSettingsStore(TestCase):
         )
 
         # Next call shouldn't change the config
-        new_settings_store = SettingsStore(config='foo.bar.txt')
+        new_settings_store = ConfigStore(config='foo.bar.txt')
         self.assertEqual(
             expected_config,
             settings_store._config['config.meta']['name'],
         )
 
     def test_init_with_defaults(self):
-        settings_store = SettingsStore()
+        settings_store = ConfigStore()
         expected_config = 'default'
         expected_subsection = 'dev.django'
 
@@ -58,7 +58,7 @@ class TestSettingsStore(TestCase):
         )
 
     def test_init_with_another_config_and_subsection(self):
-        settings_store = SettingsStore(
+        settings_store = ConfigStore(
             config=TEST_CONFIG,
             subsection='dev.django',
         )
@@ -75,7 +75,7 @@ class TestSettingsStore(TestCase):
         )
 
     def test_initialize_already_initialized(self):
-        settings_store = SettingsStore(
+        settings_store = ConfigStore(
             config=TEST_CONFIG,
             subsection='dev.django',
         )
@@ -97,7 +97,7 @@ class TestSettingsStore(TestCase):
         )
 
     def test_initialize_forced(self):
-        settings_store = SettingsStore(
+        settings_store = ConfigStore(
             config=TEST_CONFIG,
             subsection='dev.django',
         )
@@ -119,16 +119,16 @@ class TestSettingsStore(TestCase):
         )
 
     def test_name(self):
-        settings_store = SettingsStore()
+        settings_store = ConfigStore()
         expected_name = 'default'
         self.assertEqual(
             expected_name,
             settings_store.name,
         )
 
-        Singleton.destroy(SettingsStore)
+        Singleton.destroy(ConfigStore)
 
-        settings_store = SettingsStore(TEST_CONFIG)
+        settings_store = ConfigStore(TEST_CONFIG)
         expected_name = 'testDefault'
         self.assertEqual(
             expected_name,
@@ -136,7 +136,7 @@ class TestSettingsStore(TestCase):
         )
 
     def test_subsection(self):
-        settings_store = SettingsStore()
+        settings_store = ConfigStore()
         expected_config_file = 'dev.django'
         self.assertEqual(
             expected_config_file,
@@ -151,7 +151,7 @@ class TestSettingsStore(TestCase):
         )
 
     def test_get_section_only(self):
-        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
+        settings_store = ConfigStore(config=TEST_CONFIG, subsection='test')
         expected_section = ['foo', 'baz', 'buz']
 
         self.assertEqual(
@@ -160,11 +160,11 @@ class TestSettingsStore(TestCase):
         )
 
     def test_get_invalid_section(self):
-        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
+        settings_store = ConfigStore(config=TEST_CONFIG, subsection='test')
         self.assertIsNone(settings_store.get('foo'))
 
     def test_get_section_and_key(self):
-        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
+        settings_store = ConfigStore(config=TEST_CONFIG, subsection='test')
         expected_value = 'bar'
 
         self.assertEqual(
@@ -173,13 +173,13 @@ class TestSettingsStore(TestCase):
         )
 
     def test_get_invalid_key(self):
-        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
+        settings_store = ConfigStore(config=TEST_CONFIG, subsection='test')
         self.assertIsNone(
             settings_store.get('data', 'boz'),
         )
 
     def test_get_typed_key_int(self):
-        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
+        settings_store = ConfigStore(config=TEST_CONFIG, subsection='test')
         expected_value = 1
 
         self.assertEqual(
@@ -188,7 +188,7 @@ class TestSettingsStore(TestCase):
         )
 
     def test_get_typed_key_bool(self):
-        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
+        settings_store = ConfigStore(config=TEST_CONFIG, subsection='test')
         expected_value = True
 
         for value in ['yes', 'Yes', 'y', 'Y', '1', 'true', 'True']:
@@ -210,7 +210,7 @@ class TestSettingsStore(TestCase):
             )
 
     def test_get_invalidly_typed_key(self):
-        settings_store = SettingsStore(config=TEST_CONFIG, subsection='test')
+        settings_store = ConfigStore(config=TEST_CONFIG, subsection='test')
         self.assertIsNone(
             settings_store.get('data', 'foo', int),
         )

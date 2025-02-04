@@ -13,7 +13,7 @@ from common.stores.adapter import (
     AdapterNotFoundError,
     AdapterStore,
 )
-from common.stores.settings import SettingsStore
+from common.stores.config import ConfigStore
 from common.utils.singleton import Singleton
 
 from ...utils.init_scripts import FakeStore
@@ -31,13 +31,13 @@ class TestAdapterStore(TestCase):
     def setUpClass(cls):
         # Get rid of lurking instances before starting tests
         Singleton.destroy(AdapterStore)
-        Singleton.destroy(SettingsStore)
+        Singleton.destroy(ConfigStore)
         Singleton.destroy(FakeStore)
         super().setUpClass()
 
     def tearDown(self):
         Singleton.destroy(AdapterStore)
-        Singleton.destroy(SettingsStore)
+        Singleton.destroy(ConfigStore)
         Singleton.destroy(FakeStore)
 
     def test_is_singleton(self):

@@ -14,9 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DEFAULT_CONFIG = BASE_DIR / 'setup.cfg'
 
 
-class SettingsStore(metaclass=Singleton):
+class ConfigStore(metaclass=Singleton):
     """
-    Store global settings that are available across all parts of the app
+    Store settings from setup.cfg
     """
 
     def __init__(

@@ -20,7 +20,7 @@ class AuthDjangoORMAdapter(AuthPort):
           This authenticates directly with the Django database,
           and does not rely on http requests.
           For this reason the logged-in status of the user
-          is managed by the in-memory common.stores.auth.AuthStore
+          is managed by the frontend app
           and not via Django requests.
 
           Please create an AuthDjangoAPIAdapter
@@ -93,5 +93,5 @@ class AuthDjangoORMAdapter(AuthPort):
         :user: UserUI object that was logged in
         """
         # Nothing to do.
-        # The AuthStore is handling the "session"
+        # The frontend is handling the session
         return None

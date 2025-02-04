@@ -2,5 +2,6 @@
 backend/uploads/*
 data/uploads/*
 *.log
+.nicegui
 /setup.cfg
 */__pycache__/*

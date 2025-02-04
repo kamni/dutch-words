@@ -3,13 +3,25 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
-from nicegui import ui
+from abc import ABC, abstractmethod
+
+from common.stores.adapter import AdapterStore
 
 
-def Header():
+class BaseWidget(ABC):
     """
-    Header shared by all pages
+    Base for reusable page components
+
+    Implement a `display` method.
     """
 
-    with ui.header():
-        ui.label('10,000 Words').classes('text-2xl')
+    def __init__(self):
+        self._adapters = AdapterStore()
+
+    @abstractmethod
+    def display(self):
+        """
+        Display the content of the widget.
+        """
+
+        pass

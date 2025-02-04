@@ -4,18 +4,35 @@ Affero GPL v3
 """
 
 from collections.abc import Callable
-from typing import List, Optional
+from typing import Any, List, Optional
 
-from frontend.widgets.base import Header
+from common.stores.adapter import AdapterStore
+from frontend.widgets.header import Header
 
 
-def PageBase(page_content: Optional[List[Callable]] = None):
+class BaseView:
     """
-    Base for all pages
+    Base for all views in the app
     """
 
-    page_content = page_content or []
+    def __init__(self):
+        self._adapters = AdapterStore()
 
-    Header()
-    for content in page_content:
-        content()
+        self._page_content = []
+        self.set_content()
+
+    def display(self) -> Any:
+        """
+        Show the content of the view
+        """
+
+        Header().display()
+        for content in self._page_content:
+            content.display()
+
+    def set_content(self):
+        """
+        Set the widgets or other content to be displayed.
+        All content must implement a `display` function.
+        """
+        pass

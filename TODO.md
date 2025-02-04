@@ -1,5 +1,14 @@
 # TODOS
 
+## Login
+
+* App Storage instead of auth store
+* remove auth store
+  * Can pass a secret...let's use django's?
+_general
+_users
+_tabs
+
 ## Document
 
 * Document model should use the uuid of UserSettings

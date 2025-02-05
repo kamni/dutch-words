@@ -103,7 +103,7 @@ class AppSettingsStore(metaclass=Singleton):
 
             if not settings.multiuser_mode:
                 userdb = self._user_db_adapter.get_first()
-                # We need to be able to add a user.
+                # We need to be able to add a user after initial configuration.
                 # Enable registration form, even if not explicitly enabled
                 if not userdb:
                     self._settings[self.SHOW_REGISTRATION] = True

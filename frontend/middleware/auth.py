@@ -9,7 +9,7 @@ from nicegui import app
 from starlette.middleware.base import BaseHTTPMiddleware
 
 
-UNRESTRICTED_PAGE_ROUTES = {'/', '/configure'}
+UNRESTRICTED_PAGE_ROUTES = {'/', '/configure', '/register'}
 
 
 class AuthMiddleware(BaseHTTPMiddleware):

@@ -20,6 +20,7 @@ if PROJECT_DIR.as_posix() not in sys.path:
 from frontend.middleware.auth import AuthMiddleware
 from frontend.views.configure import ConfigureView
 from frontend.views.login import LoginView
+from frontend.views.register import RegisterView
 
 
 UNSAFE_SECRET_KEY = 'UNSAFE_jsn9wx-vje-+#k%(b*kra1std2^v43^jtq&)5x26whm'
@@ -44,7 +45,8 @@ async def configure():
 @ui.page('/register')
 async def register():
     ui.page_title('Register')
-    ui.label('registration page')
+    view = RegisterView()
+    return await view.display()
 
 
 @ui.page('/edit')

@@ -19,17 +19,15 @@ class ConfigureView(BaseView):
     """
 
     def setup(self):
-        self._next_url = '/register'
-        '''
         if self._app_settings.is_configured:
             if not app.storage.user.get('authenticated', False):
-                self._redirect = redirect
+                self._redirect = '/'
                 return False
-            else:
-                redirect = app.storage.user.get('referrer_path', '/')
         else:
-            redirect = '/registration'
-        '''
+            # The first time the app is configured,
+            # we also want to give the chance to create a new user.
+            self._next_url = '/register'
+
         self._page_content.append(ConfigureWidget())
         return True
 

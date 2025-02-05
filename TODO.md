@@ -1,18 +1,16 @@
 # TODOS
 
-## AppSettingsStore
+## Registration
 
-* cancel button if not first time
-* Need to re-initialize app settings store
-* Widget sends signal to redirect
-* ui.navigate.to, ui.navigate.back
+* Redirect registration if not allowed
+* Use existing app settings to show forms
+* First user is an admin
 
-* Favicon
 * re-enable auth middleware
-* disable save button
 
 ## Login
 
+* Add registration link, if settings allow it
 * App Storage instead of auth store
 * remove auth store
   * Can pass a secret...let's use django's?

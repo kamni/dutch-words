@@ -87,7 +87,7 @@ class ConfigureWidget(BaseWidget):
             adapter.create_or_update(settings)
             self._app_settings.initialize(force=True)
             ui.notify('Settings Saved!')
-            time.sleep(1)
+            time.sleep(2)
             self.emit_done()
 
         with ui.card().classes('absolute-center'):

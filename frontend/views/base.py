@@ -8,6 +8,7 @@ from collections.abc import Callable
 from typing import Any, List, Optional
 
 from fastapi.responses import RedirectResponse
+from nicegui import ui
 
 from common.stores.adapter import AdapterStore
 from common.stores.app import AppSettingsStore
@@ -25,20 +26,35 @@ class BaseView:
 
         self._page_content = []
         self._redirect = None
+        self._next_url = None
 
     async def display(self) -> Any:
         """
-        Show the content of the view
+        Show the content of the view.
+        Redirect if setup determines user should be somewhere else.
         """
 
         Header().display()
 
         # Body
         self.setup()
+        if self._redirect:
+            return RedirectResponse(self._redirect)
+
         for content in self._page_content:
             content.display()
 
-        return self.return_next()
+        ui.on('done', self.navigate_next)
+        ui.on('cancel', ui.navigate.back)
+
+    def navigate_next(self):
+        """
+        When a user is done, navigate to the next logical url.
+        """
+        if self._next_url:
+            ui.navigate.to(self._next_url)
+        else:
+            ui.navigate.back
 
     def setup(self):
         """
@@ -46,10 +62,3 @@ class BaseView:
         All content must implement a `display` function.
         """
         pass
-
-    def return_next(self) -> Optional[RedirectResponse]:
-        """
-        If needed, return a redirect to the next view.
-        """
-        if self._redirect:
-            return RedirectResponse(self._redirect)

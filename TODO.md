@@ -2,6 +2,11 @@
 
 ## AppSettingsStore
 
+* cancel button if not first time
+* Need to re-initialize app settings store
+* Widget sends signal to redirect
+* ui.navigate.to, ui.navigate.back
+
 * Favicon
 * re-enable auth middleware
 * disable save button

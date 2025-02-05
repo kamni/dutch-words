@@ -3,6 +3,7 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
+import time
 from typing import Optional
 
 from nicegui import ui
@@ -13,12 +14,18 @@ from frontend.widgets.base import BaseWidget
 
 
 class OptionWidget(BaseWidget):
+    """
+    Display an individual configuration option
+    """
+
     def __init__(self, text: str, value: bool):
+        super().__init__()
+
         self._text = text
         self._value = value
 
     @property
-    def value(self) -> Optional[bool]:
+    def value(self) -> bool:
         return self.switch.value
 
     def display(self):
@@ -50,21 +57,25 @@ class ConfigureWidget(BaseWidget):
     Configure the global app settings
     """
 
+    def __init__(self, redirect_after_save: Optional[str]='/'):
+        super().__init__()
+        self._redirect = redirect_after_save
+
     def display(self):
         adapter = self._adapters.get('AppSettingsDBPort')
-        app_settings = adapter.get_or_default()
+        current_settings = adapter.get_or_default()
 
         self._multiuser = OptionWidget(
             'Can multiple people use the app?',
-            app_settings.multiuser_mode,
+            current_settings.multiuser_mode,
         )
         self._passwordless = OptionWidget(
             'Log in without a password?',
-            app_settings.passwordless_login,
+            current_settings.passwordless_login,
         )
         self._show_users = OptionWidget(
             'Show user list on the login page?',
-            app_settings.show_users_on_login_screen,
+            current_settings.show_users_on_login_screen,
         )
 
         def save_settings():
@@ -74,7 +85,10 @@ class ConfigureWidget(BaseWidget):
                 show_users_on_login_screen=self._show_users.value,
             )
             adapter.create_or_update(settings)
+            self._app_settings.initialize(force=True)
             ui.notify('Settings Saved!')
+            time.sleep(1)
+            self.emit_done()
 
         with ui.card().classes('absolute-center'):
             ui.label('Settings').classes('text-3xl')

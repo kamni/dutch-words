@@ -19,11 +19,17 @@ class ConfigureView(BaseView):
     """
 
     def setup(self):
+        self._next_url = '/register'
+        '''
         if self._app_settings.is_configured:
             if not app.storage.user.get('authenticated', False):
-                self._redirect = '/login'
+                self._redirect = redirect
                 return False
-
+            else:
+                redirect = app.storage.user.get('referrer_path', '/')
+        else:
+            redirect = '/registration'
+        '''
         self._page_content.append(ConfigureWidget())
         return True
 

@@ -41,6 +41,12 @@ async def configure():
     return await view.display()
 
 
+@ui.page('/register')
+async def register():
+    ui.page_title('Register')
+    ui.label('registration page')
+
+
 @ui.page('/edit')
 def edit():
     ui.page_title('Editing Mode')

@@ -3,9 +3,12 @@ Copyright (C) J Leadbetter <j@jleadbetter.com>
 Affero GPL v3
 """
 
+from typing import Optional
+
 from nicegui import ui
 from nicegui.elements.label import Label
 
+from common.models.app import AppSettingsDB
 from frontend.widgets.base import BaseWidget
 
 
@@ -13,6 +16,10 @@ class OptionWidget(BaseWidget):
     def __init__(self, text: str, value: bool):
         self._text = text
         self._value = value
+
+    @property
+    def value(self) -> Optional[bool]:
+        return self.switch.value
 
     def display(self):
         def update_no_and_yes():
@@ -44,25 +51,39 @@ class ConfigureWidget(BaseWidget):
     """
 
     def display(self):
-        def save_settings():
-            ui.notify('Work in progress')
+        adapter = self._adapters.get('AppSettingsDBPort')
+        app_settings = adapter.get_or_default()
 
-        app_settings = self._adapters.get('AppSettingsDBPort').get_or_default()
+        self._multiuser = OptionWidget(
+            'Can multiple people use the app?',
+            app_settings.multiuser_mode,
+        )
+        self._passwordless = OptionWidget(
+            'Log in without a password?',
+            app_settings.passwordless_login,
+        )
+        self._show_users = OptionWidget(
+            'Show user list on the login page?',
+            app_settings.show_users_on_login_screen,
+        )
+
+        def save_settings():
+            settings = AppSettingsDB(
+                multiuser_mode=self._multiuser.value,
+                passwordless_login=self._passwordless.value,
+                show_users_on_login_screen=self._show_users.value,
+            )
+            adapter.create_or_update(settings)
+            ui.notify('Settings Saved!')
 
         with ui.card().classes('absolute-center'):
             ui.label('Settings').classes('text-3xl')
             ui.separator()
 
             with ui.grid(columns='auto auto auto auto'):
-                OptionWidget(
-                    'Can multiple people use the app?',
-                    app_settings.multiuser_mode,
-                ).display()
-                OptionWidget(
-                    'Log in without a password?',
-                    app_settings.passwordless_login,
-                ).display()
-                OptionWidget(
-                    'Show user list on the login page?',
-                    app_settings.show_users_on_login_screen,
-                ).display()
+                self._multiuser.display()
+                self._passwordless.display()
+                self._show_users.display()
+
+            ui.separator()
+            ui.button('Save', on_click=save_settings).classes('self-center')

@@ -2,12 +2,9 @@
 
 ## AppSettingsStore
 
-* Remove login components
-* Move login components to auth adapter
-* Tests work?
-* New tests:
-  * show_login
-  * show_logout
+* Favicon
+* re-enable auth middleware
+* disable save button
 
 ## Login
 

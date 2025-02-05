@@ -27,6 +27,7 @@ class Header(BaseWidget):
         show_logout = self.show_logout
 
         with ui.header():
+            ui.label('💬').classes('text-2xl')
             ui.label('10,000 Words').classes('text-2xl')
             ui.space()
             if user_authenticated:

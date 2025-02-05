@@ -24,26 +24,29 @@ from frontend.views.login import LoginView
 
 UNSAFE_SECRET_KEY = 'UNSAFE_jsn9wx-vje-+#k%(b*kra1std2^v43^jtq&)5x26whm'
 
-app.add_middleware(AuthMiddleware)
+#app.add_middleware(AuthMiddleware)
 
 
 @ui.page('/')
 async def login():
+    ui.page_title('Login')
     view = LoginView()
     return await view.display()
 
 
 @ui.page('/configure')
 async def configure():
+    ui.page_title('Configure Settings')
     view = ConfigureView()
     return await view.display()
 
 
 @ui.page('/edit')
 def edit():
+    ui.page_title('Editing Mode')
     ui.label('edit page')
 
 
 if __name__ in {'__main__', '__mp_main__'}:
-    ui.run()
+    ui.run(favicon='💬')
     set_storage_secret(UNSAFE_SECRET_KEY)
